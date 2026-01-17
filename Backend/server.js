@@ -1,22 +1,21 @@
 import express from "express";
 import cors from "cors";
-import bodyParser from "body-parser";
+import authRoutes from "./routes/auth.routes.js";
 
 const app = express();
-const port = 3000;
+const PORT = 3000;
 
-app.use(bodyParser.json());
-app.use(
-  cors({
-    origin: "http://localhost:5173", // Your frontend origin
-    credentials: true, // Allow credentials
-  })
-);
+// middlewares
+app.use(cors());
+app.use(express.json());
+app.use("/api/auth", authRoutes);
 
+
+// test route
 app.get("/", (req, res) => {
-  res.send("jobiffi backend is running!");
+  res.send("JOBIFFI backend running 🚀");
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
