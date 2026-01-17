@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Dropdown } from "antd";
-import {  ChevronDownIcon,  Bars3Icon,  XMarkIcon, } from "@heroicons/react/24/outline";
+import { ChevronDownIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import logo from "../assets/media/New_Brand_logo_-_16060-removebg.png";
 
 function Navbar() {
@@ -25,27 +25,16 @@ function Navbar() {
         </div>
 
         {/* CENTER – Desktop Menu */}
-        <div className="hidden sm:flex absolute left-1/2 -translate-x-[70%] items-center gap-10">
-
-          {/* JOBS WITH MEGA MENU */}
-          <div
-            className="relative"
-            onMouseEnter={() => setJobsOpen(true)}
-            onMouseLeave={() => setJobsOpen(false)}
-          >
+        <div className="hidden sm:flex absolute left-1/2 -translate-x-[80%] items-center gap-10">
+          {/* Jobs */}
+          <div className="relative" onMouseEnter={() => setJobsOpen(true)} onMouseLeave={() => setJobsOpen(false)}>
             <h1 className="cursor-pointer font-medium text-gray-700 hover:text-black border-b-2 border-transparent hover:border-blue-800 pb-1">
               Jobs
             </h1>
-
-            {/* Mega Menu */}
             {jobsOpen && (
               <div className="absolute top-10 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-
-                {/* Column 1 */}
                 <div>
-                  <h2 className="font-semibold text-blue-900 mb-3">
-                    Job Categories
-                  </h2>
+                  <h2 className="font-semibold text-blue-900 mb-3">Job Categories</h2>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li>IT Jobs</li>
                     <li>Sales Jobs</li>
@@ -53,12 +42,8 @@ function Navbar() {
                     <li>Finance Jobs</li>
                   </ul>
                 </div>
-
-                {/* Column 2 */}
                 <div>
-                  <h2 className="font-semibold text-blue-900 mb-3">
-                    Jobs in Demand
-                  </h2>
+                  <h2 className="font-semibold text-blue-900 mb-3">Jobs in Demand</h2>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li>Frontend Developer</li>
                     <li>Backend Developer</li>
@@ -66,12 +51,8 @@ function Navbar() {
                     <li>UI/UX Designer</li>
                   </ul>
                 </div>
-
-                {/* Column 3 */}
                 <div>
-                  <h2 className="font-semibold text-blue-900 mb-3">
-                    Jobs by Location
-                  </h2>
+                  <h2 className="font-semibold text-blue-900 mb-3">Jobs by Location</h2>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li>Jobs in Delhi</li>
                     <li>Jobs in Bangalore</li>
@@ -83,18 +64,15 @@ function Navbar() {
             )}
           </div>
 
+          {/* Companies */}
           <div className="relative" onMouseEnter={() => setJobCompany(true)} onMouseLeave={() => setJobCompany(false)}>
-            <h1 className="cursor-pointer text-gray-700 hover:text-black font-medium hover:border-blue-800 pb-1  border-b-2 border-transparent">
-            Companies
-          </h1>
+            <h1 className="cursor-pointer text-gray-700 hover:text-black font-medium hover:border-blue-800 pb-1 border-b-2 border-transparent">
+              Companies
+            </h1>
             {jobCompany && (
-               <div className="absolute top-10 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-
-                {/* Column 1 */}
+              <div className="absolute top-10 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
                 <div>
-                  <h2 className="font-semibold text-blue-900 mb-3">
-                    Job Categories
-                  </h2>
+                  <h2 className="font-semibold text-blue-900 mb-3">Job Categories</h2>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li>IT Jobs</li>
                     <li>Sales Jobs</li>
@@ -102,12 +80,8 @@ function Navbar() {
                     <li>Finance Jobs</li>
                   </ul>
                 </div>
-
-                {/* Column 2 */}
                 <div>
-                  <h2 className="font-semibold text-blue-900 mb-3">
-                    Jobs in Demand
-                  </h2>
+                  <h2 className="font-semibold text-blue-900 mb-3">Jobs in Demand</h2>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li>Frontend Developer</li>
                     <li>Backend Developer</li>
@@ -115,12 +89,8 @@ function Navbar() {
                     <li>UI/UX Designer</li>
                   </ul>
                 </div>
-
-                {/* Column 3 */}
                 <div>
-                  <h2 className="font-semibold text-blue-900 mb-3">
-                    Jobs by Location
-                  </h2>
+                  <h2 className="font-semibold text-blue-900 mb-3">Jobs by Location</h2>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li>Jobs in Delhi</li>
                     <li>Jobs in Bangalore</li>
@@ -131,18 +101,16 @@ function Navbar() {
               </div>
             )}
           </div>
+
+          {/* Services */}
           <div className="relative" onMouseEnter={() => setJobServices(true)} onMouseLeave={() => setJobServices(false)}>
-            <h1 className="cursor-pointer text-gray-700 hover:text-black font-medium  border-b-2 border-transparent hover:border-blue-800 pb-1">
-            Services
-          </h1>
+            <h1 className="cursor-pointer text-gray-700 hover:text-black font-medium border-b-2 border-transparent hover:border-blue-800 pb-1">
+              Services
+            </h1>
             {jobServices && (
               <div className="absolute top-10 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-
-                {/* Column 1 */}
                 <div>
-                  <h2 className="font-semibold text-blue-900 mb-3">
-                    Job Categories
-                  </h2>
+                  <h2 className="font-semibold text-blue-900 mb-3">Job Categories</h2>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li>IT Jobs</li>
                     <li>Sales Jobs</li>
@@ -150,12 +118,8 @@ function Navbar() {
                     <li>Finance Jobs</li>
                   </ul>
                 </div>
-
-                {/* Column 2 */}
                 <div>
-                  <h2 className="font-semibold text-blue-900 mb-3">
-                    Jobs in Demand
-                  </h2>
+                  <h2 className="font-semibold text-blue-900 mb-3">Jobs in Demand</h2>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li>Frontend Developer</li>
                     <li>Backend Developer</li>
@@ -163,12 +127,8 @@ function Navbar() {
                     <li>UI/UX Designer</li>
                   </ul>
                 </div>
-
-                {/* Column 3 */}
                 <div>
-                  <h2 className="font-semibold text-blue-900 mb-3">
-                    Jobs by Location
-                  </h2>
+                  <h2 className="font-semibold text-blue-900 mb-3">Jobs by Location</h2>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li>Jobs in Delhi</li>
                     <li>Jobs in Bangalore</li>
@@ -177,9 +137,10 @@ function Navbar() {
                   </ul>
                 </div>
               </div>
-
             )}
           </div>
+
+          {/* Resources */}
           <h1 className="cursor-pointer text-gray-700 hover:text-black font-medium border-b-2 border-transparent hover:border-blue-800 pb-1">
             Resources
           </h1>
@@ -202,17 +163,81 @@ function Navbar() {
             </div>
           </Dropdown>
 
-          {/* Mobile */}
+          {/* Mobile Hamburger */}
           <div className="sm:hidden">
             <button onClick={() => setMenuOpen(!menuOpen)}>
-              {menuOpen ? (
-                <XMarkIcon className="w-6 h-6" />
-              ) : (
-                <Bars3Icon className="w-6 h-6" />
-              )}
+              {menuOpen ? <XMarkIcon className="w-6 h-6" /> : <Bars3Icon className="w-6 h-6" />}
             </button>
           </div>
         </div>
+
+        {/* MOBILE MENU */}
+        {menuOpen && (
+          <div className="sm:hidden absolute top-full left-0 w-full bg-white shadow-md p-4 z-50">
+            {/* Jobs */}
+            <div className="mb-2">
+              <button
+                className="w-full text-left flex justify-between items-center py-2 px-2 font-medium text-gray-700 hover:text-black hover:bg-gray-100 rounded"
+                onClick={() => setJobsOpen(!jobsOpen)}
+              >
+                Jobs
+                <ChevronDownIcon className={`w-4 h-4 transform transition-transform ${jobsOpen ? "rotate-180" : ""}`} />
+              </button>
+              {jobsOpen && (
+                <ul className="pl-4 mt-2 space-y-1 text-gray-600">
+                  <li>IT Jobs</li>
+                  <li>Sales Jobs</li>
+                  <li>Marketing Jobs</li>
+                  <li>Finance Jobs</li>
+                </ul>
+              )}
+            </div>
+
+            {/* Companies */}
+            <div className="mb-2">
+              <button
+                className="w-full text-left flex justify-between items-center py-2 px-2 font-medium text-gray-700 hover:text-black hover:bg-gray-100 rounded"
+                onClick={() => setJobCompany(!jobCompany)}
+              >
+                Companies
+                <ChevronDownIcon className={`w-4 h-4 transform transition-transform ${jobCompany ? "rotate-180" : ""}`} />
+              </button>
+              {jobCompany && (
+                <ul className="pl-4 mt-2 space-y-1 text-gray-600">
+                  <li>Top MNCs</li>
+                  <li>Unicorns</li>
+                  <li>Product Companies</li>
+                  <li>Internet Companies</li>
+                </ul>
+              )}
+            </div>
+
+            {/* Services */}
+            <div className="mb-2">
+              <button
+                className="w-full text-left flex justify-between items-center py-2 px-2 font-medium text-gray-700 hover:text-black hover:bg-gray-100 rounded"
+                onClick={() => setJobServices(!jobServices)}
+              >
+                Services
+                <ChevronDownIcon className={`w-4 h-4 transform transition-transform ${jobServices ? "rotate-180" : ""}`} />
+              </button>
+              {jobServices && (
+                <ul className="pl-4 mt-2 space-y-1 text-gray-600">
+                  <li>Resume Builder</li>
+                  <li>Job Alerts</li>
+                  <li>Monthly Subscription</li>
+                </ul>
+              )}
+            </div>
+
+            {/* Resources */}
+            <div className="mb-2">
+              <button className="w-full text-left py-2 px-2 font-medium text-gray-700 hover:text-black hover:bg-gray-100 rounded">
+                Resources
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );
