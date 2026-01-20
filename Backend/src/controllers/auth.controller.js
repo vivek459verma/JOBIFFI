@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import User from "../models/User.model.js";
 
 
@@ -49,6 +50,64 @@ export const registerUser = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Server error",
+    });
+  }
+};
+
+export const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // 1. Normalize Email (Must match registration logic)
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // 2. Check if user exists
+    const user = await User.findOne({ email: normalizedEmail });
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid email or password",
+      });
+    }
+
+    // 3. Verify Password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid email or password",
+      });
+    }
+
+    // 4. Generate Token (The "Access Pass")
+    const token = jwt.sign(
+      { 
+        userId: user._id, 
+        email: user.email, 
+        workStatus: user.workStatus 
+      },
+      process.env.JWT_SECRET || "default_secret_key", 
+      { expiresIn: "7d" } // Token expires in 7 days
+    );
+
+    // 5. Send Response
+    return res.status(200).json({
+      success: true,
+      message: "Login successful",
+      token, // Frontend needs this to stay logged in
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        workStatus: user.workStatus
+      }
+    });
+
+  } catch (error) {
+    console.error("Login Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error during login",
     });
   }
 };
