@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.model.js";
+import Otp from "../models/Otp.model.js";
+import sendEmail from "../utils/sendEmail.js";
 
 
 export const registerUser = async (req, res) => {
@@ -56,17 +58,23 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { identifier, password } = req.body;
 
-    // 1. Normalize Email (Must match registration logic)
-    const normalizedEmail = email.trim().toLowerCase();
+    // 1. Normalize Identifiers (Must match registration logic)
+    const cleanIdentifier = identifier.trim().toLowerCase();
 
     // 2. Check if user exists
-    const user = await User.findOne({ email: normalizedEmail });
+    const user = await User.findOne({
+      $or: [
+        { email: cleanIdentifier },
+        { mobile: cleanIdentifier }
+      ]
+    });
+
     if (!user) {
       return res.status(400).json({
         success: false,
-        message: "Invalid email or password",
+        message: "Invalid credentials", 
       });
     }
 
@@ -75,7 +83,7 @@ export const loginUser = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(400).json({
         success: false,
-        message: "Invalid email or password",
+        message: "Invalid Credentials",
       });
     }
 
@@ -99,6 +107,7 @@ export const loginUser = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        mobile: user.mobile,
         workStatus: user.workStatus
       }
     });
@@ -109,5 +118,77 @@ export const loginUser = async (req, res) => {
       success: false,
       message: "Server error during login",
     });
+  }
+};
+
+export const sendOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // Check if user exists first
+    const user = await User.findOne({ email: normalizedEmail });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Generate 6-digit Code
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Save to DB
+    await Otp.create({ email: normalizedEmail, otp: otpCode });
+
+    // Send Email
+    await sendEmail(normalizedEmail, otpCode);
+
+    res.status(200).json({ success: true, message: "OTP sent successfully" });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Failed to send OTP" });
+  }
+};
+
+// --- NEW FUNCTION: 2. Verify OTP & Login ---
+export const loginWithOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // Find the OTP in database
+    const otpRecord = await Otp.findOne({ email: normalizedEmail, otp });
+
+    if (!otpRecord) {
+      return res.status(400).json({ success: false, message: "Invalid or expired OTP" });
+    }
+
+    // OTP is valid! Find user to get their details
+    const user = await User.findOne({ email: normalizedEmail });
+
+    // Generate Token (Same logic as password login)
+    const token = jwt.sign(
+      { userId: user._id, email: user.email, workStatus: user.workStatus },
+      process.env.JWT_SECRET || "default_secret_key",
+      { expiresIn: "7d" }
+    );
+
+    // Delete used OTP so it can't be reused
+    await Otp.deleteOne({ _id: otpRecord._id });
+
+    // Send Success Response
+    res.status(200).json({
+      success: true,
+      message: "Login successful",
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        workStatus: user.workStatus
+      }
+    });
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
