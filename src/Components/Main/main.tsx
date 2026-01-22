@@ -6,6 +6,7 @@ import { CiLocationOn, CiSearch } from "react-icons/ci";
 const locations = [
   "Remote",
   "Hybrid",
+  "New Delhi",
   "Bangalore",
   "Delhi NCR",
   "Mumbai",
@@ -32,36 +33,59 @@ const locations = [
   "Mohali",
 ];
 
+// 🎓 Experience options
+const experienceOptions = [
+  "Fresher",
+  "0 - 3 Years",
+  "3 - 5 Years",
+  "5 - 8 Years",
+  "8 - 12 Years",
+  "12 - 18 Years",
+  "18 - 25 Years",
+  "25+ Years",
+];
+
 function MainHead() {
   // 🔹 Location dropdown state
   const [locationOpen, setLocationOpen] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
-
-  // 🔹 Ref for outside click detection
   const locationRef = useRef<HTMLDivElement | null>(null);
 
-  // 🔹 Filtered locations
-  const filteredLocations = locations.filter((loc) =>
-    loc.toLowerCase().includes(locationSearch.toLowerCase())
-  );
+  // 🔹 Experience dropdown state
+  const [experienceOpen, setExperienceOpen] = useState(false);
+  const experienceRef = useRef<HTMLDivElement | null>(null);
 
-  // ✅ Close dropdown when clicking outside
+  // 🔹 Filtered locations
+  const filteredLocations =
+    locationSearch.trim().length > 0
+      ? locations.filter((loc) =>
+          loc.toLowerCase().includes(locationSearch.toLowerCase())
+        )
+      : [];
+
+  // ✅ Close dropdowns on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+
       if (
         locationRef.current &&
-        !locationRef.current.contains(event.target as Node)
+        !locationRef.current.contains(target)
       ) {
         setLocationOpen(false);
+      }
+
+      if (
+        experienceRef.current &&
+        !experienceRef.current.contains(target)
+      ) {
+        setExperienceOpen(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
+    return () =>
       document.removeEventListener("mousedown", handleClickOutside);
-    };
   }, []);
 
   return (
@@ -103,18 +127,30 @@ function MainHead() {
           <div className="h-6 w-px bg-gray-200"></div>
 
           {/* Experience */}
-          <div className="min-w-[160px] flex-1">
-            <select className="w-full h-10 sm:h-12 px-3 outline-none text-sm text-gray-500">
-              <option value="">Experience</option>
-              <option>Fresher</option>
-              <option>0 - 3 Years</option>
-              <option>3 - 5 Years</option>
-              <option>5 - 8 Years</option>
-              <option>8 - 12 Years</option>
-              <option>12 - 18 Years</option>
-              <option>18 - 25 Years</option>
-              <option>25+ Years</option>
-            </select>
+          <div
+            ref={experienceRef}
+            className="relative min-w-[160px] flex-1"
+          >
+            <div
+              onClick={() => setExperienceOpen((prev) => !prev)}
+              className="h-10 sm:h-12 px-3 flex items-center cursor-pointer text-sm text-gray-500"
+            >
+              Select experience
+            </div>
+
+            {experienceOpen && (
+              <div className="absolute z-30 mt-2 w-full bg-white rounded-lg shadow-lg">
+                {experienceOptions.map((exp) => (
+                  <div
+                    key={exp}
+                    onClick={() => setExperienceOpen(false)}
+                    className="px-4 py-2 text-sm cursor-pointer hover:bg-blue-50"
+                  >
+                    {exp}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="h-6 w-px bg-gray-200"></div>
@@ -124,48 +160,34 @@ function MainHead() {
             ref={locationRef}
             className="relative min-w-[180px] flex-1"
           >
-            <div
-              onClick={() => setLocationOpen((prev) => !prev)}
-              className="flex items-center h-10 sm:h-12 pl-9 pr-3 cursor-pointer text-sm text-gray-500"
-            >
+            <div className="flex items-center h-10 sm:h-12 pl-9 pr-3">
               <CiLocationOn className="absolute left-3 text-gray-400 text-lg" />
-              {selectedLocation || "Location"}
+              <input
+                type="text"
+                placeholder="Search location..."
+                value={locationSearch}
+                onChange={(e) => {
+                  setLocationSearch(e.target.value);
+                  setLocationOpen(true);
+                }}
+                className="w-full outline-none text-sm"
+              />
             </div>
 
-            {locationOpen && (
-              <div className="absolute z-30 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg">
-                
-                {/* Search input */}
-                <input
-                  type="text"
-                  placeholder="Search location..."
-                  value={locationSearch}
-                  onChange={(e) => setLocationSearch(e.target.value)}
-                  className="w-full px-3 py-2 border-b outline-none text-sm"
-                />
-
-                {/* Location list */}
-                <div className="max-h-48 overflow-y-auto">
-                  {filteredLocations.length > 0 ? (
-                    filteredLocations.map((loc) => (
-                      <div
-                        key={loc}
-                        onClick={() => {
-                          setSelectedLocation(loc);
-                          setLocationOpen(false);
-                          setLocationSearch("");
-                        }}
-                        className="px-4 py-2 text-sm cursor-pointer hover:bg-blue-50"
-                      >
-                        {loc}
-                      </div>
-                    ))
-                  ) : (
-                    <p className="px-4 py-2 text-sm text-gray-400">
-                      No results found
-                    </p>
-                  )}
-                </div>
+            {locationOpen && filteredLocations.length > 0 && (
+              <div className="absolute z-30 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                {filteredLocations.map((loc) => (
+                  <div
+                    key={loc}
+                    onClick={() => {
+                      setLocationSearch(loc);
+                      setLocationOpen(false);
+                    }}
+                    className="px-4 py-2 text-sm cursor-pointer hover:bg-blue-50"
+                  >
+                    {loc}
+                  </div>
+                ))}
               </div>
             )}
           </div>
