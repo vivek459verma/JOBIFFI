@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import { otpTemplate } from "./emailTemplate.js";
 dotenv.config();
 
 const sendEmail = async (email, otp) => {
@@ -21,9 +22,9 @@ const sendEmail = async (email, otp) => {
     await transporter.sendMail({
       from: `"Jobiffi Support" <${process.env.EMAIL_USER}>`,
       to: email,
-      subject: "Your Jobiffi Login OTP",
-      text: `Your OTP is: ${otp}`,
-      html: `<b>Your OTP is: ${otp}</b>`,
+      subject: "Your OTP for logging in Jobiffi account",
+      text: `Dear Jobseeker, Your OTP is: ${otp}. Valid for 15 minutes.`,
+      html: otpTemplate(otp),
     });
 
     console.log(`✅ Email sent successfully to ${email}`);

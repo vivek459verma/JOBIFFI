@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.model.js";
 import Otp from "../models/Otp.model.js";
-import sendEmail from "../utils/sendEmail.js";
+import sendEmail from "../utils/sendEmailLogin.js";
 
 
 export const registerUser = async (req, res) => {
