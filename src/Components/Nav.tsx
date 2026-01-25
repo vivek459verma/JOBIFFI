@@ -200,22 +200,13 @@ function Navbar() {
             Resources
           </h1>
           {jobResources && (
-            <div className="absolute top-10 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
+            <div className="absolute top-10 left-0 w-[350px] bg-white shadow-xl rounded-xl p-6 grid  gap-6 ">
               <div className="flex flex-col">
-                <h2 className="font-semibold text-blue-900 mb-3">Jobiffi Blogs</h2>
                 <ul className="space-y-2 text-sm text-gray-600 mb-5">
-                  {/* <li>Resume maker</li>
-                  <li>Resume quality score</li>
-                  <li>Resume samples</li>
-                  <li>Job letter samples</li> */}
-                </ul>
-              </div>
-              <div className="flex flex-col">
-                <h2 className="font-semibold text-blue-900 mb-3">AI interview coach</h2>
-                <ul className="space-y-2 text-sm text-gray-600 mb-5">
-                  {/* <li>Career tips</li>
-                  <li>Interview prep</li>
-                  <li>Job search strategies</li> */}
+                  <li>Jobiffi Blogs</li>
+                  <li>AI interview coach</li>
+                  <li>News alert</li>
+                  <li>Events & Customer </li>
                 </ul>
               </div>
             </div>

@@ -11,42 +11,43 @@ const Footer = () => {
           <img src={logo} alt="logo" className="h-12 w-auto" />
           <h6 className="mt-6 font-semibold">Connected with us</h6>
           <div className="flex gap-3 mt-3">
-            <AiFillFacebook className="text-gray-500 text-xl hover:text-blue-600 cursor-pointer" />
-            <AiFillInstagram className="text-gray-500 text-xl hover:text-pink-500 cursor-pointer" />
-            <AiFillLinkedin className="text-gray-500 text-xl hover:text-blue-700 cursor-pointer" />
+            <AiFillFacebook className="text-blue-500 text-xl  cursor-pointer" />
+            <AiFillInstagram className="text-pink-500 text-xl  cursor-pointer" />
+            <AiFillLinkedin className="text-blue-500 text-xl  cursor-pointer" />
             <img
               src="https://static.naukimg.com/s/0/0/i/new-homepage/twitter_v1.svg"
               alt="twitter"
-              className="h-5"
+              className="h-4 bg-black mt-0 cursor-pointer"
             />
           </div>
         </div>
 
         {/* Column 2 */}
         <div>
-          <h6 className="font-semibold hover:text-blue-900">About us</h6>
           <ul className="mt-3 space-y-2 text-gray-600">
+            <li className="hover:text-blue-900 cursor-pointer">About us</li>
             <li className="hover:text-blue-900 cursor-pointer">Careers</li>
-            <li className="hover:text-blue-900 cursor-pointer">Employers home</li>
+            <li className="hover:text-blue-900 cursor-pointer">Hiring hub</li>
             <li className="hover:text-blue-900 cursor-pointer">Sitemap</li>
-            <li className="hover:text-blue-900 cursor-pointer">Credits</li>
           </ul>
         </div>
 
         {/* Column 3 */}
         <div>
-          <h6 className="font-semibold hover:text-blue-900">Help center</h6>
           <ul className="mt-3 space-y-2 text-gray-600">
-            <li className="hover:text-blue-900 cursor-pointer">Summons / Notices</li>
-            <li className="hover:text-blue-900 cursor-pointer">Grievances</li>
-            <li className="hover:text-blue-900 cursor-pointer">Report issue</li>
+            <li className="hover:text-blue-900 cursor-pointer">Jobs</li>
+            <li className="hover:text-blue-900 cursor-pointer">Compaines</li>
+            <li className="hover:text-blue-900 cursor-pointer">Services</li>
+            <li className="hover:text-blue-900 cursor-pointer">Resources</li>
+            <li className="hover:text-blue-900 cursor-pointer">Blogs</li>
           </ul>
         </div>
 
         {/* Column 4 */}
         <div>
-          <h6 className="font-semibold hover:text-blue-900">Privacy policy</h6>
           <ul className="mt-3 space-y-2 text-gray-600">
+            <li className="hover:text-blue-900 cursor-pointer">Help Center</li>
+            <li className="hover:text-blue-900 cursor-pointer">Privacy Policy</li>
             <li className="hover:text-blue-900 cursor-pointer">Terms & conditions</li>
             <li className="hover:text-blue-900 cursor-pointer">Fraud alert</li>
             <li className="hover:text-blue-900 cursor-pointer">Trust & Safety</li>
@@ -55,9 +56,9 @@ const Footer = () => {
 
         {/* Column 5 */}
         <div>
-          <h6 className="text-black font-semibold">Apply on the go</h6>
+          <h6 className="text-black font-semibold">Get the App today</h6>
           <p className="text-gray-600 text-sm mt-2">
-            Get real time job updates on your app
+            Trusted by 50,000 + Job seekers
           </p>
           <div className="flex gap-3 mt-4">
             <img
