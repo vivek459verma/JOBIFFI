@@ -54,6 +54,10 @@ function MainHead() {
   const [experienceOpen, setExperienceOpen] = useState(false);
   const experienceRef = useRef<HTMLDivElement | null>(null);
 
+  // ✅ Selected experience (FIX)
+  const [selectedExperience, setSelectedExperience] = useState("");
+
+  // 🔹 Filtered locations
   const filteredLocations =
     locationSearch.trim().length > 0
       ? locations.filter((loc) =>
@@ -132,7 +136,7 @@ function MainHead() {
               onClick={() => setExperienceOpen((prev) => !prev)}
               className="h-10 sm:h-12 px-3 flex items-center cursor-pointer text-sm text-gray-500"
             >
-              Select experience
+              {selectedExperience || "Select experience"}
             </div>
 
             {experienceOpen && (
@@ -140,7 +144,10 @@ function MainHead() {
                 {experienceOptions.map((exp) => (
                   <div
                     key={exp}
-                    onClick={() => setExperienceOpen(false)}
+                    onClick={() => {
+                      setSelectedExperience(exp);
+                      setExperienceOpen(false);
+                    }}
                     className="px-4 py-2 text-sm cursor-pointer hover:bg-blue-50"
                   >
                     {exp}
@@ -152,7 +159,7 @@ function MainHead() {
 
           <div className="h-6 w-px bg-gray-200"></div>
 
-          {/* Location */}
+          {/* 📍 Location */}
           <div
             ref={locationRef}
             className="relative min-w-[180px] flex-1"
@@ -190,7 +197,13 @@ function MainHead() {
           </div>
 
           {/* Search Button */}
-          <button className="min-w-[120px] h-10 sm:h-12 px-5 bg-gradient-to-r from-blue-900 to-blue-800 text-white font-semibold text-sm rounded-r-2xl">
+          <button
+            onClick={() => {
+              console.log("Experience:", selectedExperience);
+              console.log("Location:", locationSearch);
+            }}
+            className="min-w-[120px] h-10 sm:h-12 px-5 bg-gradient-to-r from-blue-900 to-blue-800 text-white font-semibold text-sm rounded-r-2xl hover:from-blue-800 hover:to-blue-700 transition"
+          >
             Search
           </button>
         </div>
@@ -200,3 +213,4 @@ function MainHead() {
 }
 
 export default MainHead;
+
