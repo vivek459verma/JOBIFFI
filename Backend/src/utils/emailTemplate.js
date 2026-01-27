@@ -121,3 +121,75 @@ export const otpTemplate = (otp) => {
     </html>
   `;
 };
+
+export const verificationSuccessTemplate = (companyName) => {
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>Jobiffi Email Verification Success</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f4;
+          margin: 0;
+          padding: 0;
+        }
+        .container {    
+          max-width: 600px;
+          margin: 20px auto;
+          background-color: #ffffff;
+          padding: 0;
+          border-radius: 8px;
+          overflow: hidden; 
+          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .header {
+          background-color: #0033cc; /* <--- CHANGED to Light Grey */
+          padding: 20px;
+          text-align: center;
+          border-bottom: 1px solid #ddd; /* Added a subtle border */
+        }
+        .content {
+          padding: 30px;
+          color: #333333;
+          line-height: 1.6;
+        }
+        .greeting {
+          font-size: 18px;
+          font-weight: bold;
+          margin-bottom: 20px;
+        }
+        .success-message {
+          font-size: 16px;
+          margin-bottom: 20px;
+        }
+        .footer {
+          background-color: #f9f9f9;
+          padding: 20px;
+          font-size: 11px;
+          color: #777777;
+          border-top: 1px solid #eeeeee;
+          line-height: 1.5;
+        }
+        .footer a {
+          color: #0033cc;
+          text-decoration: none;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <a href="#" style="font-size: 28px; font-weight: bold; color: #ffffff !important; text-decoration: none; display: inline-block;">Jobiffi</a>
+        </div>
+        <div class="content">
+          <div class="greeting">Dear ${companyName},</div>
+          <p class="success-message">Thank you for verifying your email address. Your email has been successfully verified.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+};
