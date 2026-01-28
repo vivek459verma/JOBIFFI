@@ -57,7 +57,6 @@ function MainHead() {
   // ✅ ADDED: Selected experience state
   const [selectedExperience, setSelectedExperience] = useState("");
 
-  // 🔹 Filtered locations
   const filteredLocations =
     locationSearch.trim().length > 0
       ? locations.filter((loc) =>
@@ -65,7 +64,7 @@ function MainHead() {
         )
       : [];
 
-  // ✅ Close dropdowns on outside click
+  // ✅ Outside click handling
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
@@ -115,7 +114,6 @@ function MainHead() {
       {/* 🔍 Search Bar */}
       <div className="mt-6 w-full max-w-4xl rounded-2xl shadow-lg">
         <div className="w-full bg-white rounded-2xl border border-gray-200 flex items-center">
-
           {/* Skills */}
           <div className="relative flex items-center min-w-[220px] flex-1">
             <CiSearch className="absolute left-3 text-gray-400 text-lg" />
@@ -160,7 +158,7 @@ function MainHead() {
 
           <div className="h-6 w-px bg-gray-200"></div>
 
-          {/* 📍 Location */}
+          {/* 📍 Location (Searchable + Outside Click Close) */}
           <div
             ref={locationRef}
             className="relative min-w-[180px] flex-1"
@@ -198,13 +196,7 @@ function MainHead() {
           </div>
 
           {/* Search Button */}
-          <button
-            onClick={() => {
-              console.log("Experience:", selectedExperience);
-              console.log("Location:", locationSearch);
-            }}
-            className="min-w-[120px] h-10 sm:h-12 px-5 bg-gradient-to-r from-blue-900 to-blue-800 text-white font-semibold text-sm rounded-r-2xl hover:from-blue-800 hover:to-blue-700 transition"
-          >
+          <button className="min-w-[120px] h-10 sm:h-12 px-5 bg-gradient-to-r from-blue-900 to-blue-800 text-white font-semibold text-sm rounded-r-2xl hover:from-blue-800 hover:to-blue-700 transition">
             Search
           </button>
         </div>
