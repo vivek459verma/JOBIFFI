@@ -26,7 +26,9 @@ function Navbar() {
       <div className="max-w-7xl mx-auto flex items-center justify-between relative">
         {/* LEFT – Logo */}
         <div className="flex ml-[50px] items-center translate-x-[30%]">
-          <img src={logo} alt="Logo" className="h-12 w-auto" />
+          <a href="/">
+            <img src={logo} alt="Logo" className="h-12 w-auto" />
+          </a>
         </div>
 
         {/* CENTER – Desktop Menu */}
@@ -42,7 +44,7 @@ function Navbar() {
             </h1>
             {jobsOpen && (
               <div className="absolute top-10 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-                <div>
+                <div className="border-r  border-gray-200 pr-4">
                   <h2 className="font-semibold text-blue-900 mb-3">
                     Job Categories
                   </h2>
@@ -55,8 +57,9 @@ function Navbar() {
                     <li>HR Jobs</li>
                     <li>Engineering Jobs</li>
                   </ul>
+                
                 </div>
-                <div>
+                <div className="border-r border-gray-200 pr-4">
                   <h2 className="font-semibold text-blue-900 mb-3">
                     Jobs in Demand
                   </h2>
@@ -97,7 +100,7 @@ function Navbar() {
             </h1>
             {jobCompany && (
               <div className="absolute top-10 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-                <div>
+                <div className="border-r border-gray-200 pr-4">
                   <h2 className="font-semibold text-blue-900 mb-3">
                     Explore Categories
                   </h2>
@@ -109,7 +112,7 @@ function Navbar() {
                     <li>Internet</li>
                   </ul>
                 </div>
-                <div>
+                <div className="border-r border-gray-200 pr-4">
                   <h2 className="font-semibold text-blue-900 mb-3">
                     Explore collections
                   </h2>
@@ -147,7 +150,7 @@ function Navbar() {
             </h1>
             {jobServices && (
               <div className="absolute top-10 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-                <div className="flex flex-col">
+                <div className="flex flex-col border-r border-gray-200 pr-4">
                   {/* First Section */}
                   <h2 className="font-semibold text-blue-900 mb-3">
                     Resume Writing
@@ -169,7 +172,7 @@ function Navbar() {
                   </ul>
                 </div>
 
-                <div className="flex flex-col">
+                <div className="flex flex-col border-r border-gray-200 pr-4">
                   <h2 className="font-semibold text-blue-900 mb-3">
                     Get recruiter's attention
                   </h2>
@@ -208,7 +211,8 @@ function Navbar() {
                     <li>Jobiffi Blogs</li>
                     <li>AI interview coach</li>
                     <li>News alert</li>
-                    <li>Events & Customer </li>
+                    <li>Events </li>
+                    <li>Customer Reviews</li>
                   </ul>
                 </div>
               </div>
