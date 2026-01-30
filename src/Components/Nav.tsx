@@ -57,7 +57,7 @@ function Navbar() {
                     <li>HR Jobs</li>
                     <li>Engineering Jobs</li>
                   </ul>
-                
+
                 </div>
                 <div className="border-r border-gray-200 pr-4">
                   <h2 className="font-semibold text-blue-900 mb-3">
@@ -228,7 +228,7 @@ function Navbar() {
 
           <button
             onClick={() => navigate('/register')}
-            className="cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-gradient-to-r from-blue-800 via-blue-900 to-blue-900 text-white font-semibold"
+            className="cursor-pointer px-3  py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-gradient-to-r from-blue-800 via-blue-900 to-blue-900 text-white font-semibold"
           >
             Register
           </button>
