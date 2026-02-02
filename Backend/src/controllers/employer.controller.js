@@ -1,70 +1,9 @@
-import bcrypt from "bcrypt";
-import Employer from "../models/Employer.model.js";
-import {
-  generateOTP,
-  sendOTPEmail,
-  sendVerificationSuccessEmail,
-} from "../utils/EmployerEmailService.js";
+import * as EmployerService from "../services/employer.service.js";
 
 export const registerEmployer = async (req, res) => {
   try {
-    const {
-      companyName,
-      email,
-      password,
-      contactPerson,
-      mobile,
-      companySize,
-      industry,
-      website,
-      address,
-      description,
-    } = req.body;
+    const employer = await EmployerService.registerEmployer(req.body);
 
-    // Normalize email
-    const normalizedEmail = email.trim().toLowerCase();
-
-    // Check if email already exists
-    const existingEmail = await Employer.findOne({ email: normalizedEmail });
-    if (existingEmail) {
-      return res.status(409).json({
-        success: false,
-        message: "Email already registered",
-      });
-    }
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Generate OTP
-    const otp = generateOTP();
-    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
-
-    // Create employer
-    const employer = await Employer.create({
-      companyName,
-      email: normalizedEmail,
-      password: hashedPassword,
-      contactPerson,
-      mobile,
-      companySize,
-      industry,
-      website,
-      address,
-      description,
-      emailVerificationOTP: otp,
-      otpExpiry: otpExpiry,
-    });
-
-    // Send OTP email
-    const emailResult = await sendOTPEmail(normalizedEmail, otp, companyName);
-
-    if (!emailResult.success) {
-      // If email fails, still return success but notify about email issue
-      console.error("Failed to send OTP email:", emailResult.error);
-    }
-
-    // Return success response (excluding password and OTP)
     const employerResponse = {
       id: employer._id,
       companyName: employer.companyName,
@@ -86,35 +25,27 @@ export const registerEmployer = async (req, res) => {
     });
   } catch (error) {
     console.error("Employer registration error:", error);
-    return res.status(500).json({
+    const status = error.message === "Email already registered" ? 409 : 500;
+    return res.status(status).json({
       success: false,
-      message: "Server error during registration",
+      message: error.message || "Server error during registration",
     });
   }
 };
 
 export const getEmployerById = async (req, res) => {
   try {
-    const { id } = req.params;
-
-    const employer = await Employer.findById(id).select("-password");
-
-    if (!employer) {
-      return res.status(404).json({
-        success: false,
-        message: "Employer not found",
-      });
-    }
-
+    const employer = await EmployerService.getEmployerById(req.params.id);
     return res.status(200).json({
       success: true,
       data: employer,
     });
   } catch (error) {
     console.error("Get employer error:", error);
-    return res.status(500).json({
+    const status = error.message === "Employer not found" ? 404 : 500;
+    return res.status(status).json({
       success: false,
-      message: "Server error",
+      message: error.message || "Server error",
     });
   }
 };
@@ -122,149 +53,74 @@ export const getEmployerById = async (req, res) => {
 export const verifyEmailOTP = async (req, res) => {
   try {
     const { email, otp } = req.body;
-
-    if (!email || !otp) {
-      return res.status(400).json({
-        success: false,
-        message: "Email and OTP are required",
-      });
-    }
-
-    const normalizedEmail = email.trim().toLowerCase();
-
-    // Find employer by email
-    const employer = await Employer.findOne({ email: normalizedEmail });
-
-    if (!employer) {
-      return res.status(404).json({
-        success: false,
-        message: "Employer not found",
-      });
-    }
-
-    // Check if already verified
-    if (employer.isVerified) {
-      return res.status(400).json({
-        success: false,
-        message: "Email already verified",
-      });
-    }
-
-    // Check if OTP exists
-    if (!employer.emailVerificationOTP) {
-      return res.status(400).json({
-        success: false,
-        message: "No OTP found. Please request a new OTP.",
-      });
-    }
-
-    // Check if OTP has expired
-    if (new Date() > employer.otpExpiry) {
-      return res.status(400).json({
-        success: false,
-        message: "OTP has expired. Please request a new OTP.",
-      });
-    }
-
-    // Verify OTP
-    if (employer.emailVerificationOTP !== otp.trim()) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid OTP",
-      });
-    }
-
-    // Update employer as verified and clear OTP
-    employer.isVerified = true;
-    employer.emailVerificationOTP = null;
-    employer.otpExpiry = null;
-    await employer.save();
-
-    // Send verification success email
-    await sendVerificationSuccessEmail(normalizedEmail, employer.companyName);
+    const result = await EmployerService.verifyEmailOTP(email, otp);
 
     return res.status(200).json({
       success: true,
       message: "Email verified successfully",
       data: {
-        id: employer._id,
-        email: employer.email,
-        companyName: employer.companyName,
-        isVerified: employer.isVerified,
+        id: result._id,
+        email: result.email,
+        companyName: result.companyName,
+        isVerified: result.isVerified,
       },
     });
   } catch (error) {
     console.error("OTP verification error:", error);
-    return res.status(500).json({
+    const status =
+      error.message === "Employer not found"
+        ? 404
+        : error.message.includes("OTP") || error.message === "Email slightly verified"
+          ? 400
+          : 500;
+    return res.status(status).json({
       success: false,
-      message: "Server error during verification",
+      message: error.message || "Server error during verification",
     });
   }
 };
 
 export const resendOTP = async (req, res) => {
   try {
-    const { email } = req.body;
-
-    if (!email) {
-      return res.status(400).json({
-        success: false,
-        message: "Email is required",
-      });
-    }
-
-    const normalizedEmail = email.trim().toLowerCase();
-
-    // Find employer by email
-    const employer = await Employer.findOne({ email: normalizedEmail });
-
-    if (!employer) {
-      return res.status(404).json({
-        success: false,
-        message: "Employer not found",
-      });
-    }
-
-    // Check if already verified
-    if (employer.isVerified) {
-      return res.status(400).json({
-        success: false,
-        message: "Email already verified",
-      });
-    }
-
-    // Generate new OTP
-    const otp = generateOTP();
-    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
-
-    // Update employer with new OTP
-    employer.emailVerificationOTP = otp;
-    employer.otpExpiry = otpExpiry;
-    await employer.save();
-
-    // Send OTP email
-    const emailResult = await sendOTPEmail(
-      normalizedEmail,
-      otp,
-      employer.companyName,
-    );
-
-    if (!emailResult.success) {
-      return res.status(500).json({
-        success: false,
-        message: "Failed to send OTP email. Please try again.",
-      });
-    }
-
+    await EmployerService.resendOTP(req.body.email);
     return res.status(200).json({
       success: true,
       message: "OTP has been resent to your email",
     });
   } catch (error) {
     console.error("Resend OTP error:", error);
-    return res.status(500).json({
+    const status = error.message === "Employer not found" ? 404 : 400; // Approximate mapping
+    return res.status(status).json({
       success: false,
-      message: "Server error while resending OTP",
+      message: error.message || "Server error while resending OTP",
+    });
+  }
+};
+
+export const uploadLogo = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: "No file uploaded" });
+    }
+
+    // Assuming authentication middleware adds user/employer info to req.user or req.employer
+    // For now, passing ID via body or params if not authenticated, but ideally from token
+    // Let's assume ID is in params for simplicity or token
+    const { id } = req.params;
+
+    const result = await EmployerService.uploadLogo(id, req.file.path);
+
+    return res.status(200).json({
+      success: true,
+      message: "Logo uploaded successfully",
+      data: { logo: result.logo },
+    });
+  } catch (error) {
+    console.error("Upload Logo error:", error);
+    const status = error.message === "Employer not found" ? 404 : 500;
+    return res.status(status).json({
+      success: false,
+      message: error.message || "Server error during upload",
     });
   }
 };
