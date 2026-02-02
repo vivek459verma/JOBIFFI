@@ -3,31 +3,28 @@ import dotenv from "dotenv";
 import { otpTemplate } from "./emailTemplate.js";
 dotenv.config();
 
-const sendEmail = async (email, otp) => {
+const sendEmail = async (email, otp, name) => {
   try {
     const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || "mail.jobiffi.com", // Your custom server
-      port: process.env.EMAIL_PORT || 465, // Port from your screenshot
-      secure: true, // Must be true for Port 465
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      secure: true, 
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
-      // This helps with self-signed certificates common on cPanel hosts
-      tls: {
-        rejectUnauthorized: false
-      }
+      tls: { rejectUnauthorized: false }
     });
 
     await transporter.sendMail({
       from: `"Jobiffi Support" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Your OTP for logging in Jobiffi account",
-      text: `Dear Jobseeker, Your OTP is: ${otp}. Valid for 15 minutes.`,
-      html: otpTemplate(otp),
+      text: `Dear ${name || "Jobseeker"}, Your OTP is: ${otp}.`,
+      html: otpTemplate(otp, name),
     });
 
-    console.log(`✅ Email sent successfully to ${email}`);
+    console.log(`✅ Email sent successfully to ${name} (${email})`);
 
   } catch (error) {
     console.log("⚠️ EMAIL FAILED - USING DEV MODE ⚠️");

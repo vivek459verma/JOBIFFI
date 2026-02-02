@@ -58,18 +58,12 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   try {
-    const { identifier, password } = req.body;
+   const { email, password } = req.body;
 
-    // 1. Normalize Identifiers (Must match registration logic)
-    const cleanIdentifier = identifier.trim().toLowerCase();
+    const cleanEmail = email.trim().toLowerCase();
 
-    // 2. Check if user exists
-    const user = await User.findOne({
-      $or: [
-        { email: cleanIdentifier },
-        { mobile: cleanIdentifier }
-      ]
-    });
+    // CHANGE: Only search by Email
+    const user = await User.findOne({ email: cleanEmail });
 
     if (!user) {
       return res.status(400).json({
@@ -78,7 +72,7 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    // 3. Verify Password
+    // Verify Password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(400).json({
@@ -87,27 +81,22 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    // 4. Generate Token (The "Access Pass")
+    // Generate Token
     const token = jwt.sign(
-      { 
-        userId: user._id, 
-        email: user.email, 
-        workStatus: user.workStatus 
-      },
+      { userId: user._id, email: user.email, workStatus: user.workStatus },
       process.env.JWT_SECRET || "default_secret_key", 
-      { expiresIn: "7d" } // Token expires in 7 days
+      { expiresIn: "7d" }
     );
 
-    // 5. Send Response
     return res.status(200).json({
       success: true,
       message: "Login successful",
-      token, // Frontend needs this to stay logged in
+      token,
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
-        mobile: user.mobile,
+        mobile: user.mobile, // We still send it back, but we don't login with it
         workStatus: user.workStatus
       }
     });
@@ -121,6 +110,7 @@ export const loginUser = async (req, res) => {
   }
 };
 
+// --- NEW FUNCTION: 1. Send OTP ---
 export const sendOtp = async (req, res) => {
   try {
     const { email } = req.body;
@@ -139,7 +129,7 @@ export const sendOtp = async (req, res) => {
     await Otp.create({ email: normalizedEmail, otp: otpCode });
 
     // Send Email
-    await sendEmail(normalizedEmail, otpCode);
+    await sendEmail(normalizedEmail, otpCode ,user.name);
 
     res.status(200).json({ success: true, message: "OTP sent successfully" });
 
