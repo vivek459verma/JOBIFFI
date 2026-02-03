@@ -1,6 +1,15 @@
 import { useState, useRef } from "react";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 
+/* ===== IMAGE IMPORTS ===== */
+import edgeverveImg from "../../assets/media/edgeverve1.jpg";
+import sonataImg from "../../assets/media/sonata1.jpg";
+import genaiImg from "../../assets/media/genai1.jpg";
+import dataAnalystImg from "../../assets/media/data-analyst1.jpg";
+import interviewImg from "../../assets/media/interview1.jpg";
+import llmImg from "../../assets/media/llm1.jpg";
+import eventsSwipeImg from "../../assets/media/eventsSwipe.png";
+
 /* ===== TYPES ===== */
 
 interface EventItem {
@@ -16,10 +25,10 @@ interface EventItem {
 
 interface EventCardProps extends EventItem {}
 
-/* ===== CONSTANTS ===== */
+/* ===== CONSTANTS (NAUKRI MATCH) ===== */
 
 const CARD_WIDTH = 320;
-const CARD_GAP = 24;
+const CARD_GAP = 20;
 const STEP = CARD_WIDTH + CARD_GAP;
 const CARDS_PER_VIEW = 3;
 const ANIMATION_DURATION = 500;
@@ -27,8 +36,8 @@ const ANIMATION_DURATION = 500;
 /* ===== MAIN COMPONENT ===== */
 
 const UpcomingEvents = () => {
-  const [page, setPage] = useState<number>(0);
-  const isAnimatingRef = useRef<boolean>(false);
+  const [page, setPage] = useState(0);
+  const isAnimatingRef = useRef(false);
 
   const events: EventItem[] = [
     {
@@ -39,7 +48,7 @@ const UpcomingEvents = () => {
       enrolled: "459 Enrolled",
       badge: "Entry closes in 5d",
       action: "Job offer",
-      image: "/media/edgeverve1.jpg",
+      image: edgeverveImg,
     },
     {
       title: "Sonata Women-In-Tech Hackathon",
@@ -49,7 +58,7 @@ const UpcomingEvents = () => {
       enrolled: "908 Enrolled",
       badge: "Entry closes in 3d",
       action: "Job offer",
-      image: "/media/sonata1.jpg",
+      image: sonataImg,
     },
     {
       title: "Top GenAI Skills to crack 30 LPA+",
@@ -59,7 +68,7 @@ const UpcomingEvents = () => {
       enrolled: "261 Enrolled",
       badge: "Webinar",
       action: "Learn from experts",
-      image: "/media/genai1.jpg",
+      image: genaiImg,
     },
     {
       title: "Zero to Data Analyst Roadmap",
@@ -69,7 +78,7 @@ const UpcomingEvents = () => {
       enrolled: "581 Enrolled",
       badge: "Entry closes in 1d",
       action: "Learn from experts",
-      image: "/media/data-analyst1.jpg",
+      image: dataAnalystImg,
     },
     {
       title: "Amazon & Google Interview Prep",
@@ -79,7 +88,7 @@ const UpcomingEvents = () => {
       enrolled: "261 Enrolled",
       badge: "Webinar",
       action: "Learn from experts",
-      image: "/media/interview1.jpg",
+      image: interviewImg,
     },
     {
       title: "GenAI Projects for 25+ LPA",
@@ -89,11 +98,11 @@ const UpcomingEvents = () => {
       enrolled: "62 Enrolled",
       badge: "Entry closes in 1d",
       action: "Learn from experts",
-      image: "/media/llm1.jpg",
+      image: llmImg,
     },
   ];
 
-  const maxPage: number = Math.max(0, events.length - CARDS_PER_VIEW);
+  const maxPage = Math.max(0, events.length - CARDS_PER_VIEW);
 
   const goToPage = (nextPage: number) => {
     if (isAnimatingRef.current) return;
@@ -103,20 +112,32 @@ const UpcomingEvents = () => {
   };
 
   return (
-    <section className="px-6 py-16 bg-blue-50">
+    <section className="px-6 py-24 bg-blue-50">
       <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col md:flex-row gap-12">
+        <div className="flex flex-col md:flex-row gap-16 items-start">
 
-          <div className="md:w-1/3">
-            <h2 className="text-3xl font-bold text-gray-900">
-              Upcoming events and <br /> challenges
+          {/* LEFT */}
+          <div className="md:w-1/3 flex flex-col gap-6 mt-12">
+            <h2 className="text-3xl font-bold text-gray-900 leading-tight">
+              <span className="block whitespace-nowrap">Upcoming events</span>
+              <span className="block">and challenges</span>
             </h2>
+
+            {/* CENTERED ILLUSTRATION */}
+            <div className="flex justify-center">
+              <img
+                src={eventsSwipeImg}
+                alt="Upcoming events illustration"
+                className="w-44 opacity-90 hidden md:block"
+              />
+            </div>
           </div>
 
-          <div className="relative w-[1008px]">
+          {/* RIGHT */}
+          <div className="relative w-[1020px] mt-8">
             <div className="overflow-hidden">
               <div
-                className="flex gap-6 transition-transform duration-500 ease-in-out will-change-transform"
+                className="flex gap-5 pl-[68px] transition-transform duration-500 ease-in-out"
                 style={{ transform: `translate3d(-${page * STEP}px,0,0)` }}
               >
                 {events.map((event, index) => (
@@ -128,7 +149,7 @@ const UpcomingEvents = () => {
             {page > 0 && (
               <button
                 onClick={() => goToPage(page - 1)}
-                className="absolute -left-5 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow"
+                className="absolute -left-6 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow"
               >
                 <AiOutlineLeft />
               </button>
@@ -137,7 +158,7 @@ const UpcomingEvents = () => {
             {page < maxPage && (
               <button
                 onClick={() => goToPage(page + 1)}
-                className="absolute -right-5 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow"
+                className="absolute -right-6 top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow"
               >
                 <AiOutlineRight />
               </button>
@@ -153,8 +174,8 @@ const UpcomingEvents = () => {
                 />
               ))}
             </div>
-
           </div>
+
         </div>
       </div>
     </section>
@@ -176,56 +197,39 @@ const EventCard = ({
   image,
 }: EventCardProps) => {
   return (
-    <div className="relative min-w-[320px] max-w-[320px] bg-white rounded-2xl shadow overflow-hidden border border-gray-100">
-
-      <span className="absolute -left-2 top-1/2 h-4 w-4 bg-blue-50 rounded-full z-10" />
-      <span className="absolute -right-2 top-1/2 h-4 w-4 bg-blue-50 rounded-full z-10" />
-
-      <div className="relative h-40 overflow-hidden rounded-t-2xl">
-        <img
-          src={image}
-          srcSet={`${image} 1x, ${image} 2x`}
-          sizes="(min-width: 1024px) 320px, 100vw"
-          alt={title}
-          loading="eager"
-          decoding="sync"
-          className="w-full h-full object-cover contrast-110 saturate-110"
-          style={{
-            imageRendering: "auto",
-            transform: "translate3d(0,0,0)",
-            backfaceVisibility: "hidden",
-          }}
-        />
-
-        <span className="absolute top-3 left-3 bg-white/90 text-gray-800 text-xs px-3 py-1 rounded-full">
+    <div className="relative min-w-[300px] max-w-[300px] h-[380px] bg-white rounded-xl shadow border border-gray-100 flex flex-col">
+      <div className="relative h-32 overflow-hidden rounded-t-xl">
+        <img src={image} alt={title} className="w-full h-full object-cover" />
+        <span className="absolute top-2 left-2 bg-white/90 text-gray-800 text-[11px] px-3 py-1 rounded-full">
           {badge}
         </span>
       </div>
 
-      <div className="p-5 space-y-3">
-        <h3 className="font-semibold">{title}</h3>
-        <p className="text-sm text-gray-500">{org}</p>
+      <div className="px-3 pt-2 pb-1 flex flex-col gap-1.5">
+        <h3 className="font-semibold text-sm leading-tight">{title}</h3>
+        <p className="text-[11px] text-gray-500">{org}</p>
 
-        <div className="flex flex-wrap gap-2">
-          {tags.map((tag: string) => (
-            <span key={tag} className="text-xs border px-2 py-1 rounded-full">
+        <div className="flex flex-wrap gap-1">
+          {tags.map((tag) => (
+            <span
+              key={tag}
+              className="text-[10.5px] border px-2 py-[1px] rounded-full"
+            >
               {tag}
             </span>
           ))}
         </div>
 
-        <div className="flex justify-between text-sm text-gray-500">
+        <div className="flex justify-between text-[11px] text-gray-500 mt-0.5">
           <span>{date}</span>
           <span>{enrolled}</span>
         </div>
+      </div>
 
-        <hr className="border-gray-200" />
-
-        <div className="flex justify-between pt-2">
-          <span className="text-purple-600 text-sm">{action}</span>
-          <span className="text-blue-600 text-sm">View details</span>
-        </div>
+      <div className="mt-auto px-3 py-2 border-t border-gray-200 flex justify-between items-center">
+        <span className="text-purple-600 text-xs">{action}</span>
+        <span className="text-blue-600 text-xs font-medium">View details</span>
       </div>
     </div>
   );
-};  
+};
