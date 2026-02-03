@@ -2,15 +2,15 @@ import * as AuthService from "../services/auth.service.js";
 
 export const registerUser = async (req, res) => {
   try {
-    const user = await AuthService.registerUser(req.body);
+    await AuthService.registerUser(req.body);
     return res.status(201).json({
       success: true,
       message: "User registered successfully",
     });
   } catch (error) {
     console.error(error);
-    const status = error.message === "Email already registered" ? 409 : 400; // Map known errors
-    return res.status(status === 409 ? 409 : 500).json({ // Keep original error mapping logic loosely
+    const status = error.message === "Email already registered" ? 409 : 500;
+    return res.status(status).json({
       success: false,
       message: error.message || "Server error",
     });
@@ -20,7 +20,9 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   try {
     const { identifier, password } = req.body;
-    const { token, refreshToken, user } = await AuthService.loginUser(identifier, password);
+
+    const { token, refreshToken, user } =
+      await AuthService.loginUser(identifier, password);
 
     return res.status(200).json({
       success: true,
@@ -48,18 +50,26 @@ export const loginUser = async (req, res) => {
 export const sendOtp = async (req, res) => {
   try {
     await AuthService.sendOtp(req.body.email);
-    res.status(200).json({ success: true, message: "OTP sent successfully" });
+    res.status(200).json({
+      success: true,
+      message: "OTP sent successfully",
+    });
   } catch (error) {
     console.error(error);
     const status = error.message === "User not found" ? 404 : 500;
-    res.status(status).json({ success: false, message: error.message || "Failed to send OTP" });
+    res.status(status).json({
+      success: false,
+      message: error.message || "Failed to send OTP",
+    });
   }
 };
 
 export const loginWithOtp = async (req, res) => {
   try {
     const { email, otp } = req.body;
-    const { token, refreshToken, user } = await AuthService.loginWithOtp(email, otp);
+
+    const { token, refreshToken, user } =
+      await AuthService.loginWithOtp(email, otp);
 
     res.status(200).json({
       success: true,
@@ -76,16 +86,22 @@ export const loginWithOtp = async (req, res) => {
     });
   } catch (error) {
     const status = error.message === "Invalid or expired OTP" ? 400 : 500;
-    res.status(status).json({ success: false, message: error.message || "Server error" });
+    res.status(status).json({
+      success: false,
+      message: error.message || "Server error",
+    });
   }
 };
 
 export const changePassword = async (req, res) => {
   try {
-    const { userId, oldPassword, newPassword } = req.body; // Assuming userId is passed or attached
-    // Ideally userId comes from req.user set by auth middleware
+    const { userId, oldPassword, newPassword } = req.body;
 
-    await AuthService.changePassword(userId, oldPassword, newPassword);
+    await AuthService.changePassword(
+      userId,
+      oldPassword,
+      newPassword
+    );
 
     res.status(200).json({
       success: true,
@@ -94,6 +110,9 @@ export const changePassword = async (req, res) => {
   } catch (error) {
     console.error("Change Password Error:", error);
     const status = error.message === "Invalid old password" ? 400 : 500;
-    res.status(status).json({ success: false, message: error.message || "Server error" });
+    res.status(status).json({
+      success: false,
+      message: error.message || "Server error",
+    });
   }
 };
