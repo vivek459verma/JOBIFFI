@@ -1,7 +1,9 @@
 import "./App.css";
 import { getServerResponse } from "./api/serverApi";
 import { useState, useEffect } from "react";
-import Login from "./components/login"; // <--- Import the Login Popup
+import Login from "./components/login";
+import { Routes, Route } from "react-router-dom"; // Import Router components
+import ResetPassword from "./pages/ResetPassword"; // Import the Reset Page
 
 function App() {
   // 1. State for Server Message
@@ -20,37 +22,46 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      
-      {/* --- NAVBAR --- */}
-      <nav className="bg-white shadow-md p-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold text-blue-600">Jobiffi</h1>
+      <Routes>
         
-        {/* LOGIN BUTTON */}
-        <button 
-          onClick={() => setIsLoginOpen(true)} // Opens the popup
-          className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
-        >
-          Login
-        </button>
-      </nav>
+        {/* --- ROUTE 1: HOME PAGE (Dashboard/Landing) --- */}
+        <Route path="/" element={
+          <>
+            {/* Navbar */}
+            <nav className="bg-white shadow-md p-4 flex justify-between items-center">
+              <h1 className="text-xl font-bold text-blue-600">Jobiffi</h1>
+              
+              {/* LOGIN BUTTON */}
+              <button 
+                onClick={() => setIsLoginOpen(true)} 
+                className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
+              >
+                Login
+              </button>
+            </nav>
 
-      {/* --- MAIN CONTENT (Your existing server check) --- */}
-      <div className="flex items-center justify-center h-[80vh]">
-        <div className="bg-white p-8 rounded-lg shadow-md text-center">
-          <p className="text-gray-500 mb-2">Server Status:</p>
-          <h1 className="text-2xl font-bold text-green-600">
-            {message}
-          </h1>
-        </div>
-      </div>
+            {/* Main Content (Server Status) */}
+            <div className="flex items-center justify-center h-[80vh]">
+              <div className="bg-white p-8 rounded-lg shadow-md text-center">
+                <p className="text-gray-500 mb-2">Server Status:</p>
+                <h1 className="text-2xl font-bold text-green-600">
+                  {message}
+                </h1>
+              </div>
+            </div>
 
-      {/* --- LOGIN POPUP --- */}
-      {/* This sits on top of everything when isOpen is true */}
-      <Login 
-        isOpen={isLoginOpen} 
-        onClose={() => setIsLoginOpen(false)} 
-      />
+            {/* Login Popup (Lives on the Home Page) */}
+            <Login 
+              isOpen={isLoginOpen} 
+              onClose={() => setIsLoginOpen(false)} 
+            />
+          </>
+        } />
 
+        {/* --- ROUTE 2: RESET PASSWORD PAGE --- */}
+        <Route path="/reset-password" element={<ResetPassword />} />
+
+      </Routes>
     </div>
   );
 }

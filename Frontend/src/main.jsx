@@ -7,8 +7,13 @@ import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 
-// Replace this with your actual Google Client ID from console.cloud.google.com
-const GOOGLE_CLIENT_ID = "YOUR_CLIENT_ID_HERE.apps.googleusercontent.com"; 
+// 2. Load the ID from the environment variable (Safe & Clean)
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+// Optional: Console log to verify it loaded correctly (Remove before production)
+if (!GOOGLE_CLIENT_ID) {
+  console.error("Missing Google Client ID! Check your .env file.");
+}
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

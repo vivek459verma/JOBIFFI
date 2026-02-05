@@ -127,6 +127,25 @@ export const otpTemplate = (otp, name) => {
   `;
 };
 
+export const resetPasswordTemplate = (link, name) => {
+  return `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+      <h2 style="color: #0033cc; text-align: center;">Reset Your Password</h2>
+      <p>Dear ${name || "User"},</p>
+      <p>We received a request to reset your password for your Jobiffi account.</p>
+      <p>Please click the button below to proceed. This link is valid for 15 minutes.</p>
+      
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${link}" style="background-color: #0033cc; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">Reset Password</a>
+      </div>
+      
+      <p>If the button doesn't work, copy and paste this link into your browser:</p>
+      <p style="color: #555; word-break: break-all;">${link}</p>
+      
+      <p style="color: #999; font-size: 12px; margin-top: 20px;">If you did not request this, please ignore this email.</p>
+    </div>
+  `;
+};
 export const verificationSuccessTemplate = (companyName) => {
   return `
     <!DOCTYPE html>
