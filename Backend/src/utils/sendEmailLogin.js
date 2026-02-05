@@ -16,12 +16,20 @@ const sendEmail = async (email, otp, name) => {
       tls: { rejectUnauthorized: false }
     });
 
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const resetLink = `${frontendUrl}/reset-password?email=${email}`;
+
     await transporter.sendMail({
       from: `"Jobiffi Support" <${process.env.EMAIL_USER}>`,
       to: email,
-      subject: "Your OTP for logging in Jobiffi account",
-      text: `Dear ${name || "Jobseeker"}, Your OTP is: ${otp}.`,
-      html: otpTemplate(otp, name),
+      subject: "Jobiffi Login/Reset OTP",
+      text: `Dear Jobseeker, Your OTP is: ${otp}. Valid for 15 minutes.`,
+      html: `
+        ${otpTemplate(otp)}
+        <br/><br/>
+        <p>If you requested a password reset, click here:</p>
+        <a href="${resetLink}" style="background:#4CAF50;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;">Reset Password</a>
+      `,
     });
 
     console.log(`✅ Email sent successfully to ${name} (${email})`);

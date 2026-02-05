@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 const employerSchema = new mongoose.Schema(
   {
@@ -76,6 +77,16 @@ const employerSchema = new mongoose.Schema(
 );
 
 // Index for faster email lookups
-employerSchema.index({ email: 1 });
+// Index for faster email lookups - Removed duplicate (unique: true handles this)
+// employerSchema.index({ email: 1 });
+
+employerSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
+  this.password = await bcrypt.hash(this.password, 10);
+});
+
+employerSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
 export default mongoose.model("Employer", employerSchema);

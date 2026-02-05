@@ -1,2 +1,17 @@
+# Dependencies
 node_modules/
 .env
+
+# Utility & Test Scripts (Backend)
+Backend/setup_ethereal.js
+Backend/check_email.js
+Backend/fix_indexes.js
+Backend/verify_auth.js
+Backend/verify_full.js
+Backend/check_*.js
+Backend/fix_*.js
+Backend/verify_*.js
+npm-debug.log
+
+# User uploads
+Backend/uploads/

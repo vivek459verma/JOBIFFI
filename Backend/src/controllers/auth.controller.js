@@ -1,111 +1,49 @@
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import User from "../models/User.model.js";
-import Otp from "../models/Otp.model.js";
-import sendEmail from "../utils/sendEmailLogin.js";
-
+import * as AuthService from "../services/auth.service.js";
+import { generateTokens } from "../utils/generateTokens.js";
 
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password, mobile, workStatus } = req.body;
-
-    console.log("RAW workStatus:", workStatus);
-
-    const normalizedEmail = email.trim().toLowerCase();
-    const normalizedWorkStatus = workStatus.trim().toLowerCase();
-
-    const existingUser = await User.findOne({ email: normalizedEmail });
-    if (existingUser) {
-      return res.status(409).json({
-        success: false,
-        message: "Email already registered",
-      });
-    }
-
-    console.log("NORMALIZED workStatus:", normalizedWorkStatus);
-
-    const allowedStatus = ["fresher", "experienced"];
-
-    if (!allowedStatus.includes(normalizedWorkStatus)) {
-        return res.status(400).json({
-            success: false,
-            message: "Invalid work status",
-        });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    await User.create({
-      name,
-      email: normalizedEmail,
-      password: hashedPassword,
-      mobile,
-      workStatus: normalizedWorkStatus,
-    });
-
+    await AuthService.registerUser(req.body);
     return res.status(201).json({
       success: true,
       message: "User registered successfully",
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({
+    const status = error.message === "Email already registered" ? 409 : 500;
+    return res.status(status).json({
       success: false,
-      message: "Server error",
+      message: error.message || "Server error",
     });
   }
 };
 
 export const loginUser = async (req, res) => {
   try {
-   const { email, password } = req.body;
+    const { email, password } = req.body;
 
-    const cleanEmail = email.trim().toLowerCase();
-
-    // CHANGE: Only search by Email
-    const user = await User.findOne({ email: cleanEmail });
-
-    if (!user) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid credentials", 
-      });
-    }
-
-    // Verify Password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid Credentials",
-      });
-    }
-
-    // Generate Token
-    const token = jwt.sign(
-      { userId: user._id, email: user.email, workStatus: user.workStatus },
-      process.env.JWT_SECRET || "default_secret_key", 
-      { expiresIn: "7d" }
-    );
+    const { token, refreshToken, user } =
+      await AuthService.loginUser(email, password);
 
     return res.status(200).json({
       success: true,
       message: "Login successful",
       token,
+      refreshToken,
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
-        mobile: user.mobile, // We still send it back, but we don't login with it
-        workStatus: user.workStatus
-      }
+        mobile: user.mobile,
+        workStatus: user.workStatus,
+      },
     });
-
   } catch (error) {
     console.error("Login Error:", error);
-    return res.status(500).json({
+    const status = error.message === "Invalid credentials" ? 400 : 500;
+    return res.status(status).json({
       success: false,
-      message: "Server error during login",
+      message: error.message || "Server error during login",
     });
   }
 };
@@ -113,73 +51,118 @@ export const loginUser = async (req, res) => {
 // --- NEW FUNCTION: 1. Send OTP ---
 export const sendOtp = async (req, res) => {
   try {
-    const { email } = req.body;
-    const normalizedEmail = email.trim().toLowerCase();
-
-    // Check if user exists first
-    const user = await User.findOne({ email: normalizedEmail });
-    if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
-    }
-
-    // Generate 6-digit Code
-    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-
-    // Save to DB
-    await Otp.create({ email: normalizedEmail, otp: otpCode });
-
-    // Send Email
-    await sendEmail(normalizedEmail, otpCode ,user.name);
-
-    res.status(200).json({ success: true, message: "OTP sent successfully" });
-
+    await AuthService.sendOtp(req.body.email);
+    res.status(200).json({
+      success: true,
+      message: "OTP sent successfully",
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: "Failed to send OTP" });
+    const status = error.message === "User not found" ? 404 : 500;
+    res.status(status).json({
+      success: false,
+      message: error.message || "Failed to send OTP",
+    });
   }
 };
 
-// --- NEW FUNCTION: 2. Verify OTP & Login ---
 export const loginWithOtp = async (req, res) => {
   try {
     const { email, otp } = req.body;
-    const normalizedEmail = email.trim().toLowerCase();
 
-    // Find the OTP in database
-    const otpRecord = await Otp.findOne({ email: normalizedEmail, otp });
+    const { token, refreshToken, user } =
+      await AuthService.loginWithOtp(email, otp);
 
-    if (!otpRecord) {
-      return res.status(400).json({ success: false, message: "Invalid or expired OTP" });
-    }
-
-    // OTP is valid! Find user to get their details
-    const user = await User.findOne({ email: normalizedEmail });
-
-    // Generate Token (Same logic as password login)
-    const token = jwt.sign(
-      { userId: user._id, email: user.email, workStatus: user.workStatus },
-      process.env.JWT_SECRET || "default_secret_key",
-      { expiresIn: "7d" }
-    );
-
-    // Delete used OTP so it can't be reused
-    await Otp.deleteOne({ _id: otpRecord._id });
-
-    // Send Success Response
     res.status(200).json({
       success: true,
       message: "Login successful",
       token,
+      refreshToken,
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
         mobile: user.mobile,
-        workStatus: user.workStatus
-      }
+        workStatus: user.workStatus,
+      },
+    });
+  } catch (error) {
+    const status = error.message === "Invalid or expired OTP" ? 400 : 500;
+    res.status(status).json({
+      success: false,
+      message: error.message || "Server error",
+    });
+  }
+};
+
+export const changePassword = async (req, res) => {
+  try {
+    const { userId, oldPassword, newPassword } = req.body;
+
+    await AuthService.changePassword(
+      userId,
+      oldPassword,
+      newPassword
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Password changed successfully",
+    });
+  } catch (error) {
+    console.error("Change Password Error:", error);
+    const status = error.message === "Invalid old password" ? 400 : 500;
+    res.status(status).json({
+      success: false,
+      message: error.message || "Server error",
+    });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+    await AuthService.resetPassword(email, otp, newPassword);
+    res.status(200).json({
+      success: true,
+      message: "Password reset successful",
+    });
+  } catch (error) {
+    const status = error.message === "Invalid or expired OTP" ? 400 : 500;
+    res.status(status).json({
+      success: false,
+      message: error.message || "Server error",
+    });
+  }
+};
+
+export const getMe = async (req, res) => {
+  try {
+    const user = await AuthService.getProfile(req.user.userId);
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    res.status(404).json({ success: false, message: error.message });
+  }
+};
+
+export const googleAuthSuccess = async (req, res) => {
+  try {
+    const userId = req.query.id;
+    const user = await AuthService.getProfile(userId);
+
+    const { accessToken, refreshToken } = generateTokens({
+      userId: user._id,
+      email: user.email,
+      workStatus: user.workStatus || "fresher"
     });
 
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    res.redirect(`${frontendUrl}?accessToken=${accessToken}&refreshToken=${refreshToken}`);
   } catch (error) {
-    res.status(500).json({ success: false, message: "Server error" });
+    console.error("Google Auth Error:", error);
+    res.status(500).json({ success: false, message: "Google Auth Failed" });
   }
 };
