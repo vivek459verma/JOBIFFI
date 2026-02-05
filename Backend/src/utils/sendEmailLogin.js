@@ -3,20 +3,17 @@ import dotenv from "dotenv";
 import { otpTemplate } from "./emailTemplate.js";
 dotenv.config();
 
-const sendEmail = async (email, otp) => {
+const sendEmail = async (email, otp, name) => {
   try {
     const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || "mail.jobiffi.com", // Your custom server
-      port: process.env.EMAIL_PORT || 465, // Port from your screenshot
-      secure: true, // Must be true for Port 465
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      secure: true, 
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
-      // This helps with self-signed certificates common on cPanel hosts
-      tls: {
-        rejectUnauthorized: false
-      }
+      tls: { rejectUnauthorized: false }
     });
 
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
@@ -35,7 +32,7 @@ const sendEmail = async (email, otp) => {
       `,
     });
 
-    console.log(`✅ Email sent successfully to ${email}`);
+    console.log(`✅ Email sent successfully to ${name} (${email})`);
 
   } catch (error) {
     console.log("⚠️ EMAIL FAILED - USING DEV MODE ⚠️");

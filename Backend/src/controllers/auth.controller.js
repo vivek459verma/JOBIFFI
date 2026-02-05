@@ -48,6 +48,7 @@ export const loginUser = async (req, res) => {
   }
 };
 
+// --- NEW FUNCTION: 1. Send OTP ---
 export const sendOtp = async (req, res) => {
   try {
     await AuthService.sendOtp(req.body.email);
