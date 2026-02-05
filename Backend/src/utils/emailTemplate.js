@@ -1,4 +1,4 @@
-export const otpTemplate = (otp) => {
+export const otpTemplate = (otp, name) => {
   return `
     <!DOCTYPE html>
     <html>
@@ -81,11 +81,11 @@ export const otpTemplate = (otp) => {
     <body>
       <div class="container">
         <div class="header">
-           <a href="#" style="font-size: 28px; font-weight: bold; color: #ffffff !important; text-decoration: none; display: inline-block;">Jobiffi</a>
+          <a href="#" style="font-size: 28px; font-weight: bold; color: #ffffff !important; text-decoration: none; display: inline-block;">Jobiffi</a>
         </div>
 
         <div class="content">
-          <div class="greeting">Dear Jobseeker,</div>
+          <div class="greeting">Dear ${name || "Jobseeker"},</div>
           
           <p>Please enter the OTP below to login to your Jobiffi account.</p>
           
@@ -100,9 +100,14 @@ export const otpTemplate = (otp) => {
           <p>Good luck for your Job Search!</p>
 
           <div class="app-links">
-             <p style="font-size: 14px; color: #555;">Enjoy personalized job searching experience</p>
-             <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store">
-             <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play">
+            <p style="font-size: 14px; color: #555;">Enjoy personalized job searching experience</p>
+            <a href="#">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Download_on_the_App_Store_Badge.svg/320px-Download_on_the_App_Store_Badge.svg.png" alt="Download on App Store">
+            </a>
+            
+            <a href="#">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Play_Store_badge_EN.svg/320px-Google_Play_Store_badge_EN.svg.png" alt="Get it on Google Play">
+            </a>
           </div>
         </div>
 
