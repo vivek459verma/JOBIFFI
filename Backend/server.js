@@ -2,16 +2,17 @@ import express from "express";
 import cors from "cors";
 import connectDB from "./src/config/mongo.config.js";
 import authRoutes from "./src/routes/auth.routes.js";
+import employerRoutes from "./src/routes/employer.routes.js";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 
 app.use(
   cors({
-    origin: "http://localhost:5173", 
+    origin: process.env.FRONTEND_URL,
     credentials: true, // Allow credentials
   }),
 );
@@ -21,7 +22,10 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.send("jobiffi backend is running!");
 });
+
+// Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/employer", employerRoutes);
 
 // error handler
 app.use((err, req, res, next) => {
