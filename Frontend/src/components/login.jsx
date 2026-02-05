@@ -6,11 +6,13 @@ import { GoogleLogin } from "@react-oauth/google";
 const Login = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
 
-  // State Management
-  const [isOtpLogin, setIsOtpLogin] = useState(false); // Default is Password Login
-  const [step, setStep] = useState(1); // For OTP flow
+  // State: 'password' | 'otp' | 'forgot'
+  const [view, setView] = useState("password");
+  const [step, setStep] = useState(1); // 1=Send OTP, 2=Verify OTP
+  
   const [formData, setFormData] = useState({ email: "", password: "", otp: "" });
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
@@ -19,7 +21,14 @@ const Login = ({ isOpen, onClose }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // --- API HANDLERS ---
+  const handleSwitchTab = (newView) => {
+    setView(newView);
+    setError("");
+    setMessage("");
+    setStep(1);
+  };
+
+  // --- API HANDLERS (Same as before) ---
   const handleLoginSuccess = (data) => {
     if (data.success) {
       localStorage.setItem("token", data.token);
@@ -78,86 +87,144 @@ const Login = ({ isOpen, onClose }) => {
     } finally { setLoading(false); }
   };
 
+  // Dummy Forgot Password Handler (Until backend is ready)
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+        setMessage("Reset link sent! Check your email.");
+        setLoading(false);
+    }, 1000);
+  };
+
+
   return (
     <div style={styles.overlay}>
       <div style={styles.modal}>
+        {/* Close Button */}
         <button onClick={onClose} style={styles.closeButton}>&times;</button>
 
-        <h2 style={styles.title}>
-          {isOtpLogin ? "Login via OTP" : "Login to Jobiffi"}
-        </h2>
+        <h2 style={styles.title}>Login to Jobiffi</h2>
 
-        {/* Google Login (Only show on Password Screen) */}
-        {!isOtpLogin && (
-          <>
-            <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
-              <GoogleLogin onSuccess={handleGoogleSuccess} onError={() => setError("Failed")} width="100%" />
+        {/* 1. GOOGLE LOGIN AT TOP */}
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
+            <GoogleLogin 
+                onSuccess={handleGoogleSuccess} 
+                onError={() => setError("Google Login Failed")}
+                width="100%"
+                text="signin_with"
+                shape="rectangular"
+            />
+        </div>
+
+        <div style={styles.divider}>OR</div>
+
+        {/* 2. TABS (Password | OTP) */}
+        <div style={styles.tabHeader}>
+            <div 
+                style={view === "password" || view === "forgot" ? styles.activeTab : styles.tab}
+                onClick={() => handleSwitchTab("password")}
+            >
+                Password
             </div>
-            <div style={styles.divider}>OR</div>
-          </>
-        )}
+            <div 
+                style={view === "otp" ? styles.activeTab : styles.tab}
+                onClick={() => handleSwitchTab("otp")}
+            >
+                OTP
+            </div>
+        </div>
 
+        {/* Error / Success Messages */}
         {error && <div style={styles.error}>{error}</div>}
+        {message && <div style={styles.success}>{message}</div>}
 
-        {/* --- FORM AREA --- */}
-        <form onSubmit={!isOtpLogin ? handlePasswordLogin : (step === 1 ? sendOtp : verifyOtp)}>
-          
-          {/* EMAIL INPUT (Shared) */}
-          <input 
-            type="email" name="email" placeholder="Email Address" 
-            value={formData.email} onChange={handleChange} 
-            style={styles.input} required disabled={step === 2 && isOtpLogin}
-          />
-          
-          {/* PASSWORD MODE */}
-          {!isOtpLogin ? (
-            <>
-              <input 
-                type="password" name="password" placeholder="Password" 
-                value={formData.password} onChange={handleChange} 
-                style={styles.input} required 
-              />
-              
-              {/* SWITCH TO OTP LINK */}
-              <div style={{ textAlign: "right", marginBottom: "15px" }}>
-                <span 
-                  style={styles.link} 
-                  onClick={() => { setIsOtpLogin(true); setStep(1); setError(""); }}
-                >
-                  Login with OTP
-                </span>
-              </div>
-            </>
-          ) : (
-            /* OTP MODE */
-            <>
-              {step === 2 && (
-                <input 
-                  type="text" name="otp" placeholder="Enter 6-digit OTP" 
-                  value={formData.otp} onChange={handleChange} 
-                  style={styles.input} required 
-                />
-              )}
-            </>
-          )}
+        {/* --- FORM CONTENT --- */}
+        <div style={styles.formContent}>
+            
+            {/* VIEW: PASSWORD */}
+            {(view === "password") && (
+                <form onSubmit={handlePasswordLogin}>
+                    <input 
+                        type="email" name="email" placeholder="Email Address" 
+                        value={formData.email} onChange={handleChange} 
+                        style={styles.input} required 
+                    />
+                    <input 
+                        type="password" name="password" placeholder="Password" 
+                        value={formData.password} onChange={handleChange} 
+                        style={styles.input} required 
+                    />
+                    
+                    {/* Forgot Password Link - RIGHT ALIGNED */}
+                    <div style={{textAlign: "right", marginBottom: "20px"}}>
+                         <span style={styles.link} onClick={() => setView("forgot")}>
+                            Forgot Password?
+                         </span>
+                    </div>
 
-          {/* SUBMIT BUTTON */}
-          <button type="submit" style={styles.button} disabled={loading}>
-            {loading ? "Processing..." : (!isOtpLogin ? "Login" : (step === 1 ? "Send OTP" : "Verify & Login"))}
-          </button>
-        </form>
+                    <button type="submit" style={styles.button} disabled={loading}>
+                        {loading ? "Logging in..." : "Login"}
+                    </button>
+                </form>
+            )}
 
-        {/* FOOTER LINKS */}
-        <div style={{ marginTop: "20px" }}>
-          {isOtpLogin ? (
-            <p style={styles.backLink} onClick={() => setIsOtpLogin(false)}>
-              &larr; Back to Password Login
-            </p>
-          ) : (
-            <p style={{ fontSize: "14px", color: "#666" }}>
-              Don't have an account? <span style={{color: "#0033cc", cursor: "pointer", fontWeight: "bold"}}>Register</span>
-            </p>
-          )}
+            {/* VIEW: OTP */}
+            {view === "otp" && (
+                <form onSubmit={step === 1 ? sendOtp : verifyOtp}>
+                    <input 
+                        type="email" name="email" placeholder="Email Address" 
+                        value={formData.email} onChange={handleChange} 
+                        style={styles.input} required disabled={step === 2}
+                    />
+                    
+                    {step === 2 && (
+                         <input 
+                            type="text" name="otp" placeholder="Enter 6-digit OTP" 
+                            value={formData.otp} onChange={handleChange} 
+                            style={styles.input} required 
+                        />
+                    )}
+
+                    <button type="submit" style={styles.button} disabled={loading}>
+                        {loading ? "Processing..." : (step === 1 ? "Send OTP" : "Verify & Login")}
+                    </button>
+                    
+                    {step === 2 && (
+                        <p style={{marginTop: "10px", fontSize: "13px", color: "#666", cursor: "pointer"}} onClick={() => setStep(1)}>
+                            Resend OTP?
+                        </p>
+                    )}
+                </form>
+            )}
+
+            {/* VIEW: FORGOT PASSWORD */}
+            {view === "forgot" && (
+                <form onSubmit={handleForgotPassword}>
+                    <p style={{marginBottom: "15px", color: "#666", fontSize: "14px"}}>
+                        Enter your email to receive a reset link.
+                    </p>
+                    <input 
+                        type="email" name="email" placeholder="Enter your email" 
+                        value={formData.email} onChange={handleChange} 
+                        style={styles.input} required 
+                    />
+                    <button type="submit" style={styles.button} disabled={loading}>
+                        {loading ? "Sending..." : "Send Reset Link"}
+                    </button>
+                    
+                    <p style={styles.backLink} onClick={() => setView("password")}>
+                        Back to Login
+                    </p>
+                </form>
+            )}
+
+        </div>
+
+        {/* Footer */}
+        <div style={{ marginTop: "25px", fontSize: "14px", color: "#666" }}>
+            Don't have an account? <span style={{color: "#0033cc", cursor: "pointer", fontWeight: "bold"}}>Register</span>
         </div>
 
       </div>
@@ -165,7 +232,7 @@ const Login = ({ isOpen, onClose }) => {
   );
 };
 
-// --- UPDATED STYLES ---
+// --- STYLES ---
 const styles = {
   overlay: {
     position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
@@ -176,36 +243,67 @@ const styles = {
   },
   modal: {
     backgroundColor: "white", 
-    padding: "40px", // Increased Padding
-    borderRadius: "12px",
-    width: "500px", // Increased Width (Bigger)
+    padding: "40px", 
+    borderRadius: "16px",
+    width: "450px", 
     maxWidth: "90%", 
     position: "relative",
     boxShadow: "0 10px 30px rgba(0,0,0,0.3)", 
     textAlign: "center",
-    animation: "fadeIn 0.3s ease-in-out"
+    animation: "fadeIn 0.3s ease-in-out",
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
   },
   closeButton: {
     position: "absolute", top: "15px", right: "20px",
-    background: "none", border: "none", fontSize: "32px", cursor: "pointer", color: "#999",
+    background: "none", border: "none", fontSize: "28px", cursor: "pointer", color: "#999",
   },
-  title: { marginBottom: "25px", color: "#333", fontSize: "26px", fontWeight: "bold" },
-  divider: { margin: "20px 0", color: "#aaa", fontSize: "13px", fontWeight: "bold" },
+  title: { marginBottom: "25px", color: "#333", fontSize: "24px", fontWeight: "600" },
+  divider: { margin: "20px 0", color: "#aaa", fontSize: "12px", fontWeight: "bold", textTransform: "uppercase" },
+  
+  // TABS STYLING
+  tabHeader: {
+    display: "flex",
+    borderBottom: "1px solid #ddd",
+    marginBottom: "25px"
+  },
+  tab: {
+    flex: 1,
+    padding: "12px",
+    cursor: "pointer",
+    color: "#666",
+    fontWeight: "600",
+    borderBottom: "2px solid transparent",
+    transition: "all 0.3s"
+  },
+  activeTab: {
+    flex: 1,
+    padding: "12px",
+    cursor: "pointer",
+    color: "#0033cc",
+    fontWeight: "bold",
+    borderBottom: "2px solid #0033cc" // Blue underline
+  },
+
+  formContent: {
+    textAlign: "left"
+  },
   input: { 
-    width: "100%", padding: "14px", marginBottom: "15px", 
-    border: "1px solid #ccc", borderRadius: "8px", 
-    boxSizing: "border-box", fontSize: "15px", outline: "none"
+    width: "100%", padding: "12px 15px", marginBottom: "15px", 
+    border: "1px solid #ddd", borderRadius: "8px", 
+    boxSizing: "border-box", fontSize: "15px", outline: "none",
+    transition: "border 0.2s"
   },
   button: { 
     width: "100%", padding: "14px", 
     backgroundColor: "#0033cc", color: "white", 
     border: "none", borderRadius: "8px", 
     cursor: "pointer", fontWeight: "bold", fontSize: "16px",
-    marginTop: "10px"
+    boxShadow: "0 4px 6px rgba(0, 51, 204, 0.2)"
   },
-  error: { color: "#d9534f", backgroundColor: "#fdeaed", padding: "10px", borderRadius: "5px", marginBottom: "15px", fontSize: "13px" },
-  link: { color: "#0033cc", cursor: "pointer", fontSize: "14px", fontWeight: "600", textDecoration: "none" },
-  backLink: { color: "#666", cursor: "pointer", fontSize: "14px", marginTop: "10px" }
+  error: { color: "#d9534f", backgroundColor: "#fdeaed", padding: "10px", borderRadius: "5px", marginBottom: "15px", fontSize: "13px", textAlign: "center" },
+  success: { color: "#155724", backgroundColor: "#d4edda", padding: "10px", borderRadius: "5px", marginBottom: "15px", fontSize: "13px", textAlign: "center" },
+  link: { color: "#0033cc", cursor: "pointer", fontSize: "13px", fontWeight: "600" },
+  backLink: { color: "#666", cursor: "pointer", fontSize: "14px", marginTop: "15px", textAlign: "center", display: "block" }
 };
 
 export default Login;
