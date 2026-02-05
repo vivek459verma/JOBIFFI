@@ -1,4 +1,5 @@
 import * as AuthService from "../services/auth.service.js";
+import { generateTokens } from "../utils/generateTokens.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -19,10 +20,10 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   try {
-    const { identifier, password } = req.body;
+    const { email, password } = req.body;
 
     const { token, refreshToken, user } =
-      await AuthService.loginUser(identifier, password);
+      await AuthService.loginUser(email, password);
 
     return res.status(200).json({
       success: true,
@@ -114,5 +115,53 @@ export const changePassword = async (req, res) => {
       success: false,
       message: error.message || "Server error",
     });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+    await AuthService.resetPassword(email, otp, newPassword);
+    res.status(200).json({
+      success: true,
+      message: "Password reset successful",
+    });
+  } catch (error) {
+    const status = error.message === "Invalid or expired OTP" ? 400 : 500;
+    res.status(status).json({
+      success: false,
+      message: error.message || "Server error",
+    });
+  }
+};
+
+export const getMe = async (req, res) => {
+  try {
+    const user = await AuthService.getProfile(req.user.userId);
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    res.status(404).json({ success: false, message: error.message });
+  }
+};
+
+export const googleAuthSuccess = async (req, res) => {
+  try {
+    const userId = req.query.id;
+    const user = await AuthService.getProfile(userId);
+
+    const { accessToken, refreshToken } = generateTokens({
+      userId: user._id,
+      email: user.email,
+      workStatus: user.workStatus || "fresher"
+    });
+
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    res.redirect(`${frontendUrl}?accessToken=${accessToken}&refreshToken=${refreshToken}`);
+  } catch (error) {
+    console.error("Google Auth Error:", error);
+    res.status(500).json({ success: false, message: "Google Auth Failed" });
   }
 };

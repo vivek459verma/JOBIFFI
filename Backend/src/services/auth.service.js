@@ -3,6 +3,12 @@ import User from "../models/User.model.js";
 import Otp from "../models/Otp.model.js";
 import sendEmail from "../utils/sendEmailLogin.js";
 
+export const getProfile = async (userId) => {
+    const user = await User.findById(userId).select("-password");
+    if (!user) throw new Error("User not found");
+    return user;
+};
+
 export const registerUser = async (data) => {
     const { name, email, password, mobile, workStatus } = data;
 
@@ -34,9 +40,7 @@ export const registerUser = async (data) => {
 export const loginUser = async (identifier, password) => {
     const cleanIdentifier = identifier.trim().toLowerCase();
 
-    const user = await User.findOne({
-        $or: [{ email: cleanIdentifier }, { mobile: cleanIdentifier }],
-    });
+    const user = await User.findOne({ email: cleanIdentifier });
 
     if (!user) {
         throw new Error("Invalid credentials");
@@ -128,3 +132,29 @@ export const changePassword = async (userId, oldPassword, newPassword) => {
 
     return true;
 };
+
+export const resetPassword = async (email, otp, newPassword) => {
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // 1. Verify OTP
+    const otpRecord = await Otp.findOne({ email: normalizedEmail, otp });
+    if (!otpRecord) {
+        throw new Error("Invalid or expired OTP");
+    }
+
+    // 2. Find User
+    const user = await User.findOne({ email: normalizedEmail });
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    // 3. Update Password
+    user.password = newPassword;
+    await user.save();
+
+    // 4. Delete OTP
+    await Otp.deleteOne({ _id: otpRecord._id });
+
+    return true;
+};
+

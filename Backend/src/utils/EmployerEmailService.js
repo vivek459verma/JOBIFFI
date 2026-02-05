@@ -31,11 +31,22 @@ export const sendOTPEmail = async (email, otp, companyName) => {
   try {
     const transporter = createTransporter();
 
+    // Construct Reset Link (Assuming this OTP is for reset flows too? Or should we distinguish?)
+    // User requested "link for changing password".
+    // Let's assume generic Verify/Reset link for now.
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const resetLink = `${frontendUrl}/reset-password?email=${email}`;
+
     const mailOptions = {
       from: `"Jobiffi" <${process.env.EMAIL_USER}>`,
       to: email,
-      subject: "Email Verification - Jobiffi",
-      html: otpTemplate(otp),
+      subject: "Email Verification / Password Reset - Jobiffi",
+      html: `
+        ${otpTemplate(otp)}
+        <br/><br/>
+        <p>Or click this link to reset your password directly:</p>
+        <a href="${resetLink}" style="background:#4A90E2;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;">Reset Password</a>
+      `,
     };
 
     const info = await transporter.sendMail(mailOptions);

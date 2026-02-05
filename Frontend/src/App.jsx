@@ -1,27 +1,19 @@
 import "./App.css";
-import { getServerResponse } from "./api/serverApi";
-import { useState, useEffect } from "react";
+import TestDashboard from './components/TestDashboard';
+import ResetPassword from './pages/ResetPassword';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
-  const [message, setMessage] = useState("Loading...");
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getServerResponse();
-      setMessage(data || "Failed to connect to server");
-    };
-    fetchData();
-  }, []);
-
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-blue-600 text-center">
-          {message}
-        </h1>
+    <BrowserRouter>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<TestDashboard />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+        </Routes>
       </div>
-    </div>
+    </BrowserRouter>
   );
 }
 
-export default App;
+export default App;;

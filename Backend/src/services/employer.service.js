@@ -1,4 +1,5 @@
 import Employer from "../models/Employer.model.js";
+import Otp from "../models/Otp.model.js";
 import {
     generateOTP,
     sendOTPEmail,
@@ -58,6 +59,12 @@ export const getEmployerById = async (id) => {
     if (!employer) {
         throw new Error("Employer not found");
     }
+    return employer;
+};
+
+export const getProfile = async (id) => {
+    const employer = await Employer.findById(id).select("-password");
+    if (!employer) throw new Error("Employer not found");
     return employer;
 };
 
@@ -128,6 +135,61 @@ export const resendOTP = async (email) => {
         throw new Error("Failed to send OTP email. Please try again.");
     }
 
+    return true;
+};
+
+export const loginEmployer = async (email, password) => {
+    const normalizedEmail = email.trim().toLowerCase();
+    const employer = await Employer.findOne({ email: normalizedEmail });
+
+    if (!employer) {
+        throw new Error("Invalid credentials");
+    }
+
+    const isMatch = await employer.matchPassword(password);
+    if (!isMatch) {
+        throw new Error("Invalid credentials");
+    }
+
+    return employer;
+};
+
+export const changePassword = async (employerId, oldPassword, newPassword) => {
+    const employer = await Employer.findById(employerId);
+    if (!employer) {
+        throw new Error("Employer not found");
+    }
+
+    const isMatch = await employer.matchPassword(oldPassword);
+    if (!isMatch) {
+        throw new Error("Invalid old password");
+    }
+
+    employer.password = newPassword; // Hook hashes it
+    await employer.save();
+    return true;
+};
+
+export const resetPassword = async (email, otp, newPassword) => {
+    // 1. Verify OTP (reuses same OTP model/logic as auth service, assuming generic Otp model)
+    // Actually, Otp model is shared.
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // Note: We need to import Otp model here if not present.
+    // Checking imports... yes, Otp is NOT imported in employer.service.js currently?
+    // Wait, verifyEmailOTP uses it? No, verifyEmailOTP calls Otp.findOne...
+    // Let me check imports first.
+
+    const otpRecord = await Otp.findOne({ email: normalizedEmail, otp });
+    if (!otpRecord) throw new Error("Invalid or expired OTP");
+
+    const employer = await Employer.findOne({ email: normalizedEmail });
+    if (!employer) throw new Error("Employer not found");
+
+    employer.password = newPassword;
+    await employer.save();
+
+    await Otp.deleteOne({ _id: otpRecord._id });
     return true;
 };
 

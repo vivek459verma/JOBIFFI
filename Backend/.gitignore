@@ -1,2 +1,16 @@
 node_modules/
 .env
+
+# Utility & Test Scripts
+setup_ethereal.js
+check_email.js
+fix_indexes.js
+verify_auth.js
+verify_full.js
+check_*.js
+fix_*.js
+verify_*.js
+npm-debug.log
+
+# User Content
+uploads/
