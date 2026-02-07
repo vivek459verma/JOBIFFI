@@ -1,3 +1,4 @@
+import img from "../../assets/media/img.jpeg"
 export default function AsideFooter() {
   return (
     <>
@@ -31,7 +32,8 @@ export default function AsideFooter() {
           </div>
         </div>
         <div className="md:w-1/2 flex justify-center ">
-            <img src="https://static.naukimg.com/s/0/0/i/download-app-link/MaskGroupOneTheme.png" alt="" className="h-60"/>
+            {/* <img src="https://static.naukimg.com/s/0/0/i/download-app-link/MaskGroupOneTheme.png" alt="" className="h-60"/> */}
+            <img src={img} alt="" className="h-60"/>
         </div>
       </div>
     </>

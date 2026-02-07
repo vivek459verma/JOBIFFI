@@ -24,7 +24,7 @@ const Register = () => {
                 <div className="max-w-6xl w-full flex flex-col md:flex-row gap-0 md:gap-32">
 
                     {/* Left Side - Form */}
-                    <div className="flex-1 max-w-2xl border border-dashed border-gray-300 rounded-2xl p-6 shadow-sm ">
+                    <div className="flex-1 max-w-2xl border border-dashed border-gray-300 rounded-2xl p-6 ml-4 shadow-sm ">
                         <h1 className="text-3xl font-bold text-gray-900 mb-1">Create your Jobiffi profile</h1>
                         <p className="text-gray-500 text-sm mb-6">Search & apply to jobs from India's No.1 Job Site</p>
 
@@ -286,7 +286,7 @@ const Register = () => {
                                 By clicking Register, you agree to the <a href="#" className="text-blue-600 hover:text-blue-500">Terms and Conditions</a> & <a href="#" className="text-blue-600 hover:text-blue-500">Privacy Policy</a> of Jobiffi.com
                             </p>
 
-                            <div className="pt-2">
+                            <div className="pt-2 flex justify-between">
                                 <button
                                     type="submit"
                                     disabled={!isChecked || !workStatus || (!!workStatus && !city)}
@@ -296,6 +296,7 @@ const Register = () => {
                                 >
                                     Register now
                                 </button>
+                                <button className="mt-2 text-sm text-blue-600 hover:text-blue-500 ml-15">Already have an account? Sign in</button>
                             </div>
                         </form>
                     </div>
@@ -303,22 +304,22 @@ const Register = () => {
                     {/* Right Side - Info Card */}
                     <div className="hidden md:flex flex-col w-[320px] shrink-0">
                         <div className="sticky top-28 p-6 bg-gradient-to-br from-blue-50 to-white rounded-3xl border border-blue-100 shadow-sm">
-                            <div className="h-36 w-36 mx-auto -mt-12 mb-4 bg-white rounded-full p-4 shadow-md border border-gray-100 flex items-center justify-center relative z-10">
-                                <img src={registerImg} alt="Illustration" className="w-full h-full object-contain" />
+                            <div className="h-40 w-40 mx-auto -mt-12 mb-4 bg-white rounded-full p-4 shadow-md border border-gray-100 flex items-center justify-center relative z-10">
+                                <img src={registerImg} alt="Illustration" className="w-full h-full mt-2 object-contain " />
                                 <div className="absolute -bottom-2 bg-blue-600 text-white text-[10px] uppercase font-bold px-3 py-1 rounded-full tracking-wider shadow-sm">Free</div>
                             </div>
 
                             <div className="text-center mb-6">
-                                <h3 className="font-bold text-gray-900 text-lg">Why Join Jobiffi?</h3>
+                                <h3 className="font-bold text-gray-900 text-lg">Register Now and get access to jobiffi</h3>
                                 <p className="text-xs text-gray-500 mt-1">Unlock your career potential today</p>
                             </div>
 
                             <ul className="space-y-3">
                                 {[
-                                    "Discover relevant jobs",
-                                    "Get recruiter visibility",
-                                    "Improve your resume",
-                                    "Grow your career"
+                                    "Vast job opportunities",
+                                    "Real time job alerts",
+                                    "Personalized recommendations",
+                                    "Enhance visibilty to employers",
                                 ].map((item, index) => (
                                     <li key={index} className="flex items-center gap-3 bg-white p-3 rounded-xl border border-blue-50 shadow-sm hover:shadow-md hover:border-blue-200 transition-all cursor-default group">
                                         <div className="bg-green-50 p-1.5 rounded-full text-green-600 transition-colors">

@@ -44,7 +44,7 @@ const experienceOptions = [
   "25+ Years",
 ];
 
-function MainHead() {
+export default function MainHead() {
   const [locationOpen, setLocationOpen] = useState(false);
   const [locationSearch, setLocationSearch] = useState("");
   const locationRef = useRef<HTMLDivElement | null>(null);
@@ -201,8 +201,10 @@ function MainHead() {
           </button>
         </div>
       </div>
+      </div>
+    </div>
     </div>
   );
 }
 
-export default MainHead;
+

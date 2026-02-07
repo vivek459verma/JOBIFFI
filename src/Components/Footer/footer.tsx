@@ -1,3 +1,4 @@
+import { AiOutlineCopyright } from "react-icons/ai"; 
 
 import logo from "../../assets/media/New_Brand_logo_-_16060-removebg.png";
 
@@ -9,30 +10,38 @@ const Footer = () => {
         <div>
           <img src={logo} alt="logo" className="h-12 w-auto mt-3" />
           <h6 className="mt-6 font-semibold">Connected with us</h6>
-          <div className="flex items-center gap-3 mt-3">
-            <img
+          <div className="flex items-center gap-2 mt-3">
+            <a href="http://facebook.com/Jobiffi">
+              <img
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQb-ddIzltfqrD7r7l7bEUKu1ekFwv5C7c7ow&s"
               alt="facebook"
               className="h-7 w-7 object-contain"
             />
 
-            <img
+            </a>
+            <a href="https://www.instagram.com/jobiffi?igsh=dnMwNWozYnBuODc2">
+              <img
               src="https://img.freepik.com/premium-psd/instagram-logo-social-media-icon_705838-13489.jpg?semt=ais_hybrid&w=740&q=80"
               alt="instagram"
               className="h-7 w-7 object-contain"
             />
+            </a>
 
-            <img
+            <a href="https://www.linkedin.com/company/jobiffi/">
+              <img
               src="https://e7.pngegg.com/pngimages/524/809/png-clipart-computer-icons-resume-linkedin-logo-job-hunting-others-blue-angle-thumbnail.png"
               alt="linkedin"
               className="h-7 w-7 object-contain"
             />
 
-            <img
+            </a>
+           <a href="">
+             <img
               src="https://img.freepik.com/free-vector/new-2023-twitter-logo-x-icon-design_1017-45418.jpg?semt=ais_hybrid&w=740&q=80"
               alt="twitter"
-              className="h-5 w-5 object-contain"
+              className="h-5 w-5 ml-1 object-contain"
             />
+           </a>
           </div>
         </div>
 
@@ -94,8 +103,9 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="text-center mt-8 mb-0 text-gray-700">
-        <h6>all trademarks are the property of their respective owners. All right reversed (India) pvt.ltd.</h6>
+      <div className="border border-r border-gray-200"></div>
+      <div className="text-center mt-4 mb-4 text-gray-700">
+        <h6 className="flex justify-center gap-2">All right reserved <AiOutlineCopyright className="text-center  mt-1"/> 2026 Jobiffi (P) Ltd.</h6>
       </div>
     </footer>
   );
