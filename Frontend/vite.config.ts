@@ -2,11 +2,12 @@ import { defineConfig } from "vite"
 import react from "@vitejs/plugin-react"
 import tailwindcss from "@tailwindcss/vite"
 
+// build added
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   base: "/",
 
-  build: {
+  build:{ 
     chunkSizeWarningLimit: 500,
 
     rollupOptions: {
