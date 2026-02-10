@@ -2,7 +2,8 @@ import express from "express";
 import cors from "cors";
 import connectDB from "./src/config/mongo.config.js";
 import authRoutes from "./src/routes/auth.routes.js";
-import passport from "./src/config/passport.js"; // 🆕 Import passport config
+import passport from "./src/config/passport.js"; // OAuth passport config
+import employerRoutes from "./src/routes/employer.routes.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -13,9 +14,9 @@ const port = process.env.PORT || 3000;
 // CORS Configuration
 app.use(
   cors({
-    origin: process.env.NODE_ENV === "production" 
-      ? "http://localhost:5173" 
-      : "*", // Allow all origins in development for testing
+    origin: process.env.NODE_ENV === "production"
+      ? process.env.FRONTEND_URL
+      : process.env.FRONTEND_URL || "http://localhost:5173",
     credentials: true,
   }),
 );
@@ -24,7 +25,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 🆕 Initialize Passport (for OAuth)
+// Initialize Passport (for OAuth)
 app.use(passport.initialize());
 
 // Routes
@@ -33,6 +34,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/employer", employerRoutes);
 
 // Error Handler
 app.use((err, req, res, next) => {
