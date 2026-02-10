@@ -18,12 +18,12 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
+      unique: true,      // ✅ This already creates an index automatically
       lowercase: true,
       trim: true
     },
 
-    // 🔐 Make passwordHash optional for social login
+    // Required for email signup, optional for OAuth
     passwordHash: {
       type: String,
       required: function() {
@@ -31,29 +31,28 @@ const userSchema = new mongoose.Schema(
       }
     },
 
+    // Required for email signup, optional for OAuth (filled during onboarding)
     mobile: {
       type: String,
       required: function() {
-        // Mobile required only after onboarding
-        return this.profileCompletion >= 50;
+        return this.authProvider === "EMAIL";
       }
     },
 
-    // ✅ NOW ALIGNED WITH FRONTEND
+    // Required for email signup, optional for OAuth
     workStatus: {
       type: String,
       enum: ["FRESHER", "EXPERIENCED", "STUDENT"],
       required: function() {
-        // Work status required only after onboarding
-        return this.profileCompletion >= 50;
+        return this.authProvider === "EMAIL";
       }
     },
 
+    // Required for email signup, optional for OAuth
     currentCity: {
       type: String,
       required: function() {
-        // City required only after onboarding
-        return this.profileCompletion >= 50;
+        return this.authProvider === "EMAIL";
       }
     },
 
@@ -63,24 +62,24 @@ const userSchema = new mongoose.Schema(
       whatsapp: { type: Boolean, default: false }
     },
 
-    // 🆕 STUDENT DETAILS (optional, only for students)
+    // STUDENT DETAILS (optional, only for students)
     studentDetails: {
       collegeName: { type: String },
       degree: { type: String },
       graduationYear: { type: Number }
     },
 
-    // 🆕 SOCIAL AUTH FIELDS
+    // SOCIAL AUTH FIELDS
     googleId: {
       type: String,
-      sparse: true,
-      unique: true
+      sparse: true,      // ✅ sparse already creates an index automatically
+      unique: true       // ✅ unique also creates an index automatically
     },
 
     linkedInId: {
       type: String,
-      sparse: true,
-      unique: true
+      sparse: true,      // ✅ sparse already creates an index automatically
+      unique: true       // ✅ unique also creates an index automatically
     },
 
     authProvider: {
@@ -124,11 +123,6 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-// 🔍 Index for faster lookups
-userSchema.index({ email: 1 });
-userSchema.index({ googleId: 1 });
-userSchema.index({ linkedInId: 1 });
 
 const User = mongoose.model("User", userSchema);
 export default User;

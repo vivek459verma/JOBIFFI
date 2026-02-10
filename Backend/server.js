@@ -1,24 +1,26 @@
+// ⚠️ IMPORTANT: This must be the very first import
+// In ES modules, ALL imports are hoisted before any code runs
+// So we use a separate env loader file to ensure dotenv loads first
+import "./src/config/env.config.js";
+
 import express from "express";
 import cors from "cors";
 import connectDB from "./src/config/mongo.config.js";
 import authRoutes from "./src/routes/auth.routes.js";
-import passport from "./src/config/passport.js"; // OAuth passport config
+import passport from "./src/config/passport.js";
 import employerRoutes from "./src/routes/employer.routes.js";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 
 // CORS Configuration
 app.use(
   cors({
     origin: process.env.NODE_ENV === "production"
       ? process.env.FRONTEND_URL
-      : process.env.FRONTEND_URL || "http://localhost:5173",
+      : process.env.FRONTEND_URL || "*",
     credentials: true,
-  }),
+  })
 );
 
 // Body Parsers
@@ -28,11 +30,12 @@ app.use(express.urlencoded({ extended: true }));
 // Initialize Passport (for OAuth)
 app.use(passport.initialize());
 
-// Routes
+// Health Check Route
 app.get("/", (req, res) => {
   res.send("jobiffi backend is running!");
 });
 
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/employer", employerRoutes);
 
