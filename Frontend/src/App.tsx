@@ -13,6 +13,7 @@ import UpcomingEvents from "./Components/Events/UpcomingEvents";
 
 import Register from "./Components/Authentication/register";
 import Verification from "./Components/Authentication/verification";
+import AboutUs from "./Components/pages/AboutUs";
 
 import TermsConditions from "./Components/pages/TermsConditions";
 import PrivacyPolicy from "./Components/pages/PrivacyPolicy";
@@ -58,6 +59,17 @@ function App() {
           <>
             <Navbar />
             <Verification />
+          </>
+        }
+      />
+
+      {/* ABOUT US — WITH NAVBAR */}
+      <Route
+        path="/about-us"
+        element={
+          <>
+            <Navbar />
+            <AboutUs />
           </>
         }
       />
