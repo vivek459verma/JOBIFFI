@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dropdown } from "antd";
 import {
@@ -21,6 +21,12 @@ function Navbar() {
   /* ✅ ONLY ADDITION */
   const [isLoginOpen, setIsLoginOpen] = useState(false);
 
+  /* ✅ ONLY ADDITION (hover delay refs) */
+  const jobsTimeout = useRef<any>(null);
+  const companyTimeout = useRef<any>(null);
+  const servicesTimeout = useRef<any>(null);
+  const resourcesTimeout = useRef<any>(null);
+
   const navigate = useNavigate();
 
   const employerItems = [
@@ -32,7 +38,7 @@ function Navbar() {
     <>
       <nav className="w-full bg-white shadow-md px-4 sm:px-8 py-3 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between relative">
-          
+
           {/* LEFT – Logo */}
           <div className="flex ml-[50px] items-center translate-x-[30%]">
             <a href="/">
@@ -46,16 +52,23 @@ function Navbar() {
             {/* Jobs */}
             <div
               className="relative"
-              onMouseEnter={() => setJobsOpen(true)}
-              onMouseLeave={() => setJobsOpen(false)}
+              onMouseEnter={() => {
+                clearTimeout(jobsTimeout.current);
+                setJobsOpen(true);
+              }}
+              onMouseLeave={() => {
+                jobsTimeout.current = setTimeout(() => {
+                  setJobsOpen(false);
+                }, 150);
+              }}
             >
               <h1 className="cursor-pointer font-medium text-gray-700 hover:text-black border-b-2 border-transparent hover:border-blue-800 pb-1">
                 Jobs
               </h1>
 
               {jobsOpen && (
-                <div className="absolute top-10 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-                  
+                <div className="absolute top-full mt-1 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
+
                   <div className="border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
                       Job Categories
@@ -106,16 +119,23 @@ function Navbar() {
             {/* Companies */}
             <div
               className="relative"
-              onMouseEnter={() => setJobCompany(true)}
-              onMouseLeave={() => setJobCompany(false)}
+              onMouseEnter={() => {
+                clearTimeout(companyTimeout.current);
+                setJobCompany(true);
+              }}
+              onMouseLeave={() => {
+                companyTimeout.current = setTimeout(() => {
+                  setJobCompany(false);
+                }, 150);
+              }}
             >
               <h1 className="cursor-pointer text-gray-700 hover:text-black font-medium border-b-2 border-transparent hover:border-blue-800 pb-1">
                 Companies
               </h1>
 
               {jobCompany && (
-                <div className="absolute top-10 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-                  
+                <div className="absolute top-full mt-1 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
+
                   <div className="border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
                       Explore Categories
@@ -161,16 +181,23 @@ function Navbar() {
             {/* Services */}
             <div
               className="relative"
-              onMouseEnter={() => setJobServices(true)}
-              onMouseLeave={() => setJobServices(false)}
+              onMouseEnter={() => {
+                clearTimeout(servicesTimeout.current);
+                setJobServices(true);
+              }}
+              onMouseLeave={() => {
+                servicesTimeout.current = setTimeout(() => {
+                  setJobServices(false);
+                }, 150);
+              }}
             >
               <h1 className="cursor-pointer text-gray-700 hover:text-black font-medium border-b-2 border-transparent hover:border-blue-800 pb-1">
                 Services
               </h1>
 
               {jobServices && (
-                <div className="absolute top-10 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-                  
+                <div className="absolute top-full mt-1 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
+
                   <div className="flex flex-col border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
                       Resume Writing
@@ -226,15 +253,22 @@ function Navbar() {
             {/* Resources */}
             <div
               className="relative"
-              onMouseEnter={() => setJobResources(true)}
-              onMouseLeave={() => setJobResources(false)}
+              onMouseEnter={() => {
+                clearTimeout(resourcesTimeout.current);
+                setJobResources(true);
+              }}
+              onMouseLeave={() => {
+                resourcesTimeout.current = setTimeout(() => {
+                  setJobResources(false);
+                }, 150);
+              }}
             >
               <h1 className="cursor-pointer text-gray-700 hover:text-black font-medium border-b-2 border-transparent hover:border-blue-800 pb-1">
                 Resources
               </h1>
 
               {jobResources && (
-                <div className="absolute top-10 left-0 w-[350px] bg-white shadow-xl rounded-xl p-6 grid gap-6 z-50">
+                <div className="absolute top-full mt-1 left-0 w-[350px] bg-white shadow-xl rounded-xl p-6 grid gap-6 z-50">
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li>Jobiffi Blogs</li>
                     <li>AI interview coach</li>
@@ -250,7 +284,7 @@ function Navbar() {
 
           {/* RIGHT – Buttons */}
           <div className="flex items-center gap-2 sm:gap-4">
-            
+
             <button
               onClick={() => setIsLoginOpen(true)}
               className="cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl border border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white transition font-semibold"
@@ -284,7 +318,7 @@ function Navbar() {
             </div>
           </div>
 
-          {/* ✅ FULL MOBILE MENU RESTORED */}
+          {/* ✅ FULL MOBILE MENU – UNCHANGED */}
           {menuOpen && (
             <div className="sm:hidden absolute top-full left-0 w-full bg-white shadow-md p-4 z-50">
 
