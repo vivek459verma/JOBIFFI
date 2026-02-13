@@ -17,6 +17,8 @@ import AboutUs from "./Components/pages/AboutUs";
 
 import TermsConditions from "./Components/pages/TermsConditions";
 import PrivacyPolicy from "./Components/pages/PrivacyPolicy";
+import FraudAlert from "./Components/pages/FraudAlert";
+
 
 function App() {
   return (
@@ -92,9 +94,21 @@ function App() {
             <PrivacyPolicy />
           </div>
         }
+        
       />
+
+      <Route
+  path="/fraud-alert"
+  element={
+    <div className="bg-blue-50 min-h-screen">
+      <FraudAlert />
+    </div>
+  }
+/>
+
     </Routes>
   );
 }
+
 
 export default App;
