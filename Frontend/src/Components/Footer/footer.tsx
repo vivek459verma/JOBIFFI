@@ -111,9 +111,15 @@ const Footer = () => {
               Terms & conditions
             </a>
 
-            <li className="hover:text-blue-900 cursor-pointer">
-              Fraud alert
-            </li>
+           <a
+  href="/fraud-alert"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="hover:text-blue-900 cursor-pointer block"
+>
+  Fraud Alert
+</a>
+
 
             <li className="hover:text-blue-900 cursor-pointer">
               Trust & Safety
