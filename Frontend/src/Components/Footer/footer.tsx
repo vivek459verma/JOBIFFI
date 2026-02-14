@@ -1,6 +1,6 @@
 import { AiOutlineCopyright } from "react-icons/ai";
 
-import logo from "../../assets/media/New_Brand_logo_-_16060-removebg.png";
+import logo from "../../assets/media/Logo.png";
 
 
 const Footer = () => {
@@ -84,10 +84,6 @@ const Footer = () => {
             <li className="hover:text-blue-900 cursor-pointer">Blogs</li>
           </ul>
         </div>
-
-        {/* Column 4 */}
-        {/* Column 4 */}
-        {/* Column 4 */}
         <div>
           <ul className="mt-3 space-y-2 text-gray-600">
 

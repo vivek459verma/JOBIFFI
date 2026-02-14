@@ -6,7 +6,7 @@ import {
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import logo from "../assets/media/New_Brand_logo_-_16060-removebg.png";
+import logo from "../assets/media/Logo.png";
 
 /* ✅ ONLY ADDITION */
 import Login from "./Login";
@@ -22,10 +22,10 @@ function Navbar() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   /* ✅ ONLY ADDITION (hover delay refs) */
-  const jobsTimeout = useRef<any>(null);
-  const companyTimeout = useRef<any>(null);
-  const servicesTimeout = useRef<any>(null);
-  const resourcesTimeout = useRef<any>(null);
+  const jobsTimeout = useRef<number | undefined>(undefined);
+  const companyTimeout = useRef<number | undefined>(undefined);
+  const servicesTimeout = useRef<number | undefined>(undefined);
+  const resourcesTimeout = useRef<number | undefined>(undefined);
 
   const navigate = useNavigate();
 

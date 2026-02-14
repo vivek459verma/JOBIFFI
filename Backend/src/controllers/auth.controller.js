@@ -4,8 +4,8 @@ import { OAuth2Client } from "google-auth-library"; // Required for Google Login
 import User from "../models/User.model.js";
 import Otp from "../models/Otp.model.js";
 import sendEmail from "../utils/sendEmailLogin.js";
-import sendResetEmail from "../utils/sendResetEmail.js";
 import { resetPasswordTemplate } from "../utils/emailTemplate.js";
+import sendResetEmail from "../utils/SendResetEmail.js";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
