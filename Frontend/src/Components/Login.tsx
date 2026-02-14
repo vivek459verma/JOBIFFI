@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import type { ChangeEvent, FormEvent, CSSProperties } from "react";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 
 import { GoogleLogin } from "@react-oauth/google";
@@ -77,13 +77,15 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
   ) => {
     try {
       const res = await axios.post<LoginResponse>(
-        "http://localhost:3000/api/auth/google",
+        // "http://localhost:3000/api/auth/google",
+        "https://www.jobiffi.com/api/auth/google",
         {
           token: credentialResponse.credential,
         }
       );
       handleLoginSuccess(res.data);
     } catch (err) {
+      console.error("Google Login Error:", err);
       setError("Google Login Failed");
     }
   };
@@ -94,15 +96,17 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
     setError("");
     try {
       const res = await axios.post<LoginResponse>(
-        "http://localhost:3000/api/auth/login",
+        // "http://localhost:3000/api/auth/login",
+        "https://www.jobiffi.com/api/auth/login",
         {
           email: formData.email,
           password: formData.password,
         }
       );
       handleLoginSuccess(res.data);
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Login failed");
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message: string }>;
+      setError(error.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -114,12 +118,14 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
     setError("");
     try {
       await axios.post(
-        "http://localhost:3000/api/auth/send-otp",
+        // "http://localhost:3000/api/auth/send-otp",
+        "https://www.jobiffi.com/api/auth/send-otp",
         { email: formData.email }
       );
       setStep(2);
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to send OTP");
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message: string }>;
+      setError(error.response?.data?.message || "Failed to send OTP");
     } finally {
       setLoading(false);
     }
@@ -131,15 +137,17 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
     setError("");
     try {
       const res = await axios.post<LoginResponse>(
-        "http://localhost:3000/api/auth/login-otp",
+        // "http://localhost:3000/api/auth/login-otp",
+        "https://www.jobiffi.com/api/auth/login-otp",
         {
           email: formData.email,
           otp: formData.otp,
         }
       );
       handleLoginSuccess(res.data);
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Invalid OTP");
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message: string }>;
+      setError(error.response?.data?.message || "Invalid OTP");
     } finally {
       setLoading(false);
     }
