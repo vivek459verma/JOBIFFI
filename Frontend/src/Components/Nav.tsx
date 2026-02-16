@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dropdown } from "antd";
 import {
@@ -21,12 +21,6 @@ function Navbar() {
   /* ✅ ONLY ADDITION */
   const [isLoginOpen, setIsLoginOpen] = useState(false);
 
-  /* ✅ ONLY ADDITION (hover delay refs) */
-  const jobsTimeout = useRef<any>(null);
-  const companyTimeout = useRef<any>(null);
-  const servicesTimeout = useRef<any>(null);
-  const resourcesTimeout = useRef<any>(null);
-
   const navigate = useNavigate();
 
   const employerItems = [
@@ -38,9 +32,9 @@ function Navbar() {
     <>
       <nav className="w-full bg-white shadow-md px-4 sm:px-8 py-3 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between relative">
-
+          
           {/* LEFT – Logo */}
-          <div className="flex ml-[50px] items-center translate-x-[30%]">
+          <div className="flex ml-12.5 items-center translate-x-[30%]">
             <a href="/">
               <img src={logo} alt="Logo" className="h-12 w-auto" />
             </a>
@@ -52,23 +46,16 @@ function Navbar() {
             {/* Jobs */}
             <div
               className="relative"
-              onMouseEnter={() => {
-                clearTimeout(jobsTimeout.current);
-                setJobsOpen(true);
-              }}
-              onMouseLeave={() => {
-                jobsTimeout.current = setTimeout(() => {
-                  setJobsOpen(false);
-                }, 150);
-              }}
+              onMouseEnter={() => setJobsOpen(true)}
+              onMouseLeave={() => setJobsOpen(false)}
             >
               <h1 className="cursor-pointer font-medium text-gray-700 hover:text-black border-b-2 border-transparent hover:border-blue-800 pb-1">
                 Jobs
               </h1>
 
               {jobsOpen && (
-                <div className="absolute top-full mt-1 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-
+                <div className="absolute top-10 left-0 w-162.5 bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
+                  
                   <div className="border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
                       Job Categories
@@ -95,6 +82,7 @@ function Navbar() {
                       <li>Work from home Jobs</li>
                       <li>Walk-in Jobs</li>
                       <li>Part-time Jobs</li>
+                      <li>Freelancing Jobs</li>
                     </ul>
                   </div>
 
@@ -104,6 +92,7 @@ function Navbar() {
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600">
                       <li>Jobs in Delhi</li>
+                      <li>Jobs in Noida</li>
                       <li>Jobs in Bangalore</li>
                       <li>Jobs in Mumbai</li>
                       <li>Jobs in Hyderabad</li>
@@ -119,23 +108,16 @@ function Navbar() {
             {/* Companies */}
             <div
               className="relative"
-              onMouseEnter={() => {
-                clearTimeout(companyTimeout.current);
-                setJobCompany(true);
-              }}
-              onMouseLeave={() => {
-                companyTimeout.current = setTimeout(() => {
-                  setJobCompany(false);
-                }, 150);
-              }}
+              onMouseEnter={() => setJobCompany(true)}
+              onMouseLeave={() => setJobCompany(false)}
             >
               <h1 className="cursor-pointer text-gray-700 hover:text-black font-medium border-b-2 border-transparent hover:border-blue-800 pb-1">
                 Companies
               </h1>
 
               {jobCompany && (
-                <div className="absolute top-full mt-1 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-
+                <div className="absolute top-10 left-0 w-162.5 bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
+                  
                   <div className="border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
                       Explore Categories
@@ -154,22 +136,22 @@ function Navbar() {
                       Explore collections
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600">
-                      <li>Top companies</li>
-                      <li>IT companies</li>
-                      <li>Fintech companies</li>
-                      <li>Sponsored companies</li>
-                      <li>Featured companies</li>
+                      <li>Top Companies</li>
+                      <li>IT Companies</li>
+                      <li>Fintech Companies</li>
+                      <li>Sponsored Companies</li>
+                      <li>Featured Companies</li>
                     </ul>
                   </div>
 
                   <div>
                     <h2 className="font-semibold text-blue-900 mb-3">
-                      Research companies
+                      Workplace Insights
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600">
-                      <li>Interview question</li>
-                      <li>Company salaries</li>
-                      <li>Company reviews</li>
+                      <li>Interview Question</li>
+                      <li>Company Salaries</li>
+                      <li>Company Reviews</li>
                       <li>Salary Calculator</li>
                     </ul>
                   </div>
@@ -181,68 +163,68 @@ function Navbar() {
             {/* Services */}
             <div
               className="relative"
-              onMouseEnter={() => {
-                clearTimeout(servicesTimeout.current);
-                setJobServices(true);
-              }}
-              onMouseLeave={() => {
-                servicesTimeout.current = setTimeout(() => {
-                  setJobServices(false);
-                }, 150);
-              }}
+              onMouseEnter={() => setJobServices(true)}
+              onMouseLeave={() => setJobServices(false)}
             >
               <h1 className="cursor-pointer text-gray-700 hover:text-black font-medium border-b-2 border-transparent hover:border-blue-800 pb-1">
                 Services
               </h1>
 
               {jobServices && (
-                <div className="absolute top-full mt-1 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-
+                <div className="absolute top-10 left-0 w-162.5 bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
+                  
                   <div className="flex flex-col border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
-                      Resume Writing
+                      Smart Resume Builder
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600 mb-5">
-                      <li>Text Resume</li>
+                      <li>Text-Based Resume</li>
                       <li>Visual Resume</li>
-                      <li>Resume Critique</li>
+                      <li>One-Page Resume</li>
+                      <li>Infographic Resume</li>
+                      <li>AI Cover Letter</li>
                     </ul>
 
                     <h2 className="font-semibold text-blue-900 mb-3">
-                      Find Jobs
+                      Job Search
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600">
-                      <li>Jobs4u</li>
-                      <li>Priority applicant</li>
+                      <li>Early Access</li>
+                      <li>Turbo Apply</li>
                       <li>Contact us</li>
                     </ul>
                   </div>
 
                   <div className="flex flex-col border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
-                      Get recruiter's attention
+                      Fast-Track to Recruiters
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600 mb-5">
-                      <li>Resume display</li>
+                      <li>Resume Highlighting</li>
+                      <li>Profile Spotlight</li>
+                      <li>VIP Profile Access</li>
                     </ul>
 
                     <h2 className="font-semibold text-blue-900 mb-3">
-                      Monthly subscription
+                      Monthly Subscription
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600">
-                      <li>Basic & premium plans</li>
+                      <li>Basic Monthly Aceess</li>
+                      <li>Premium Monthly Aceess</li>
+                      <li>VIP Monthly Aceess</li>
+                      <li>Elite Monthly Aceess</li>
                     </ul>
                   </div>
 
                   <div>
                     <h2 className="font-semibold text-blue-900 mb-3">
-                      Free resume resources
+                      Free Resume Toolkit
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600">
-                      <li>Resume maker</li>
-                      <li>Resume quality score</li>
-                      <li>Resume samples</li>
-                      <li>Job letter samples</li>
+                      <li>Resume Builder</li>
+                      <li>Smart Resume Score</li>
+                      <li>Resume Samples</li>
+                      <li>Cover Letter Samples</li>
                     </ul>
                   </div>
 
@@ -253,27 +235,19 @@ function Navbar() {
             {/* Resources */}
             <div
               className="relative"
-              onMouseEnter={() => {
-                clearTimeout(resourcesTimeout.current);
-                setJobResources(true);
-              }}
-              onMouseLeave={() => {
-                resourcesTimeout.current = setTimeout(() => {
-                  setJobResources(false);
-                }, 150);
-              }}
+              onMouseEnter={() => setJobResources(true)}
+              onMouseLeave={() => setJobResources(false)}
             >
               <h1 className="cursor-pointer text-gray-700 hover:text-black font-medium border-b-2 border-transparent hover:border-blue-800 pb-1">
                 Resources
               </h1>
 
               {jobResources && (
-                <div className="absolute top-full mt-1 left-0 w-[350px] bg-white shadow-xl rounded-xl p-6 grid gap-6 z-50">
+                <div className="absolute top-10 left-0 w-55 bg-white shadow-xl rounded-xl p-6 grid gap-6 z-50">
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li>Jobiffi Blogs</li>
-                    <li>AI interview coach</li>
-                    <li>News alert</li>
-                    <li>Events</li>
+                    <li>AI Interview Coach</li>
+                    <li>News Alert and Events</li>
                     <li>Customer Reviews</li>
                   </ul>
                 </div>
@@ -284,7 +258,7 @@ function Navbar() {
 
           {/* RIGHT – Buttons */}
           <div className="flex items-center gap-2 sm:gap-4">
-
+            
             <button
               onClick={() => setIsLoginOpen(true)}
               className="cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl border border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white transition font-semibold"
@@ -294,7 +268,7 @@ function Navbar() {
 
             <button
               onClick={() => navigate("/register")}
-              className="cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-gradient-to-r from-blue-800 via-blue-900 to-blue-900 text-white font-semibold"
+              className="cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-linear-to-r from-blue-800 via-blue-900 to-blue-900 text-white font-semibold"
             >
               Register
             </button>
@@ -318,7 +292,7 @@ function Navbar() {
             </div>
           </div>
 
-          {/* ✅ FULL MOBILE MENU – UNCHANGED */}
+          {/* ✅ FULL MOBILE MENU RESTORED */}
           {menuOpen && (
             <div className="sm:hidden absolute top-full left-0 w-full bg-white shadow-md p-4 z-50">
 
@@ -358,25 +332,6 @@ function Navbar() {
                     <li>Unicorns</li>
                     <li>Product Companies</li>
                     <li>Internet Companies</li>
-                  </ul>
-                )}
-              </div>
-
-              {/* Services */}
-              <div className="mb-2">
-                <button
-                  className="w-full text-left flex justify-between items-center py-2 px-2 font-medium"
-                  onClick={() => setJobServices(!jobServices)}
-                >
-                  Services
-                  <ChevronDownIcon className={`w-4 h-4 ${jobServices ? "rotate-180" : ""}`} />
-                </button>
-
-                {jobServices && (
-                  <ul className="pl-4 space-y-1">
-                    <li>Resume Builder</li>
-                    <li>Job Alerts</li>
-                    <li>Monthly Subscription</li>
                   </ul>
                 )}
               </div>
