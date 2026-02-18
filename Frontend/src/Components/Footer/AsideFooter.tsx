@@ -11,7 +11,7 @@ export default function AsideFooter() {
             Jobiffi app
           </h1>
           <span className="text-gray-600">
-            Get real time 50,000+ job in our app
+            Get real time 5,000+ job in our app
           </span>
           <div className="relative mt-5 w-full max-w-sm">
             <input

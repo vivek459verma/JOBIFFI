@@ -117,7 +117,7 @@ const Footer = () => {
         <div>
           <h6 className="text-black font-semibold mt-3">Get the App today</h6>
           <p className="text-gray-600 text-sm mt-2">
-            Trusted by 50,000 + Job seekers
+            Trusted by 5,000 + Job seekers
           </p>
           <div className="flex gap-3 mt-4">
             <img src={goggle} alt="android" className="h-10" />
