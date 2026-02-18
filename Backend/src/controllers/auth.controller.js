@@ -1,157 +1,11 @@
-// import bcrypt from "bcrypt";
-// import crypto from "crypto";
-// import User from "../models/User.model.js";
-// import Subscription from "../models/Subscription.model.js";
-// import { sendVerificationEmail } from "../utils/sendEmail.js";
-
-// /**
-//  * REGISTER USER (JOB SEEKER)
-//  */
-// export const registerUser = async (req, res) => {
-//   console.log("🔥 REGISTER API HIT");
-
-//   try {
-//     const {
-//       fullName,
-//       email,
-//       password,
-//       mobile,
-//       workStatus,
-//       currentCity,
-//       communicationConsent
-//     } = req.body;
-
-//     if (!fullName || !email || !password || !mobile || !workStatus || !currentCity) {
-//       return res.status(400).json({ message: "Missing required fields" });
-//     }
-
-//     const existingUser = await User.findOne({ email });
-//     if (existingUser) {
-//       return res.status(409).json({ message: "User already exists" });
-//     }
-
-//     const passwordHash = await bcrypt.hash(password, 10);
-
-//     const user = await User.create({
-//       fullName,
-//       email,
-//       passwordHash,
-//       mobile,
-//       workStatus,
-//       currentCity,
-//       communicationConsent,
-//       role: "JOB_SEEKER",
-//       profileCompletion: 20,
-//       isEmailVerified: false
-//     });
-
-//     const verificationToken = crypto.randomBytes(32).toString("hex");
-//     user.emailVerificationToken = verificationToken;
-//     user.emailVerificationExpires = Date.now() + 48 * 60 * 60 * 1000; 
-
-//     await user.save();
-
-//     // 📧 Send professional email using juice-inlined template
-//     await sendVerificationEmail(user.email, verificationToken);
-
-//     await Subscription.create({
-//       ownerId: user._id,
-//       ownerType: "USER",
-//       planName: "FREE",
-//       isActive: true
-//     });
-
-//     return res.status(201).json({
-//       userId: user._id,
-//       message: "Registration successful. Please verify your email."
-//     });
-
-//   } catch (error) {
-//     console.error("Register error:", error);
-//     return res.status(500).json({ message: "Internal server error" });
-//   }
-// };
-
-// /**
-//  * VERIFY EMAIL
-//  * Handles the click from the email button
-//  */
-// export const verifyEmail = async (req, res) => {
-//   try {
-//     const { token } = req.query;
-//     const loginUrl = process.env.FRONTEND_LOGIN_URL;
-
-//     if (!token) {
-//       return res.redirect(`${loginUrl}?status=invalid`);
-//     }
-
-//     const user = await User.findOne({
-//       emailVerificationToken: token,
-//       emailVerificationExpires: { $gt: Date.now() }
-//     });
-
-//     if (!user) {
-//       return res.redirect(`${loginUrl}?status=expired`);
-//     }
-
-//     user.isEmailVerified = true;
-//     user.emailVerificationToken = undefined;
-//     user.emailVerificationExpires = undefined;
-//     await user.save();
-
-//     // ✅ Redirect to Login with Success Flag for the pop-up
-//     return res.redirect(`${loginUrl}?status=verified`);
-
-//   } catch (error) {
-//     console.error("Verify email error:", error);
-//     return res.redirect(`${process.env.FRONTEND_LOGIN_URL}?status=error`);
-//   }
-// };
-
-// /**
-//  * RESEND VERIFICATION EMAIL
-//  */
-// export const resendVerificationEmail = async (req, res) => {
-//   try {
-//     const { email } = req.body;
-
-//     if (!email) {
-//       return res.status(400).json({ message: "Email is required" });
-//     }
-
-//     const user = await User.findOne({ email });
-
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     if (user.isEmailVerified) {
-//       return res.status(400).json({ message: "Email already verified" });
-//     }
-
-//     const token = crypto.randomBytes(32).toString("hex");
-//     user.emailVerificationToken = token;
-//     user.emailVerificationExpires = Date.now() + 48 * 60 * 60 * 1000;
-//     await user.save();
-
-//     await sendVerificationEmail(user.email, token);
-
-//     return res.json({ message: "Verification email resent successfully" });
-
-//   } catch (error) {
-//     console.error("Resend verification error:", error);
-//     return res.status(500).json({ message: "Internal server error" });
-//   }
-// };
-
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
 import User from "../models/User.model.js";
-import Subscription from "../models/Subscription.model.js";
 import Otp from "../models/OTP.model.js";
+import Subscription from "../models/Subscription.model.js";
 import { sendVerificationEmail } from "../utils/sendEmail.js";
 import sendEmail from "../utils/sendEmailLogin.js";
 import sendResetEmail from "../utils/SendResetEmail.js";
@@ -160,7 +14,7 @@ import { resetPasswordTemplate } from "../utils/emailTemplate.js";
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 /**
- * REGISTER USER (JOB SEEKER) - Email Verification Version
+ * ✅ REGISTER USER (UNCHANGED - Your existing logic)
  */
 export const registerUser = async (req, res) => {
   const session = await mongoose.startSession();
@@ -173,22 +27,18 @@ export const registerUser = async (req, res) => {
       email,
       password,
       mobile,
-      workStatus, // FRESHER | EXPERIENCED | STUDENT
+      workStatus,
       currentCity,
       communicationConsent,
-
-      // NEW (only for students)
-      studentDetails // { collegeName, degree, graduationYear }
+      studentDetails
     } = req.body;
 
-    // Basic validation
     if (!fullName || !email || !password || !mobile || !workStatus || !currentCity) {
       await session.abortTransaction();
       session.endSession();
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    // Validate workStatus
     const allowedWorkStatus = ["FRESHER", "EXPERIENCED", "STUDENT"];
     if (!allowedWorkStatus.includes(workStatus)) {
       await session.abortTransaction();
@@ -196,7 +46,6 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid work status" });
     }
 
-    // Student-specific validation
     if (workStatus === "STUDENT") {
       if (
         !studentDetails ||
@@ -212,7 +61,6 @@ export const registerUser = async (req, res) => {
       }
     }
 
-    // Check existing user
     const existingUser = await User.findOne({ email }).session(session);
     if (existingUser) {
       await session.abortTransaction();
@@ -223,7 +71,6 @@ export const registerUser = async (req, res) => {
     const passwordHash = await bcrypt.hash(password, 10);
     const verificationToken = crypto.randomBytes(32).toString("hex");
 
-    // Create user
     const [user] = await User.create(
       [{
         fullName,
@@ -233,10 +80,7 @@ export const registerUser = async (req, res) => {
         workStatus,
         currentCity,
         communicationConsent,
-
-        // Student block (stored only if STUDENT)
         studentDetails: workStatus === "STUDENT" ? studentDetails : undefined,
-
         role: "JOB_SEEKER",
         profileCompletion: workStatus === "STUDENT" ? 15 : 20,
         isEmailVerified: false,
@@ -246,7 +90,6 @@ export const registerUser = async (req, res) => {
       { session }
     );
 
-    // Create subscription
     await Subscription.create(
       [{
         ownerId: user._id,
@@ -257,17 +100,14 @@ export const registerUser = async (req, res) => {
       { session }
     );
 
-    // Commit DB changes
     await session.commitTransaction();
     session.endSession();
 
-    // Respond first
     res.status(201).json({
       userId: user._id,
       message: "Registration successful. Please verify your email."
     });
 
-    // Email outside transaction
     sendVerificationEmail(user.email, verificationToken)
       .catch(err => console.error("Email send failed:", err));
 
@@ -283,15 +123,15 @@ export const registerUser = async (req, res) => {
 };
 
 /**
- * VERIFY EMAIL
+ * ✅ VERIFY EMAIL - FIXED TO REDIRECT TO LANDING PAGE
  */
 export const verifyEmail = async (req, res) => {
   try {
     const { token } = req.query;
-    const loginUrl = process.env.FRONTEND_LOGIN_URL;
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
 
     if (!token) {
-      return res.redirect(`${loginUrl}?status=invalid`);
+      return res.redirect(`${frontendUrl}/?verified=false&reason=missing_token`);
     }
 
     const user = await User.findOne({
@@ -300,7 +140,7 @@ export const verifyEmail = async (req, res) => {
     });
 
     if (!user) {
-      return res.redirect(`${loginUrl}?status=expired`);
+      return res.redirect(`${frontendUrl}/?verified=false&reason=expired`);
     }
 
     user.isEmailVerified = true;
@@ -308,15 +148,25 @@ export const verifyEmail = async (req, res) => {
     user.emailVerificationExpires = undefined;
     await user.save();
 
-    return res.redirect(`${loginUrl}?status=verified`);
+    // ✅ GENERATE TOKEN FOR AUTO-LOGIN
+    const loginToken = jwt.sign(
+      { userId: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    // ✅ REDIRECT TO AUTH CALLBACK TO LOG IN AUTOMATICALLY
+    return res.redirect(`${frontendUrl}/auth/callback?token=${loginToken}&verified=true&status=verified`);
+
   } catch (error) {
     console.error("Verify email error:", error);
-    return res.redirect(`${process.env.FRONTEND_LOGIN_URL}?status=error`);
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    return res.redirect(`${frontendUrl}/?verified=false&reason=error`);
   }
 };
 
 /**
- * RESEND VERIFICATION EMAIL
+ * ✅ RESEND VERIFICATION EMAIL (UNCHANGED)
  */
 export const resendVerificationEmail = async (req, res) => {
   try {
@@ -368,14 +218,14 @@ export const loginUser = async (req, res) => {
     }
 
     // Verify Password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
     if (!isPasswordValid) {
       return res.status(400).json({ success: false, message: "Invalid Credentials" });
     }
 
     // Generate Token
     const token = jwt.sign(
-      { userId: user._id, email: user.email, workStatus: user.workStatus },
+      { userId: user._id, email: user.email },
       process.env.JWT_SECRET || "default_secret_key",
       { expiresIn: "7d" }
     );
@@ -386,14 +236,21 @@ export const loginUser = async (req, res) => {
       token,
       user: {
         id: user._id,
-        name: user.name,
+        fullName: user.fullName,
         email: user.email,
-        workStatus: user.workStatus
+        workStatus: user.workStatus,
+        mobile: user.mobile,
+        currentCity: user.currentCity,
+        profilePicture: user.profilePicture
       }
     });
 
   } catch (error) {
-    console.error("Login Error:", error);
+    console.error("❌ MANUAL LOGIN ERROR:", {
+      message: error.message,
+      stack: error.stack,
+      body: req.body
+    });
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
@@ -444,7 +301,7 @@ export const loginWithOtp = async (req, res) => {
 
     // Generate Token
     const token = jwt.sign(
-      { userId: user._id, email: user.email, workStatus: user.workStatus },
+      { userId: user._id, email: user.email },
       process.env.JWT_SECRET || "default_secret_key",
       { expiresIn: "7d" }
     );
@@ -458,9 +315,12 @@ export const loginWithOtp = async (req, res) => {
       token,
       user: {
         id: user._id,
-        name: user.name,
+        fullName: user.fullName,
         email: user.email,
-        workStatus: user.workStatus
+        workStatus: user.workStatus,
+        mobile: user.mobile,
+        currentCity: user.currentCity,
+        profilePicture: user.profilePicture
       }
     });
 
@@ -493,18 +353,20 @@ export const googleLogin = async (req, res) => {
       const hashedPassword = await bcrypt.hash(randomPassword, 10);
 
       user = await User.create({
-        name: name,
+        fullName: name,
         email: normalizedEmail,
-        password: hashedPassword,
-        mobile: "", // Optional
-        workStatus: "fresher", // Default
-        profilePicture: picture // If your model has this field
+        passwordHash: hashedPassword,
+        authProvider: "GOOGLE",
+        isEmailVerified: true,
+        // mobile: "", // Leave out to trigger onboarding
+        // workStatus: "FRESHER", // Leave out to trigger onboarding
+        profilePicture: picture
       });
     }
 
     // Generate JWT
     const jwtToken = jwt.sign(
-      { userId: user._id, email: user.email, workStatus: user.workStatus },
+      { userId: user._id, email: user.email },
       process.env.JWT_SECRET || "default_secret_key",
       { expiresIn: "7d" }
     );
@@ -515,9 +377,12 @@ export const googleLogin = async (req, res) => {
       token: jwtToken,
       user: {
         id: user._id,
-        name: user.name,
+        fullName: user.fullName,
         email: user.email,
-        workStatus: user.workStatus
+        workStatus: user.workStatus,
+        mobile: user.mobile,
+        currentCity: user.currentCity,
+        profilePicture: user.profilePicture
       }
     });
 
@@ -541,8 +406,8 @@ export const forgotPassword = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "15m" });
 
     // Create the Link (Points to your Frontend)
-    const link = `http://localhost:5173/reset-password?token=${token}`;
-    const emailHtml = resetPasswordTemplate(link, user.name);
+    const link = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+    const emailHtml = resetPasswordTemplate(link, user.fullName || "User");
 
     await sendResetEmail(email, emailHtml);
 
@@ -570,7 +435,7 @@ export const sendResetOtp = async (req, res) => {
     await Otp.create({ email: user.email, otp });
 
     // Send OTP Email
-    await sendEmail(user.email, otp, user.name); // Reuse existing OTP email function
+    await sendEmail(user.email, otp, user.fullName || "User"); // Reuse existing OTP email function
 
     res.status(200).json({ success: true, message: "OTP sent to email" });
 
@@ -597,7 +462,7 @@ export const resetPasswordConfirm = async (req, res) => {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     // Update User
-    user.password = hashedPassword;
+    user.passwordHash = hashedPassword;
     await user.save();
 
     // Clean up OTP
@@ -607,5 +472,73 @@ export const resetPasswordConfirm = async (req, res) => {
 
   } catch (error) {
     res.status(500).json({ success: false, message: "Reset failed" });
+  }
+};
+
+// --- 9. GET USER PROFILE (For OAuth Completion Check) ---
+export const getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId).select("-passwordHash -password");
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+    res.status(200).json({
+      success: true,
+      user: {
+        id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        workStatus: user.workStatus,
+        mobile: user.mobile,
+        currentCity: user.currentCity,
+        profilePicture: user.profilePicture
+      }
+    });
+  } catch (error) {
+    console.error("Get Profile Error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// --- 10. UPDATE USER PROFILE (For OAuth Completion) ---
+export const updateProfile = async (req, res) => {
+  try {
+    const { mobile, workStatus, currentCity, fullName } = req.body;
+
+    const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Update fields
+    if (mobile) user.mobile = mobile;
+    if (workStatus) user.workStatus = workStatus;
+    if (currentCity) user.currentCity = currentCity;
+    if (fullName) user.fullName = fullName;
+
+    // Update profile completion score if needed
+    if (user.mobile && user.workStatus && user.currentCity && user.profileCompletion < 50) {
+      user.profileCompletion = 50;
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user: {
+        id: user._id,
+        fullName: user.fullName || user.name,
+        email: user.email,
+        workStatus: user.workStatus,
+        mobile: user.mobile,
+        currentCity: user.currentCity,
+        profilePicture: user.profilePicture
+      }
+    });
+
+  } catch (error) {
+    console.error("Update Profile Error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };

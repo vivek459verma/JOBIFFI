@@ -11,12 +11,26 @@ import {
   googleLogin,
   forgotPassword,
   sendResetOtp,
-  resetPasswordConfirm
+  resetPasswordConfirm,
+  getProfile,
+  updateProfile
 } from "../controllers/auth.controller.js";
 import { validateRegister } from "../middlewares/validateRegister.js";
 import { registerLimiter } from "../middlewares/rateLimit.js";
+import { protect } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
+
+// Add at the top with other routes
+router.get('/test-email-assets', (req, res) => {
+  res.json({
+    playstore: process.env.PLAYSTORE_BADGE_URL,
+    appstore: process.env.APPSTORE_BADGE_URL,
+    logo: process.env.EMAIL_LOGO_URL,
+    smtp_host: process.env.SMTP_HOST,
+    backend_url: process.env.BACKEND_URL
+  });
+});
 
 // Email Verification Routes (from feature branch)
 router.post("/register", registerLimiter, validateRegister, registerUser);
@@ -27,6 +41,10 @@ router.post("/resend-verification", registerLimiter, resendVerificationEmail);
 router.post("/login", loginUser);           // Password Login
 router.post("/send-otp", sendOtp);          // OTP Login Step 1
 router.post("/login-otp", loginWithOtp);    // OTP Login Step 2
+
+// Profile Routes (Protected)
+router.get("/me", protect, getProfile);
+router.put("/profile", protect, updateProfile);
 
 // Google Login (direct API from main)
 router.post("/google", googleLogin);
@@ -57,7 +75,9 @@ router.get(
 
 router.get(
   "/linkedin",
-  passport.authenticate("linkedin", { state: "SOME_RANDOM_STRING" })
+  passport.authenticate("linkedin", {
+    scope: ["openid", "profile", "email"]
+  })
 );
 
 router.get(

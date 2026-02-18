@@ -66,7 +66,7 @@ const AboutUs = () => {
                         </p>
                     </div>
                     <div className="flex-1 relative">
-                        <div className="relative z-10 bg-white rounded-3xl shadow-2xl p-8 border border-gray-100 transform rotate-2 hover:rotate-0 transition-all duration-500">
+                        <div className="relative z-10 bg-white rounded-3xl shadow-2xl p-8 border border-gray-100">
                             <div className="flex items-center gap-4 mb-6">
                                 <div className="p-3 bg-blue-100 rounded-full">
                                     <BuildingOfficeIcon className="w-8 h-8 text-blue-600" />

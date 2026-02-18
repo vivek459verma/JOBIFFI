@@ -18,7 +18,6 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true,      // ✅ This already creates an index automatically
       lowercase: true,
       trim: true
     },
@@ -26,7 +25,7 @@ const userSchema = new mongoose.Schema(
     // Required for email signup, optional for OAuth
     passwordHash: {
       type: String,
-      required: function() {
+      required: function () {
         return this.authProvider === "EMAIL";
       }
     },
@@ -34,7 +33,16 @@ const userSchema = new mongoose.Schema(
     // Required for email signup, optional for OAuth (filled during onboarding)
     mobile: {
       type: String,
-      required: function() {
+      maxlength: 16, // E.164 allows up to 15 digits + '+' sign
+      validate: {
+        validator: function (v) {
+          // If not required (e.g. OAuth), allow empty if not set
+          if (!this.required && !v) return true;
+          return /^\+[1-9]\d{1,14}$/.test(v);
+        },
+        message: props => `${props.value} is not a valid international phone number!`
+      },
+      required: function () {
         return this.authProvider === "EMAIL";
       }
     },
@@ -43,7 +51,7 @@ const userSchema = new mongoose.Schema(
     workStatus: {
       type: String,
       enum: ["FRESHER", "EXPERIENCED", "STUDENT"],
-      required: function() {
+      required: function () {
         return this.authProvider === "EMAIL";
       }
     },
@@ -51,7 +59,7 @@ const userSchema = new mongoose.Schema(
     // Required for email signup, optional for OAuth
     currentCity: {
       type: String,
-      required: function() {
+      required: function () {
         return this.authProvider === "EMAIL";
       }
     },
@@ -71,15 +79,11 @@ const userSchema = new mongoose.Schema(
 
     // SOCIAL AUTH FIELDS
     googleId: {
-      type: String,
-      sparse: true,      // ✅ sparse already creates an index automatically
-      unique: true       // ✅ unique also creates an index automatically
+      type: String
     },
 
     linkedInId: {
-      type: String,
-      sparse: true,      // ✅ sparse already creates an index automatically
-      unique: true       // ✅ unique also creates an index automatically
+      type: String
     },
 
     authProvider: {
@@ -123,6 +127,11 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// Unified Index Definitions (Fixes "Duplicate schema index" warnings)
+userSchema.index({ email: 1 }, { unique: true });
+userSchema.index({ googleId: 1 }, { unique: true, sparse: true });
+userSchema.index({ linkedInId: 1 }, { unique: true, sparse: true });
 
 const User = mongoose.model("User", userSchema);
 export default User;

@@ -1,6 +1,9 @@
 import juice from "juice";
 import nodemailer from "nodemailer";
-import { verificationTemplate } from "./verificationTemplate.js";
+import dotenv from "dotenv";
+import { verificationTemplate } from "./emailTemplate.js";
+
+dotenv.config();
 
 // ✅ DEFINE THE TRANSPORTER
 const getTransporter = () => {
@@ -11,7 +14,8 @@ const getTransporter = () => {
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS
-    }
+    },
+    tls: { rejectUnauthorized: false }
   });
 };
 
@@ -19,7 +23,7 @@ export const sendVerificationEmail = async (to, token) => {
   console.log("📧 sendVerificationEmail called for:", to);
 
   const verificationLink =
-    `${process.env.BACKEND_URL}/api/auth/verify-email?token=${token}`;
+    `${process.env.BACKEND_URL || 'http://localhost:8000'}/api/auth/verify-email?token=${token}`;
 
   // 1️⃣ Raw HTML from template
   const rawHtml = verificationTemplate(verificationLink);

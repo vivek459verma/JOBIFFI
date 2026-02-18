@@ -80,8 +80,13 @@ export const validateRegister = (req, res, next) => {
     return res.status(400).json({ success: false, message: "Invalid work status" });
   }
 
-  if (mobile.length !== 10 || isNaN(mobile)) {
-    return res.status(400).json({ success: false, message: "Mobile number must be a 10-digit number" });
+  // Validate International Phone Format (E.164)
+  const phoneRegex = /^\+[1-9]\d{1,14}$/;
+  if (!phoneRegex.test(mobile)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid mobile number. Must be in international format (e.g., +91XXXXXXXXXX)"
+    });
   }
 
   next();

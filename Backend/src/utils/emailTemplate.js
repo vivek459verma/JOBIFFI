@@ -1,151 +1,529 @@
+import dotenv from "dotenv";
+dotenv.config();
+
+// Helper to safely get environment variables for images
+const getAssetUrl = (key, fallback) => {
+  const url = process.env[key] || fallback;
+  return url.replace(/['"]/g, "").trim();
+};
+
 export const otpTemplate = (otp, name) => {
+  const logoUrl = getAssetUrl('EMAIL_LOGO_URL', 'https://res.cloudinary.com/drkakxopk/image/upload/v1770984351/android-chrome-512x512_etyldn.png');
+  const playstoreBadge = getAssetUrl('PLAYSTORE_BADGE_URL', 'https://res.cloudinary.com/drkakxopk/image/upload/v1770984249/Picture1_yyvmqs.png');
+  const appstoreBadge = getAssetUrl('APPSTORE_BADGE_URL', 'https://res.cloudinary.com/drkakxopk/image/upload/v1771130247/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917_dx9zt7.png');
+
+  console.log(`📧 Generating OTP template... Assets: Logo=${logoUrl.substring(0, 40)}..., PlayStore=${playstoreBadge.substring(0, 40)}...`);
+
   return `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <title>Jobiffi Login OTP</title>
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          background-color: #f4f4f4;
-          margin: 0;
-          padding: 0;
-        }
-        .container {
-          max-width: 600px;
-          margin: 20px auto;
-          background-color: #ffffff;
-          padding: 0;
-          border-radius: 8px;
-          overflow: hidden; 
-          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .header {
-          background-color: #0033cc; /* <--- CHANGED to Light Grey */
-          padding: 20px;
-          text-align: center;
-          border-bottom: 1px solid #ddd; /* Added a subtle border */
-        }
-
-        .content {
-          padding: 30px;
-          color: #333333;
-          line-height: 1.6;
-        }
-        .greeting {
-          font-size: 18px;
-          font-weight: bold;
-          margin-bottom: 20px;
-        }
-        .otp-box {
-          font-size: 36px;
-          font-weight: bold;
-          color: #0033cc;
-          letter-spacing: 5px;
-          background: #e6f0ff;
-          padding: 15px;
-          text-align: center;
-          margin: 20px 0;
-          border-radius: 8px;
-          border: 1px dashed #0033cc;
-        }
-        .note {
-          font-size: 14px;
-          color: #cc0000;
-          margin-top: 10px;
-        }
-        .app-links {
-          margin-top: 20px;
-          text-align: center;
-        }
-        .app-links img {
-          height: 40px;
-          margin: 0 5px;
-          cursor: pointer;
-        }
-        .footer {
-          background-color: #f9f9f9;
-          padding: 20px;
-          font-size: 11px;
-          color: #777777;
-          border-top: 1px solid #eeeeee;
-          line-height: 1.5;
-        }
-        .footer a {
-          color: #0033cc;
-          text-decoration: none;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          <a href="#" style="font-size: 28px; font-weight: bold; color: #ffffff !important; text-decoration: none; display: inline-block;">Jobiffi</a>
-        </div>
-
-        <div class="content">
-          <div class="greeting">Dear ${name || "Jobseeker"},</div>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Jobiffi OTP</title>
+  <style type="text/css">
+    body { margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+    table { border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    @media only screen and (max-width: 600px) {
+      .email-container { width: 100% !important; }
+      .mobile-padding { padding: 20px !important; }
+      .badge-row td { display: block !important; width: 100% !important; padding: 10px 0 !important; text-align: center !important; }
+      .badge-img { width: 135px !important; height: auto !important; max-width: 135px !important; margin: 0 auto !important; }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f4f4;">
+  <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f4f4f4;">
+    <tr>
+      <td align="center" style="padding: 20px 10px;">
+        <table border="0" cellpadding="0" cellspacing="0" width="600" class="email-container" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 600px;">
           
-          <p>Please enter the OTP below to login to your Jobiffi account.</p>
+          <!-- HEADER SECTION -->
+          <tr>
+            <td align="center" style="background-color: #0033cc; padding: 30px 20px; border-radius: 8px 8px 0 0;">
+              <a href="https://jobiffi.com" style="text-decoration: none;">
+                <img src="${logoUrl}" alt="Jobiffi" width="60" style="height: 60px; width: 60px; display: block; margin: 0 auto 10px auto; border: 0;" />
+                <div style="font-size: 24px; font-weight: bold; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center;">Jobiffi</div>
+              </a>
+            </td>
+          </tr>
           
-          <div class="otp-box">${otp}</div>
+          <!-- CONTENT SECTION -->
+          <tr>
+            <td style="padding: 40px 30px;" class="mobile-padding">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 24px; color: #333333; padding-bottom: 15px;">
+                    Dear ${name || "Jobseeker"},
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 24px; color: #333333; padding-bottom: 25px;">
+                    Please enter the OTP below to proceed with your request on <strong>Jobiffi</strong>.
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center" style="padding: 20px 0 30px 0;">
+                    <table border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="background-color: #e6f0ff; border: 1px dashed #0033cc; border-radius: 8px; padding: 15px 30px;">
+                          <span style="font-family: Arial, Helvetica, sans-serif; font-size: 32px; font-weight: bold; color: #0033cc; letter-spacing: 5px;">
+                            ${otp}
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 20px; color: #cc0000; padding-bottom: 20px;">
+                    <strong>Note:</strong> This OTP is valid for the next 15 minutes only.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 24px; color: #333333; padding-top: 20px;">
+                    Regards,<br/>
+                    <strong>Jobiffi Team</strong>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
           
-          <p class="note"><strong>Note:</strong> This OTP is valid for the next 15 minutes only.</p>
+          <!-- SEPARATOR -->
+          <tr>
+            <td style="padding: 0 30px;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td style="border-top: 1px solid #eeeeee; padding: 0;"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
           
-          <p>If you did not make this request, please write to us at <a href="mailto:support@jobiffi.com">support@jobiffi.com</a>.</p>
+          <!-- APP DOWNLOAD SECTION -->
+          <tr>
+            <td align="center" style="padding: 30px;" class="mobile-padding">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td align="center" style="font-family: Arial, Helvetica, sans-serif; font-size: 16px; color: #666666; padding-bottom: 20px;">
+                    Get the Jobiffi App
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center">
+                    <table border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
+                      <tr class="badge-row">
+                        <td align="center" valign="middle" style="padding: 0 10px;">
+                          <a href="https://play.google.com/store/apps/details?id=com.jobiffi" target="_blank">
+                            <img src="${playstoreBadge}" alt="Google Play" width="135" class="badge-img" style="display: block; border: 0;" />
+                          </a>
+                        </td>
+                        <td align="center" valign="middle" style="padding: 0 10px;">
+                          <a href="https://apps.apple.com/app/jobiffi" target="_blank">
+                            <img src="${appstoreBadge}" alt="App Store" width="135" class="badge-img" style="display: block; border: 0;" />
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
           
-          <br/>
-          <p>Regards,<br><strong>Jobiffi Team</strong></p>
-          <p>Good luck for your Job Search!</p>
-
-          <div class="app-links">
-            <p style="font-size: 14px; color: #555;">Enjoy personalized job searching experience</p>
-            <a href="#">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Download_on_the_App_Store_Badge.svg/320px-Download_on_the_App_Store_Badge.svg.png" alt="Download on App Store">
-            </a>
-            
-            <a href="#">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Play_Store_badge_EN.svg/320px-Google_Play_Store_badge_EN.svg.png" alt="Get it on Google Play">
-            </a>
-          </div>
-        </div>
-
-        <div class="footer">
-          <p><a href="#">Report a problem</a></p>
-          <p>You have received this mail because your e-mail ID is registered with Jobiffi.com. This is a system-generated e-mail regarding your Jobiffi account preferences, please don't reply to this message.</p>
-          
-          <p>The jobs sent in this mail have been posted by the clients of Jobiffi.com. We have enabled auto-login for your convenience; you are strongly advised not to forward this email to protect your account from unauthorized access.</p>
-          
-          <p>Jobiffi has taken all reasonable steps to ensure that the information in this mailer is authentic. Users are advised to research bonafides of advertisers independently. <strong>Please do not pay any money to anyone who promises to find you a job.</strong></p>
-          
-          <p>Jobiffi shall not have any responsibility in this regard. We recommend that you visit our <a href="#">Terms and conditions</a> and the <a href="#">Security Advice</a> for more comprehensive information.</p>
-        </div>
-      </div>
-    </body>
-    </html>
-  `;
+          <!-- FOOTER SECTION -->
+          <tr>
+            <td style="background-color: #f9f9f9; padding: 30px; border-top: 1px solid #eeeeee; border-radius: 0 0 8px 8px;" class="mobile-padding">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 20px; color: #0033cc; padding-bottom: 20px;">
+                    <a href="https://jobiffi.com/report" style="color: #0033cc; text-decoration: none; font-weight: bold;">Report a problem</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px; color: #666666; padding-bottom: 15px;">
+                    You have received this mail because your e-mail ID is registered with Jobiffi.com. This is a system-generated e-mail regarding your account preferences. Please do not reply to this message.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="border-top: 1px dotted #cccccc; padding: 0; line-height: 1px; font-size: 1px;">&nbsp;</td>
+                </tr>
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px; color: #666666; padding-top: 15px; padding-bottom: 15px;">
+                    Jobiffi has taken all reasonable steps to ensure the authenticity of information in this mailer. Users are advised to research the bonafides of advertisers independently. <strong style="color: #333333;">Please do not pay any money to anyone who promises to find you a job.</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px; color: #666666; padding-bottom: 20px;">
+                    We recommend that you visit our <a href="https://jobiffi.com/terms" style="color: #0033cc; text-decoration: none;">Terms and Conditions</a> and <a href="https://jobiffi.com/security" style="color: #0033cc; text-decoration: none;">Security Advice</a> for more information.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="border-top: 1px solid #e0e0e0; padding-top: 20px; text-align: center;">
+                    <span style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #999999;">© 2026 Jobiffi. All rights reserved.</span><br/>
+                    <div style="padding-top: 10px;">
+                      <a href="https://jobiffi.com/privacy" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #0033cc; text-decoration: none; margin: 0 5px;">Privacy Policy</a>
+                      <span style="color: #999999;">|</span>
+                      <a href="https://jobiffi.com/terms" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #0033cc; text-decoration: none; margin: 0 5px;">Terms of Service</a>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
 };
 
 export const resetPasswordTemplate = (link, name) => {
+  const logoUrl = getAssetUrl('EMAIL_LOGO_URL', 'https://res.cloudinary.com/drkakxopk/image/upload/v1770984351/android-chrome-512x512_etyldn.png');
+  const playstoreBadge = getAssetUrl('PLAYSTORE_BADGE_URL', 'https://res.cloudinary.com/drkakxopk/image/upload/v1770984249/Picture1_yyvmqs.png');
+  const appstoreBadge = getAssetUrl('APPSTORE_BADGE_URL', 'https://res.cloudinary.com/drkakxopk/image/upload/v1771130247/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917_dx9zt7.png');
+
+  console.log(`📧 Generating Reset Template... Assets: Logo=${logoUrl.substring(0, 40)}..., PlayStore=${playstoreBadge.substring(0, 40)}...`);
+
   return `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-      <h2 style="color: #0033cc; text-align: center;">Reset Your Password</h2>
-      <p>Dear ${name || "User"},</p>
-      <p>We received a request to reset your password for your Jobiffi account.</p>
-      <p>Please click the button below to proceed. This link is valid for 15 minutes.</p>
-      
-      <div style="text-align: center; margin: 30px 0;">
-        <a href="${link}" style="background-color: #0033cc; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">Reset Password</a>
-      </div>
-      
-      <p>If the button doesn't work, copy and paste this link into your browser:</p>
-      <p style="color: #555; word-break: break-all;">${link}</p>
-      
-      <p style="color: #999; font-size: 12px; margin-top: 20px;">If you did not request this, please ignore this email.</p>
-    </div>
-  `;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reset Your Jobiffi Password</title>
+  <style type="text/css">
+    body { margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+    table { border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    @media only screen and (max-width: 600px) {
+      .email-container { width: 100% !important; }
+      .mobile-padding { padding: 20px !important; }
+      .badge-row td { display: block !important; width: 100% !important; padding: 10px 0 !important; text-align: center !important; }
+      .badge-img { width: 135px !important; height: auto !important; max-width: 135px !important; margin: 0 auto !important; }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f4f4;">
+  <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f4f4f4;">
+    <tr>
+      <td align="center" style="padding: 20px 10px;">
+        <table border="0" cellpadding="0" cellspacing="0" width="600" class="email-container" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 600px;">
+          
+          <!-- HEADER SECTION -->
+          <tr>
+            <td align="center" style="background-color: #0033cc; padding: 30px 20px; border-radius: 8px 8px 0 0;">
+              <a href="https://jobiffi.com" style="text-decoration: none;">
+                <img src="${logoUrl}" alt="Jobiffi" width="60" style="height: 60px; width: 60px; display: block; margin: 0 auto 10px auto; border: 0;" />
+                <div style="font-size: 24px; font-weight: bold; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center;">Jobiffi</div>
+              </a>
+            </td>
+          </tr>
+          
+          <!-- CONTENT SECTION -->
+          <tr>
+            <td style="padding: 40px 30px;" class="mobile-padding">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 24px; color: #333333; padding-bottom: 15px;">
+                    Dear ${name || "Jobseeker"},
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 24px; color: #333333; padding-bottom: 25px;">
+                    We received a request to reset your password for your <strong>Jobiffi</strong> account. Please click the button below to proceed.
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center" style="padding: 20px 0 30px 0;">
+                    <table border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="border-radius: 6px; background-color: #0033cc;">
+                          <a href="${link}" target="_blank" style="font-size: 16px; font-family: Arial, Helvetica, sans-serif; color: #ffffff; text-decoration: none; border-radius: 6px; padding: 14px 40px; border: 1px solid #0033cc; display: inline-block; font-weight: bold;">
+                            Reset Password
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; line-height: 20px; color: #666666; padding-bottom: 20px;">
+                    Link valid for 15 minutes. Or copy this link: <br/> ${link}
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 24px; color: #333333; padding-top: 20px;">
+                    Regards,<br/>
+                    <strong>Jobiffi Team</strong>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- SEPARATOR -->
+          <tr>
+            <td style="padding: 0 30px;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td style="border-top: 1px solid #eeeeee; padding: 0;"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- APP DOWNLOAD SECTION -->
+          <tr>
+            <td align="center" style="padding: 30px;" class="mobile-padding">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td align="center" style="font-family: Arial, Helvetica, sans-serif; font-size: 16px; color: #666666; padding-bottom: 20px;">
+                    Get the Jobiffi App
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center">
+                    <table border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
+                      <tr class="badge-row">
+                        <td align="center" valign="middle" style="padding: 0 10px;">
+                          <a href="https://play.google.com/store/apps/details?id=com.jobiffi" target="_blank">
+                            <img src="${playstoreBadge}" alt="Google Play" width="135" class="badge-img" style="display: block; border: 0;" />
+                          </a>
+                        </td>
+                        <td align="center" valign="middle" style="padding: 0 10px;">
+                          <a href="https://apps.apple.com/app/jobiffi" target="_blank">
+                            <img src="${appstoreBadge}" alt="App Store" width="135" class="badge-img" style="display: block; border: 0;" />
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- FOOTER SECTION -->
+          <tr>
+            <td style="background-color: #f9f9f9; padding: 30px; border-top: 1px solid #eeeeee; border-radius: 0 0 8px 8px;" class="mobile-padding">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 20px; color: #0033cc; padding-bottom: 20px;">
+                    <a href="https://jobiffi.com/report" style="color: #0033cc; text-decoration: none; font-weight: bold;">Report a problem</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px; color: #666666; padding-bottom: 15px;">
+                    You have received this mail because your e-mail ID is registered with Jobiffi.com. This is a system-generated e-mail regarding your account preferences. Please do not reply to this message.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="border-top: 1px dotted #cccccc; padding: 0; line-height: 1px; font-size: 1px;">&nbsp;</td>
+                </tr>
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px; color: #666666; padding-top: 15px; padding-bottom: 15px;">
+                    Jobiffi has taken all reasonable steps to ensure the authenticity of information in this mailer. Users are advised to research the bonafides of advertisers independently. <strong style="color: #333333;">Please do not pay any money to anyone who promises to find you a job.</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px; color: #666666; padding-bottom: 20px;">
+                    We recommend that you visit our <a href="https://jobiffi.com/terms" style="color: #0033cc; text-decoration: none;">Terms and Conditions</a> and <a href="https://jobiffi.com/security" style="color: #0033cc; text-decoration: none;">Security Advice</a> for more information.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="border-top: 1px solid #e0e0e0; padding-top: 20px; text-align: center;">
+                    <span style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #999999;">© 2026 Jobiffi. All rights reserved.</span><br/>
+                    <div style="padding-top: 10px;">
+                      <a href="https://jobiffi.com/privacy" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #0033cc; text-decoration: none; margin: 0 5px;">Privacy Policy</a>
+                      <span style="color: #999999;">|</span>
+                      <a href="https://jobiffi.com/terms" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #0033cc; text-decoration: none; margin: 0 5px;">Terms of Service</a>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
 };
+
+export const verificationTemplate = (link) => {
+  const logoUrl = getAssetUrl('EMAIL_LOGO_URL', 'https://res.cloudinary.com/drkakxopk/image/upload/v1770984351/android-chrome-512x512_etyldn.png');
+  const playstoreBadge = getAssetUrl('PLAYSTORE_BADGE_URL', 'https://res.cloudinary.com/drkakxopk/image/upload/v1770984249/Picture1_yyvmqs.png');
+  const appstoreBadge = getAssetUrl('APPSTORE_BADGE_URL', 'https://res.cloudinary.com/drkakxopk/image/upload/v1771130247/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917_dx9zt7.png');
+
+  console.log(`📧 Generating Verification Template... Assets: Logo=${logoUrl.substring(0, 40)}..., PlayStore=${playstoreBadge.substring(0, 40)}...`);
+
+  return `
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verify Your Jobiffi Account</title>
+  <style type="text/css">
+    body { margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+    table { border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    @media only screen and (max-width: 600px) {
+      .email-container { width: 100% !important; }
+      .mobile-padding { padding: 20px !important; }
+      .badge-row td { display: block !important; width: 100% !important; padding: 10px 0 !important; text-align: center !important; }
+      .badge-img { width: 135px !important; height: auto !important; max-width: 135px !important; margin: 0 auto !important; }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f4f4;">
+  <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f4f4f4;">
+    <tr>
+      <td align="center" style="padding: 20px 10px;">
+        <table border="0" cellpadding="0" cellspacing="0" width="600" class="email-container" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 600px;">
+          
+          <!-- HEADER SECTION -->
+          <tr>
+            <td align="center" style="background-color: #0033cc; padding: 30px 20px; border-radius: 8px 8px 0 0;">
+              <a href="https://jobiffi.com" style="text-decoration: none;">
+                <img src="${logoUrl}" alt="Jobiffi" width="60" style="height: 60px; width: 60px; display: block; margin: 0 auto 10px auto; border: 0;" />
+                <div style="font-size: 24px; font-weight: bold; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center;">Jobiffi</div>
+              </a>
+            </td>
+          </tr>
+          
+          <!-- CONTENT SECTION -->
+          <tr>
+            <td style="padding: 40px 30px;" class="mobile-padding">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 24px; color: #333333; padding-bottom: 15px;">
+                    Dear Jobseeker,
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 24px; color: #333333; padding-bottom: 25px;">
+                    Thank you for registering with <strong>Jobiffi</strong>. Please verify your email to activate your account.
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center" style="padding: 20px 0 30px 0;">
+                    <table border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="border-radius: 6px; background-color: #0033cc;">
+                          <a href="${link}" target="_blank" style="font-size: 16px; font-family: Arial, Helvetica, sans-serif; color: #ffffff; text-decoration: none; border-radius: 6px; padding: 14px 40px; border: 1px solid #0033cc; display: inline-block; font-weight: bold;">
+                            Verify My Account
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 24px; color: #333333; padding-top: 20px;">
+                    Regards,<br/>
+                    <strong>Jobiffi Team</strong>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- SEPARATOR -->
+          <tr>
+            <td style="padding: 0 30px;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td style="border-top: 1px solid #eeeeee; padding: 0;"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- APP DOWNLOAD SECTION -->
+          <tr>
+            <td align="center" style="padding: 30px;" class="mobile-padding">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td align="center" style="font-family: Arial, Helvetica, sans-serif; font-size: 16px; color: #666666; padding-bottom: 20px;">
+                    Get the Jobiffi App
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center">
+                    <table border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
+                      <tr class="badge-row">
+                        <td align="center" valign="middle" style="padding: 0 10px;">
+                          <a href="https://play.google.com/store/apps/details?id=com.jobiffi" target="_blank">
+                            <img src="${playstoreBadge}" alt="Google Play" width="135" class="badge-img" style="display: block; border: 0;" />
+                          </a>
+                        </td>
+                        <td align="center" valign="middle" style="padding: 0 10px;">
+                          <a href="https://apps.apple.com/app/jobiffi" target="_blank">
+                            <img src="${appstoreBadge}" alt="App Store" width="135" class="badge-img" style="display: block; border: 0;" />
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- FOOTER SECTION -->
+          <tr>
+            <td style="background-color: #f9f9f9; padding: 30px; border-top: 1px solid #eeeeee; border-radius: 0 0 8px 8px;" class="mobile-padding">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 20px; color: #0033cc; padding-bottom: 20px;">
+                    <a href="https://jobiffi.com/report" style="color: #0033cc; text-decoration: none; font-weight: bold;">Report a problem</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px; color: #666666; padding-bottom: 15px;">
+                    You have received this mail because your e-mail ID is registered with Jobiffi.com. This is a system-generated e-mail regarding your account preferences. Please do not reply to this message.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="border-top: 1px dotted #cccccc; padding: 0; line-height: 1px; font-size: 1px;">&nbsp;</td>
+                </tr>
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px; color: #666666; padding-top: 15px; padding-bottom: 15px;">
+                    Jobiffi has taken all reasonable steps to ensure the authenticity of information in this mailer. Users are advised to research the bonafides of advertisers independently. <strong style="color: #333333;">Please do not pay any money to anyone who promises to find you a job.</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px; color: #666666; padding-bottom: 20px;">
+                    We recommend that you visit our <a href="https://jobiffi.com/terms" style="color: #0033cc; text-decoration: none;">Terms and Conditions</a> and <a href="https://jobiffi.com/security" style="color: #0033cc; text-decoration: none;">Security Advice</a> for more information.
+                  </td>
+                </tr>
+                <tr>
+                  <td style="border-top: 1px solid #e0e0e0; padding-top: 20px; text-align: center;">
+                    <span style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #999999;">© 2026 Jobiffi. All rights reserved.</span><br/>
+                    <div style="padding-top: 10px;">
+                      <a href="https://jobiffi.com/privacy" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #0033cc; text-decoration: none; margin: 0 5px;">Privacy Policy</a>
+                      <span style="color: #999999;">|</span>
+                      <a href="https://jobiffi.com/terms" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #0033cc; text-decoration: none; margin: 0 5px;">Terms of Service</a>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+};
+
 export const verificationSuccessTemplate = (companyName) => {
   return `
     <!DOCTYPE html>
@@ -154,66 +532,21 @@ export const verificationSuccessTemplate = (companyName) => {
       <meta charset="UTF-8">
       <title>Jobiffi Email Verification Success</title>
       <style>
-        body {
-          font-family: Arial, sans-serif;
-          background-color: #f4f4f4;
-          margin: 0;
-          padding: 0;
-        }
-        .container {    
-          max-width: 600px;
-          margin: 20px auto;
-          background-color: #ffffff;
-          padding: 0;
-          border-radius: 8px;
-          overflow: hidden; 
-          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .header {
-          background-color: #0033cc; /* <--- CHANGED to Light Grey */
-          padding: 20px;
-          text-align: center;
-          border-bottom: 1px solid #ddd; /* Added a subtle border */
-        }
-        .content {
-          padding: 30px;
-          color: #333333;
-          line-height: 1.6;
-        }
-        .greeting {
-          font-size: 18px;
-          font-weight: bold;
-          margin-bottom: 20px;
-        }
-        .success-message {
-          font-size: 16px;
-          margin-bottom: 20px;
-        }
-        .footer {
-          background-color: #f9f9f9;
-          padding: 20px;
-          font-size: 11px;
-          color: #777777;
-          border-top: 1px solid #eeeeee;
-          line-height: 1.5;
-        }
-        .footer a {
-          color: #0033cc;
-          text-decoration: none;
-        }
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .header { background-color: #0033cc; padding: 20px; text-align: center; color: #ffffff; font-size: 28px; font-weight: bold; }
+        .content { padding: 30px; color: #333333; line-height: 1.6; }
+        .greeting { font-size: 18px; font-weight: bold; margin-bottom: 20px; }
       </style>
     </head>
     <body>
       <div class="container">
-        <div class="header">
-          <a href="#" style="font-size: 28px; font-weight: bold; color: #ffffff !important; text-decoration: none; display: inline-block;">Jobiffi</a>
-        </div>
+        <div class="header">Jobiffi</div>
         <div class="content">
           <div class="greeting">Dear ${companyName},</div>
-          <p class="success-message">Thank you for verifying your email address. Your email has been successfully verified.</p>
+          <p>Your email has been successfully verified. You can now login to your account.</p>
         </div>
       </div>
     </body>
-    </html>
-  `;
+    </html>`;
 };

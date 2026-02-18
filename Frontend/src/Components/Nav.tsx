@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Dropdown } from "antd";
 import {
   ChevronDownIcon,
@@ -10,6 +10,7 @@ import logo from "../assets/media/New_Brand_logo_-_16060-removebg.png";
 
 /* ✅ ONLY ADDITION */
 import Login from "./Login";
+import CompleteProfileModal from "./Authentication/CompleteProfileModal";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -18,21 +19,103 @@ function Navbar() {
   const [jobServices, setJobServices] = useState(false);
   const [jobResources, setJobResources] = useState(false);
 
-  /* ✅ ONLY ADDITION */
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [userData, setUserData] = useState<any>(null); // To store user details for modal
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Handle path-based modal triggers
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (location.pathname === "/login" || params.get("login") === "true") {
+      if (!isLoggedIn) {
+        setIsLoginOpen(true);
+      } else {
+        navigate("/", { replace: true });
+      }
+    }
+  }, [location, navigate, isLoggedIn]);
+
+  // Check for profile completion and login status on load
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setIsLoggedIn(false);
+        setUserData(null);
+        return;
+      }
+
+      setIsLoggedIn(true);
+
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/auth/me`, {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          const { mobile, workStatus, currentCity } = data.user;
+          setUserData(data.user);
+          // If any mandatory field is missing, open profile completion modal
+          if (!mobile || !workStatus || !currentCity) {
+            setIsProfileModalOpen(true);
+          }
+        } else {
+          // Token might be invalid/expired
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          setIsLoggedIn(false);
+        }
+      } catch (err) {
+        console.error("Failed to check auth:", err);
+      }
+    };
+
+    checkAuth();
+
+    // Listen for storage changes (for cross-tab sync)
+    const handleStorageChange = () => checkAuth();
+    // Listen for custom "auth-change" event for same-tab sync
+    const handleAuthChange = () => checkAuth();
+
+    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("auth-change", handleAuthChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("auth-change", handleAuthChange);
+    };
+  }, [location, navigate]); // 🔧 ADDED location as dependency
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    setUserData(null);
+    navigate("/");
+  };
 
   const employerItems = [
     { key: "1", label: <a href="#">Buy Online</a> },
     { key: "2", label: <a href="#">Employer Login</a> },
   ];
 
+  const userMenuItems = [
+    { key: "profile", label: "My Profile", onClick: () => setIsProfileModalOpen(true) },
+    { key: "logout", label: <span className="text-red-600 font-semibold">Logout</span>, onClick: handleLogout },
+  ];
+
   return (
     <>
       <nav className="w-full bg-white shadow-md px-4 sm:px-8 py-3 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between relative">
-          
+
           {/* LEFT – Logo */}
           <div className="flex ml-[50px] items-center translate-x-[30%]">
             <a href="/">
@@ -55,7 +138,7 @@ function Navbar() {
 
               {jobsOpen && (
                 <div className="absolute top-10 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-                  
+
                   <div className="border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
                       Job Categories
@@ -115,7 +198,7 @@ function Navbar() {
 
               {jobCompany && (
                 <div className="absolute top-10 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-                  
+
                   <div className="border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
                       Explore Categories
@@ -170,7 +253,7 @@ function Navbar() {
 
               {jobServices && (
                 <div className="absolute top-10 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-                  
+
                   <div className="flex flex-col border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
                       Resume Writing
@@ -250,20 +333,39 @@ function Navbar() {
 
           {/* RIGHT – Buttons */}
           <div className="flex items-center gap-2 sm:gap-4">
-            
-            <button
-              onClick={() => setIsLoginOpen(true)}
-              className="cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl border border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white transition font-semibold"
-            >
-              Login
-            </button>
+            {!isLoggedIn ? (
+              <>
+                <button
+                  onClick={() => setIsLoginOpen(true)}
+                  className="cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl border border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white transition font-semibold"
+                >
+                  Login
+                </button>
 
-            <button
-              onClick={() => navigate("/register")}
-              className="cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-gradient-to-r from-blue-800 via-blue-900 to-blue-900 text-white font-semibold"
-            >
-              Register
-            </button>
+                <button
+                  onClick={() => navigate("/register")}
+                  className="cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-gradient-to-r from-blue-800 via-blue-900 to-blue-900 text-white font-semibold"
+                >
+                  Register
+                </button>
+              </>
+            ) : (
+              <Dropdown menu={{ items: userMenuItems }} trigger={["click"]}>
+                <div className="flex items-center gap-2 cursor-pointer bg-blue-50 px-3 py-1.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors">
+                  <div className="w-8 h-8 rounded-full bg-blue-900 flex items-center justify-center text-white font-bold text-xs overflow-hidden">
+                    {userData?.profilePicture ? (
+                      <img src={userData.profilePicture} alt="User" className="w-full h-full object-cover" />
+                    ) : (
+                      userData?.fullName?.[0]?.toUpperCase() || "U"
+                    )}
+                  </div>
+                  <span className="hidden sm:inline font-semibold text-blue-900 text-sm">
+                    {userData?.fullName?.split(" ")[0] || "User"}
+                  </span>
+                  <ChevronDownIcon className="w-4 h-4 text-blue-900" />
+                </div>
+              </Dropdown>
+            )}
 
             <Dropdown menu={{ items: employerItems }} trigger={["hover"]}>
               <div className="hidden sm:flex items-center gap-1 cursor-pointer text-gray-700 hover:text-black">
@@ -361,7 +463,24 @@ function Navbar() {
       {/* LOGIN */}
       <Login
         isOpen={isLoginOpen}
-        onClose={() => setIsLoginOpen(false)}
+        onClose={() => {
+          setIsLoginOpen(false);
+          if (location.pathname === "/login") {
+            navigate("/", { replace: true });
+          }
+        }}
+      />
+
+      {/* PROFILE COMPLETION MODAL */}
+      <CompleteProfileModal
+        isOpen={isProfileModalOpen}
+        initialData={userData}
+        onClose={() => setIsProfileModalOpen(false)}
+        onComplete={(user) => {
+          console.log("Profile updated:", user);
+          setUserData(user); // Update local state
+          localStorage.setItem("user", JSON.stringify(user)); // Sync with localStorage
+        }}
       />
     </>
   );
