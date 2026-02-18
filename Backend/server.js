@@ -1,19 +1,19 @@
-// ⚠️ IMPORTANT: This must be the very first import
-// In ES modules, ALL imports are hoisted before any code runs
-// So we use a separate env loader file to ensure dotenv loads first
 import "./src/config/env.config.js";
-
 import express from "express";
 import cors from "cors";
 import connectDB from "./src/config/mongo.config.js";
 import authRoutes from "./src/routes/auth.routes.js";
-import passport from "./src/config/passport.js";
 import employerRoutes from "./src/routes/employer.routes.js";
+import resumeMakerRoutes from './src/routes/ResumeMaker.routes.js';
+import dotenv from "dotenv";
 
+// 1. Load environment variables first!
+dotenv.config();
+
+// 2. Initialize the Express App
 const app = express();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 3000;
 
-// CORS Configuration
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   "http://localhost:5173",
@@ -21,6 +21,7 @@ const allowedOrigins = [
   "http://localhost:3000"
 ];
 
+// 3. Middleware
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -35,24 +36,24 @@ app.use(
     credentials: true,
   })
 );
-
-// Body Parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Initialize Passport (for OAuth)
 app.use(passport.initialize());
 
-// Health Check Route
+
+
+// 4. Routes
 app.get("/", (req, res) => {
   res.send("jobiffi backend is running!");
 });
 
-// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/employer", employerRoutes);
+// ✅ Here is your Resume Maker route, safely placed after app is initialized!
+app.use('/api/resumeMaker', resumeMakerRoutes);
 
-// Error Handler
+// 5. Error Handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
   const statusCode = err.statusCode || 500;
@@ -62,7 +63,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start Server
+// 6. Start Server
 const startServer = async () => {
   await connectDB();
   app.listen(port, () => {
