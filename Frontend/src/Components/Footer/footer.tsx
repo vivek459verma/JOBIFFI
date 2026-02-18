@@ -1,5 +1,6 @@
 import { AiOutlineCopyright } from "react-icons/ai";
-
+import goggle from "../../assets/media/apple store.svg";
+import play from "../../assets/media/playstore.svg";
 import logo from "../../assets/media/New_Brand_logo_-_16060-removebg.png";
 
 
@@ -132,7 +133,9 @@ const Footer = () => {
             Trusted by 5,000 + Job seekers
           </p>
           <div className="flex gap-3 mt-4">
-            <img
+            <img src={goggle} alt="android" className="h-10"/>
+            <img src={play} alt="playstore"  className="h-10"/>
+            {/* <img
               src="https://static.naukimg.com/s/0/0/i/new-homepage/android-app_v1.png"
               alt="android"
               className="h-10"
@@ -141,7 +144,7 @@ const Footer = () => {
               src="https://static.naukimg.com/s/0/0/i/new-homepage/ios-app_v1.png"
               alt="ios"
               className="h-10"
-            />
+            /> */}
           </div>
         </div>
       </div>

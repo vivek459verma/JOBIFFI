@@ -117,7 +117,7 @@ function Navbar() {
         <div className="max-w-7xl mx-auto flex items-center justify-between relative">
 
           {/* LEFT – Logo */}
-          <div className="flex ml-[50px] items-center translate-x-[30%]">
+          <div className="flex ml-12.5 items-center translate-x-[30%]">
             <a href="/">
               <img src={logo} alt="Logo" className="h-12 w-auto" />
             </a>
@@ -137,8 +137,8 @@ function Navbar() {
               </h1>
 
               {jobsOpen && (
-                <div className="absolute top-10 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-
+                <div className="absolute top-10 left-0 w-162.5 bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
+                  
                   <div className="border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
                       Job Categories
@@ -165,6 +165,7 @@ function Navbar() {
                       <li>Work from home Jobs</li>
                       <li>Walk-in Jobs</li>
                       <li>Part-time Jobs</li>
+                      <li>Freelancing Jobs</li>
                     </ul>
                   </div>
 
@@ -174,6 +175,7 @@ function Navbar() {
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600">
                       <li>Jobs in Delhi</li>
+                      <li>Jobs in Noida</li>
                       <li>Jobs in Bangalore</li>
                       <li>Jobs in Mumbai</li>
                       <li>Jobs in Hyderabad</li>
@@ -197,8 +199,8 @@ function Navbar() {
               </h1>
 
               {jobCompany && (
-                <div className="absolute top-10 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-
+                <div className="absolute top-10 left-0 w-162.5 bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
+                  
                   <div className="border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
                       Explore Categories
@@ -217,22 +219,22 @@ function Navbar() {
                       Explore collections
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600">
-                      <li>Top companies</li>
-                      <li>IT companies</li>
-                      <li>Fintech companies</li>
-                      <li>Sponsored companies</li>
-                      <li>Featured companies</li>
+                      <li>Top Companies</li>
+                      <li>IT Companies</li>
+                      <li>Fintech Companies</li>
+                      <li>Sponsored Companies</li>
+                      <li>Featured Companies</li>
                     </ul>
                   </div>
 
                   <div>
                     <h2 className="font-semibold text-blue-900 mb-3">
-                      Research companies
+                      Workplace Insights
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600">
-                      <li>Interview question</li>
-                      <li>Company salaries</li>
-                      <li>Company reviews</li>
+                      <li>Interview Question</li>
+                      <li>Company Salaries</li>
+                      <li>Company Reviews</li>
                       <li>Salary Calculator</li>
                     </ul>
                   </div>
@@ -252,53 +254,60 @@ function Navbar() {
               </h1>
 
               {jobServices && (
-                <div className="absolute top-10 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-
+                <div className="absolute top-10 left-0 w-162.5 bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
+                  
                   <div className="flex flex-col border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
-                      Resume Writing
+                      Smart Resume Builder
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600 mb-5">
-                      <li>Text Resume</li>
+                      <li>Text-Based Resume</li>
                       <li>Visual Resume</li>
-                      <li>Resume Critique</li>
+                      <li>One-Page Resume</li>
+                      <li>Infographic Resume</li>
+                      <li>AI Cover Letter</li>
                     </ul>
 
                     <h2 className="font-semibold text-blue-900 mb-3">
-                      Find Jobs
+                      Job Search
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600">
-                      <li>Jobs4u</li>
-                      <li>Priority applicant</li>
+                      <li>Early Access</li>
+                      <li>Turbo Apply</li>
                       <li>Contact us</li>
                     </ul>
                   </div>
 
                   <div className="flex flex-col border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
-                      Get recruiter's attention
+                      Fast-Track to Recruiters
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600 mb-5">
-                      <li>Resume display</li>
+                      <li>Resume Highlighting</li>
+                      <li>Profile Spotlight</li>
+                      <li>VIP Profile Access</li>
                     </ul>
 
                     <h2 className="font-semibold text-blue-900 mb-3">
-                      Monthly subscription
+                      Monthly Subscription
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600">
-                      <li>Basic & premium plans</li>
+                      <li>Basic Monthly Aceess</li>
+                      <li>Premium Monthly Aceess</li>
+                      <li>VIP Monthly Aceess</li>
+                      <li>Elite Monthly Aceess</li>
                     </ul>
                   </div>
 
                   <div>
                     <h2 className="font-semibold text-blue-900 mb-3">
-                      Free resume resources
+                      Free Resume Toolkit
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600">
-                      <li>Resume maker</li>
-                      <li>Resume quality score</li>
-                      <li>Resume samples</li>
-                      <li>Job letter samples</li>
+                      <li>Resume Builder</li>
+                      <li>Smart Resume Score</li>
+                      <li>Resume Samples</li>
+                      <li>Cover Letter Samples</li>
                     </ul>
                   </div>
 
@@ -317,12 +326,11 @@ function Navbar() {
               </h1>
 
               {jobResources && (
-                <div className="absolute top-10 left-0 w-[350px] bg-white shadow-xl rounded-xl p-6 grid gap-6 z-50">
+                <div className="absolute top-10 left-0 w-55 bg-white shadow-xl rounded-xl p-6 grid gap-6 z-50">
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li>Jobiffi Blogs</li>
-                    <li>AI interview coach</li>
-                    <li>News alert</li>
-                    <li>Events</li>
+                    <li>AI Interview Coach</li>
+                    <li>News Alert and Events</li>
                     <li>Customer Reviews</li>
                   </ul>
                 </div>
@@ -342,30 +350,12 @@ function Navbar() {
                   Login
                 </button>
 
-                <button
-                  onClick={() => navigate("/register")}
-                  className="cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-gradient-to-r from-blue-800 via-blue-900 to-blue-900 text-white font-semibold"
-                >
-                  Register
-                </button>
-              </>
-            ) : (
-              <Dropdown menu={{ items: userMenuItems }} trigger={["click"]}>
-                <div className="flex items-center gap-2 cursor-pointer bg-blue-50 px-3 py-1.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors">
-                  <div className="w-8 h-8 rounded-full bg-blue-900 flex items-center justify-center text-white font-bold text-xs overflow-hidden">
-                    {userData?.profilePicture ? (
-                      <img src={userData.profilePicture} alt="User" className="w-full h-full object-cover" />
-                    ) : (
-                      userData?.fullName?.[0]?.toUpperCase() || "U"
-                    )}
-                  </div>
-                  <span className="hidden sm:inline font-semibold text-blue-900 text-sm">
-                    {userData?.fullName?.split(" ")[0] || "User"}
-                  </span>
-                  <ChevronDownIcon className="w-4 h-4 text-blue-900" />
-                </div>
-              </Dropdown>
-            )}
+            <button
+              onClick={() => navigate("/register")}
+              className="cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-linear-to-r from-blue-800 via-blue-900 to-blue-900 text-white font-semibold"
+            >
+              Register
+            </button>
 
             <Dropdown menu={{ items: employerItems }} trigger={["hover"]}>
               <div className="hidden sm:flex items-center gap-1 cursor-pointer text-gray-700 hover:text-black">
@@ -426,25 +416,6 @@ function Navbar() {
                     <li>Unicorns</li>
                     <li>Product Companies</li>
                     <li>Internet Companies</li>
-                  </ul>
-                )}
-              </div>
-
-              {/* Services */}
-              <div className="mb-2">
-                <button
-                  className="w-full text-left flex justify-between items-center py-2 px-2 font-medium"
-                  onClick={() => setJobServices(!jobServices)}
-                >
-                  Services
-                  <ChevronDownIcon className={`w-4 h-4 ${jobServices ? "rotate-180" : ""}`} />
-                </button>
-
-                {jobServices && (
-                  <ul className="pl-4 space-y-1">
-                    <li>Resume Builder</li>
-                    <li>Job Alerts</li>
-                    <li>Monthly Subscription</li>
                   </ul>
                 )}
               </div>
