@@ -11,7 +11,7 @@ export default function AsideFooter() {
             Jobiffi app
           </h1>
           <span className="text-gray-600">
-            Get real time 50,000+ job in our app
+            Get real time 5,000+ job in our app
           </span>
           <div className="relative mt-5 w-full max-w-sm">
             <input
@@ -36,8 +36,8 @@ export default function AsideFooter() {
           </div>
         </div>
         <div className="md:w-1/2 flex justify-center ">
-            {/* <img src="https://static.naukimg.com/s/0/0/i/download-app-link/MaskGroupOneTheme.png" alt="" className="h-60"/> */}
-            <img src={img} alt="" className="h-60"/>
+          {/* <img src="https://static.naukimg.com/s/0/0/i/download-app-link/MaskGroupOneTheme.png" alt="" className="h-60"/> */}
+          <img src={img} alt="" className="h-60" />
         </div>
       </div>
     </>

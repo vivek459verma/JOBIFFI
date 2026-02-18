@@ -53,7 +53,6 @@ export default function MainHead() {
   const [experienceOpen, setExperienceOpen] = useState(false);
   const experienceRef = useRef<HTMLDivElement | null>(null);
 
-
   // ✅ Selected experience state
   const [selectedExperience, setSelectedExperience] = useState("");
 
@@ -61,8 +60,8 @@ export default function MainHead() {
   const filteredLocations =
     locationSearch.trim().length > 0
       ? locations.filter((loc) =>
-          loc.toLowerCase().includes(locationSearch.toLowerCase())
-        )
+        loc.toLowerCase().includes(locationSearch.toLowerCase())
+      )
       : [];
 
   // ✅ Outside click handling
@@ -88,7 +87,7 @@ export default function MainHead() {
     <div className="container mx-auto px-3 flex flex-col items-center">
       {/* Badge */}
       <h1 className="mt-14 rounded-2xl border-2 border-blue-700 bg-blue-100 text-blue-600 font-bold px-4">
-        50,000+ jobs available
+        5,000+ jobs available
       </h1>
 
       {/* Heading */}
@@ -108,7 +107,7 @@ export default function MainHead() {
       {/* 🔍 Search Bar */}
       <div className="mt-6 w-full max-w-4xl rounded-2xl shadow-lg">
         <div className="w-full bg-white rounded-2xl border border-gray-200 flex items-center">
-          
+
           {/* Skills */}
           <div className="relative flex items-center min-w-[220px] flex-1">
             <CiSearch className="absolute left-3 text-gray-400 text-lg" />
@@ -152,9 +151,6 @@ export default function MainHead() {
 
 
           {/* 📍 Location */}
-          <div ref={locationRef} className="relative min-w-[180px] flex-1">
-            <div className="flex items-center h-10 sm:h-12 pl-9 pr-3">
-
           {/* Location */}
           <div ref={locationRef} className="relative min-w-[180px] flex-1">
             <div className="flex items-center h-10 sm:h-12 pl-9 pr-3 relative">
@@ -203,14 +199,7 @@ export default function MainHead() {
         </div>
       </div>
 
-       {/* ROUTED PAGE CONTENT */}
-
-
-      </div>
     </div>
-
-    </div>
-     
   );
 }
 

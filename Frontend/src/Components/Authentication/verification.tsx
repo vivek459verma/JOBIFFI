@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import axios from "axios";
+import { message } from "antd";
 import Footer from "../Footer/footer";
 
 const Verification = () => {
@@ -7,8 +9,16 @@ const Verification = () => {
     const email = location.state?.email || "your email address";
     const [resendStatus, setResendStatus] = useState("");
 
-    const handleResend = () => {
-        setResendStatus("Verification email resent!");
+    const handleResend = async () => {
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/auth/resend-verification`, { email });
+            setResendStatus(response.data.message || "Verification email resent!");
+            message.success("Verification email resent successfully!");
+        } catch (error: any) {
+            console.error("Resend Error:", error);
+            message.error(error.response?.data?.message || "Failed to resend email.");
+            setResendStatus("Failed to resend.");
+        }
         setTimeout(() => setResendStatus(""), 3000);
     };
 

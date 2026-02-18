@@ -75,7 +75,7 @@ const employerSchema = new mongoose.Schema(
   },
 );
 
-// Index for faster email lookups
-employerSchema.index({ email: 1 });
+// Index for faster email lookups - removed because unique: true already creates an index
+// employerSchema.index({ email: 1 });
 
 export default mongoose.model("Employer", employerSchema);
