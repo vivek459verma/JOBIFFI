@@ -103,7 +103,21 @@ function Navbar() {
 
   const employerItems = [
     { key: "1", label: <a href="#">Buy Online</a> },
-    { key: "2", label: <a href="#">Employer Login</a> },
+    {
+      key: "2",
+      label: (
+        <a
+          href="/employer-register"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate("/employer-register");
+          }}
+        >
+          Employer Register
+        </a>
+      ),
+    },
+    { key: "3", label: <a href="#">Employer Login</a> },
   ];
 
   const userMenuItems = [
@@ -125,7 +139,6 @@ function Navbar() {
 
           {/* CENTER – Desktop Menu */}
           <div className="hidden sm:flex absolute left-1/2 -translate-x-[80%] items-center gap-10">
-
             {/* Jobs */}
             <div
               className="relative"
@@ -138,7 +151,6 @@ function Navbar() {
 
               {jobsOpen && (
                 <div className="absolute top-10 left-0 w-162.5 bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-                  
                   <div className="border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
                       Job Categories
@@ -183,7 +195,6 @@ function Navbar() {
                       <li>Jobs in Pune</li>
                     </ul>
                   </div>
-
                 </div>
               )}
             </div>
@@ -200,7 +211,6 @@ function Navbar() {
 
               {jobCompany && (
                 <div className="absolute top-10 left-0 w-162.5 bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-                  
                   <div className="border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
                       Explore Categories
@@ -238,7 +248,6 @@ function Navbar() {
                       <li>Salary Calculator</li>
                     </ul>
                   </div>
-
                 </div>
               )}
             </div>
@@ -255,7 +264,6 @@ function Navbar() {
 
               {jobServices && (
                 <div className="absolute top-10 left-0 w-162.5 bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-                  
                   <div className="flex flex-col border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
                       Smart Resume Builder
@@ -310,7 +318,6 @@ function Navbar() {
                       <li>Cover Letter Samples</li>
                     </ul>
                   </div>
-
                 </div>
               )}
             </div>
@@ -336,7 +343,6 @@ function Navbar() {
                 </div>
               )}
             </div>
-
           </div>
 
           {/* RIGHT – Buttons */}
@@ -379,7 +385,6 @@ function Navbar() {
           {/* ✅ FULL MOBILE MENU RESTORED */}
           {menuOpen && (
             <div className="sm:hidden absolute top-full left-0 w-full bg-white shadow-md p-4 z-50">
-
               {/* Jobs */}
               <div className="mb-2">
                 <button
@@ -387,7 +392,9 @@ function Navbar() {
                   onClick={() => setJobsOpen(!jobsOpen)}
                 >
                   Jobs
-                  <ChevronDownIcon className={`w-4 h-4 ${jobsOpen ? "rotate-180" : ""}`} />
+                  <ChevronDownIcon
+                    className={`w-4 h-4 ${jobsOpen ? "rotate-180" : ""}`}
+                  />
                 </button>
 
                 {jobsOpen && (
@@ -407,7 +414,9 @@ function Navbar() {
                   onClick={() => setJobCompany(!jobCompany)}
                 >
                   Companies
-                  <ChevronDownIcon className={`w-4 h-4 ${jobCompany ? "rotate-180" : ""}`} />
+                  <ChevronDownIcon
+                    className={`w-4 h-4 ${jobCompany ? "rotate-180" : ""}`}
+                  />
                 </button>
 
                 {jobCompany && (

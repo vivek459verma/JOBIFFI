@@ -14,6 +14,8 @@ import UpcomingEvents from "./Components/Events/UpcomingEvents";
 
 import Register from "./Components/Authentication/register";
 import Verification from "./Components/Authentication/verification";
+import EmployerRegister from "./Components/Authentication/EmployerRegister";
+import EmployerVerification from "./Components/Authentication/EmployerVerification";
 import ResetPassword from "./Components/Authentication/ResetPassword";
 import AuthCallback from "./Components/Authentication/AuthCallback";
 import AboutUs from "./Components/pages/AboutUs";
@@ -346,6 +348,26 @@ function App() {
         }
       />
 
+      {/* EMPLOYER REGISTRATION — WITH NAVBAR */}
+      <Route
+        path="/employer-register"
+        element={
+          <>
+            <Navbar />
+            <EmployerRegister />
+          </>
+        }
+      />
+
+      <Route
+        path="/employer-verification"
+        element={
+          <>
+            <Navbar />
+            <EmployerVerification />
+          </>
+        }
+      />
       <Route path="/auth/callback" element={<AuthCallback />} />
       <Route path="/reset-password" element={<ResetPassword />} />
 
