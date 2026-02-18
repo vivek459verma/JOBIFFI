@@ -15,3 +15,16 @@ export const getServerResponse = async () => {
     return null;
   }
 };
+
+export const employerRegister = async (formData) => {
+  try {
+    const response = await axiosInstance.post(
+      "/api/employer/register",
+      formData,
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};

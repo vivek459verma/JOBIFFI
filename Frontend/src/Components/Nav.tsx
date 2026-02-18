@@ -25,14 +25,27 @@ function Navbar() {
 
   const employerItems = [
     { key: "1", label: <a href="#">Buy Online</a> },
-    { key: "2", label: <a href="#">Employer Login</a> },
+    {
+      key: "2",
+      label: (
+        <a
+          href="/employer-register"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate("/employer-register");
+          }}
+        >
+          Employer Register
+        </a>
+      ),
+    },
+    { key: "3", label: <a href="#">Employer Login</a> },
   ];
 
   return (
     <>
       <nav className="w-full bg-white shadow-md px-4 sm:px-8 py-3 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between relative">
-          
           {/* LEFT – Logo */}
           <div className="flex ml-12.5 items-center translate-x-[30%]">
             <a href="/">
@@ -42,7 +55,6 @@ function Navbar() {
 
           {/* CENTER – Desktop Menu */}
           <div className="hidden sm:flex absolute left-1/2 -translate-x-[80%] items-center gap-10">
-
             {/* Jobs */}
             <div
               className="relative"
@@ -55,7 +67,6 @@ function Navbar() {
 
               {jobsOpen && (
                 <div className="absolute top-10 left-0 w-162.5 bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-                  
                   <div className="border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
                       Job Categories
@@ -100,7 +111,6 @@ function Navbar() {
                       <li>Jobs in Pune</li>
                     </ul>
                   </div>
-
                 </div>
               )}
             </div>
@@ -117,7 +127,6 @@ function Navbar() {
 
               {jobCompany && (
                 <div className="absolute top-10 left-0 w-162.5 bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-                  
                   <div className="border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
                       Explore Categories
@@ -155,7 +164,6 @@ function Navbar() {
                       <li>Salary Calculator</li>
                     </ul>
                   </div>
-
                 </div>
               )}
             </div>
@@ -172,7 +180,6 @@ function Navbar() {
 
               {jobServices && (
                 <div className="absolute top-10 left-0 w-162.5 bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-                  
                   <div className="flex flex-col border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
                       Smart Resume Builder
@@ -227,7 +234,6 @@ function Navbar() {
                       <li>Cover Letter Samples</li>
                     </ul>
                   </div>
-
                 </div>
               )}
             </div>
@@ -253,12 +259,10 @@ function Navbar() {
                 </div>
               )}
             </div>
-
           </div>
 
           {/* RIGHT – Buttons */}
           <div className="flex items-center gap-2 sm:gap-4">
-            
             <button
               onClick={() => setIsLoginOpen(true)}
               className="cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl border border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white transition font-semibold"
@@ -295,7 +299,6 @@ function Navbar() {
           {/* ✅ FULL MOBILE MENU RESTORED */}
           {menuOpen && (
             <div className="sm:hidden absolute top-full left-0 w-full bg-white shadow-md p-4 z-50">
-
               {/* Jobs */}
               <div className="mb-2">
                 <button
@@ -303,7 +306,9 @@ function Navbar() {
                   onClick={() => setJobsOpen(!jobsOpen)}
                 >
                   Jobs
-                  <ChevronDownIcon className={`w-4 h-4 ${jobsOpen ? "rotate-180" : ""}`} />
+                  <ChevronDownIcon
+                    className={`w-4 h-4 ${jobsOpen ? "rotate-180" : ""}`}
+                  />
                 </button>
 
                 {jobsOpen && (
@@ -323,7 +328,9 @@ function Navbar() {
                   onClick={() => setJobCompany(!jobCompany)}
                 >
                   Companies
-                  <ChevronDownIcon className={`w-4 h-4 ${jobCompany ? "rotate-180" : ""}`} />
+                  <ChevronDownIcon
+                    className={`w-4 h-4 ${jobCompany ? "rotate-180" : ""}`}
+                  />
                 </button>
 
                 {jobCompany && (
@@ -348,10 +355,7 @@ function Navbar() {
       </nav>
 
       {/* LOGIN */}
-      <Login
-        isOpen={isLoginOpen}
-        onClose={() => setIsLoginOpen(false)}
-      />
+      <Login isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
     </>
   );
 }

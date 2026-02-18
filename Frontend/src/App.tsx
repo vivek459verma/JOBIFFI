@@ -13,6 +13,8 @@ import UpcomingEvents from "./Components/Events/UpcomingEvents";
 
 import Register from "./Components/Authentication/register";
 import Verification from "./Components/Authentication/verification";
+import EmployerRegister from "./Components/Authentication/EmployerRegister";
+import EmployerVerification from "./Components/Authentication/EmployerVerification";
 import AboutUs from "./Components/pages/AboutUs";
 
 import TermsConditions from "./Components/pages/TermsConditions";
@@ -59,6 +61,27 @@ function App() {
           <>
             <Navbar />
             <Verification />
+          </>
+        }
+      />
+
+      {/* EMPLOYER REGISTRATION — WITH NAVBAR */}
+      <Route
+        path="/employer-register"
+        element={
+          <>
+            <Navbar />
+            <EmployerRegister />
+          </>
+        }
+      />
+
+      <Route
+        path="/employer-verification"
+        element={
+          <>
+            <Navbar />
+            <EmployerVerification />
           </>
         }
       />
