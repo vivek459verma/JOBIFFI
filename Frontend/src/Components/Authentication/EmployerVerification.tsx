@@ -33,6 +33,7 @@ const EmployerVerification = () => {
         setError(data.message || "Verification failed");
       }
     } catch (err) {
+      console.error("Verification error:", err);
       setError("Server error. Please try again later.");
     } finally {
       setLoading(false);
@@ -59,6 +60,7 @@ const EmployerVerification = () => {
         setError(data.message || "Failed to resend OTP");
       }
     } catch (err) {
+      console.error("Resend OTP error:", err);
       setError("Server error. Please try again later.");
     }
   };

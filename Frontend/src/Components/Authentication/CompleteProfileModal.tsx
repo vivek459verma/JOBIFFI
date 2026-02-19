@@ -7,11 +7,23 @@ import { MapPinIcon } from "@heroicons/react/24/outline";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
+interface UserProfileData {
+  name?: string;
+  fullName?: string;
+  email?: string;
+  mobile?: string;
+  workStatus?: string;
+  currentCity?: string;
+  avatar?: string;
+  bio?: string;
+}
+
+
 interface CompleteProfileModalProps {
     isOpen: boolean;
-    initialData?: any;
+    initialData?: UserProfileData;
     onClose: () => void;
-    onComplete: (updatedData: any) => void;
+    onComplete: (updatedData: UserProfileData) => void;
 }
 
 const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({ isOpen, initialData, onClose, onComplete }) => {
