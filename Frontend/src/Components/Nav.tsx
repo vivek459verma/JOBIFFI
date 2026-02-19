@@ -52,11 +52,14 @@ function Navbar() {
       setIsLoggedIn(true);
 
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/auth/me`, {
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-        });
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/auth/me`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
 
         const data = await res.json();
         if (data.success) {
@@ -121,15 +124,22 @@ function Navbar() {
   ];
 
   const userMenuItems = [
-    { key: "profile", label: "My Profile", onClick: () => setIsProfileModalOpen(true) },
-    { key: "logout", label: <span className="text-red-600 font-semibold">Logout</span>, onClick: handleLogout },
+    {
+      key: "profile",
+      label: "My Profile",
+      onClick: () => setIsProfileModalOpen(true),
+    },
+    {
+      key: "logout",
+      label: <span className="text-red-600 font-semibold">Logout</span>,
+      onClick: handleLogout,
+    },
   ];
 
   return (
     <>
       <nav className="w-full bg-white shadow-md px-4 sm:px-8 py-3 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between relative">
-
           {/* LEFT – Logo */}
           <div className="flex ml-12.5 items-center translate-x-[30%]">
             <a href="/">
@@ -356,30 +366,39 @@ function Navbar() {
                   Login
                 </button>
 
-            <button
-              onClick={() => navigate("/register")}
-              className="cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-linear-to-r from-blue-800 via-blue-900 to-blue-900 text-white font-semibold"
-            >
-              Register
-            </button>
+                <button
+                  onClick={() => navigate("/register")}
+                  className="cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-linear-to-r from-blue-800 via-blue-900 to-blue-900 text-white font-semibold"
+                >
+                  Register
+                </button>
 
-            <Dropdown menu={{ items: employerItems }} trigger={["hover"]}>
-              <div className="hidden sm:flex items-center gap-1 cursor-pointer text-gray-700 hover:text-black">
-                For Employers
-                <ChevronDownIcon className="w-4 h-4 text-gray-400" />
-              </div>
-            </Dropdown>
+                <Dropdown menu={{ items: employerItems }} trigger={["hover"]}>
+                  <div className="hidden sm:flex items-center gap-1 cursor-pointer text-gray-700 hover:text-black">
+                    For Employers
+                    <ChevronDownIcon className="w-4 h-4 text-gray-400" />
+                  </div>
+                </Dropdown>
 
-            {/* Mobile Hamburger */}
-            <div className="sm:hidden">
-              <button onClick={() => setMenuOpen(!menuOpen)}>
-                {menuOpen ? (
-                  <XMarkIcon className="w-6 h-6" />
-                ) : (
-                  <Bars3Icon className="w-6 h-6" />
-                )}
-              </button>
-            </div>
+                {/* Mobile Hamburger */}
+                <div className="sm:hidden">
+                  <button onClick={() => setMenuOpen(!menuOpen)}>
+                    {menuOpen ? (
+                      <XMarkIcon className="w-6 h-6" />
+                    ) : (
+                      <Bars3Icon className="w-6 h-6" />
+                    )}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <Dropdown menu={{ items: userMenuItems }} trigger={["hover"]}>
+                <div className="hidden sm:flex items-center gap-1 cursor-pointer text-gray-700 hover:text-black">
+                  My Account
+                  <ChevronDownIcon className="w-4 h-4 text-gray-400" />
+                </div>
+              </Dropdown>
+            )}
           </div>
 
           {/* ✅ FULL MOBILE MENU RESTORED */}
