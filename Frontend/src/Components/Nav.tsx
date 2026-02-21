@@ -103,7 +103,21 @@ function Navbar() {
 
   const employerItems = [
     { key: "1", label: <a href="#">Buy Online</a> },
-    { key: "2", label: <a href="#">Employer Login</a> },
+    {
+      key: "2",
+      label: (
+        <a
+          href="/employer-register"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate("/employer-register");
+          }}
+        >
+          Employer Register
+        </a>
+      ),
+    },
+    { key: "3", label: <a href="#">Employer Login</a> },
   ];
 
   const userMenuItems = [
@@ -256,49 +270,56 @@ function Navbar() {
 
                   <div className="flex flex-col border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
-                      Resume Writing
+                      Smart Resume Builder
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600 mb-5">
-                      <li>Text Resume</li>
+                      <li>Text-Based Resume</li>
                       <li>Visual Resume</li>
-                      <li>Resume Critique</li>
+                      <li>One-Page Resume</li>
+                      <li>Infographic Resume</li>
+                      <li>AI Cover Letter</li>
                     </ul>
 
                     <h2 className="font-semibold text-blue-900 mb-3">
-                      Find Jobs
+                      Job Search
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600">
-                      <li>Jobs4u</li>
-                      <li>Priority applicant</li>
+                      <li>Early Access</li>
+                      <li>Turbo Apply</li>
                       <li>Contact us</li>
                     </ul>
                   </div>
 
                   <div className="flex flex-col border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
-                      Get recruiter's attention
+                      Fast-Track to Recruiters
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600 mb-5">
-                      <li>Resume display</li>
+                      <li>Resume Highlighting</li>
+                      <li>Profile Spotlight</li>
+                      <li>VIP Profile Access</li>
                     </ul>
 
                     <h2 className="font-semibold text-blue-900 mb-3">
-                      Monthly subscription
+                      Monthly Subscription
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600">
-                      <li>Basic & premium plans</li>
+                      <li>Basic Monthly Aceess</li>
+                      <li>Premium Monthly Aceess</li>
+                      <li>VIP Monthly Aceess</li>
+                      <li>Elite Monthly Aceess</li>
                     </ul>
                   </div>
 
                   <div>
                     <h2 className="font-semibold text-blue-900 mb-3">
-                      Free resume resources
+                      Free Resume Toolkit
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600">
-                      <li>Resume maker</li>
-                      <li>Resume quality score</li>
-                      <li>Resume samples</li>
-                      <li>Job letter samples</li>
+                      <li>Resume Builder</li>
+                      <li>Smart Resume Score</li>
+                      <li>Resume Samples</li>
+                      <li>Cover Letter Samples</li>
                     </ul>
                   </div>
 
@@ -320,9 +341,8 @@ function Navbar() {
                 <div className="absolute top-10 left-0 w-[350px] bg-white shadow-xl rounded-xl p-6 grid gap-6 z-50">
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li>Jobiffi Blogs</li>
-                    <li>AI interview coach</li>
-                    <li>News alert</li>
-                    <li>Events</li>
+                    <li>AI Interview Coach</li>
+                    <li>News Alert and Events</li>
                     <li>Customer Reviews</li>
                   </ul>
                 </div>

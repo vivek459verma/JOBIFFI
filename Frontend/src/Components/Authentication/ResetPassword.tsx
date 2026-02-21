@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import Navbar from "../Nav";
 
 const BACKEND_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
@@ -9,6 +10,7 @@ const ResetPassword = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const token = searchParams.get("token");
+    const hasRequestedOtp = useRef(false);
 
     const [otp, setOtp] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -23,6 +25,11 @@ const ResetPassword = () => {
             setError("Invalid or missing reset token.");
             return;
         }
+
+        // Prevent double-sending in development/strict mode
+        if (hasRequestedOtp.current) return;
+        hasRequestedOtp.current = true;
+
         sendOtp();
     }, [token]);
 
@@ -46,6 +53,12 @@ const ResetPassword = () => {
         e.preventDefault();
         if (newPassword !== confirmPassword) {
             setError("Passwords do not match.");
+            return;
+        }
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+        if (!passwordRegex.test(newPassword)) {
+            setError("Password must be at least 8 characters and include uppercase, lowercase, a number, and a special character.");
             return;
         }
         if (otp.length !== 6) {
@@ -115,9 +128,31 @@ const ResetPassword = () => {
                                     placeholder="New Password"
                                     value={newPassword}
                                     onChange={(e) => setNewPassword(e.target.value)}
-                                    style={styles.input}
+                                    style={{
+                                        ...styles.input,
+                                        border: newPassword && !(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/.test(newPassword)) ? '1px solid #fc8181' : '1px solid #e2e8f0'
+                                    }}
                                     required
                                 />
+
+                                {newPassword.length > 0 && (
+                                    <div style={{ marginTop: '12px', padding: '12px', backgroundColor: '#f7fafc', borderRadius: '8px', border: '1px solid #edf2f7' }}>
+                                        <p style={{ fontSize: '10px', fontWeight: 'bold', color: '#718096', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Security Checklist:</p>
+                                        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                                            {[
+                                                { label: "8+ Characters", met: newPassword.length >= 8 },
+                                                { label: "One Uppercase (A-Z)", met: /[A-Z]/.test(newPassword) },
+                                                { label: "One Number (0-9)", met: /\d/.test(newPassword) },
+                                                { label: "One Special Case (@$!%*?&)", met: /[@$!%*?&]/.test(newPassword) }
+                                            ].map((req, i) => (
+                                                <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', marginBottom: '4px', color: req.met ? '#38a169' : '#a0aec0' }}>
+                                                    <CheckCircleIcon style={{ height: '16px', width: '16px', color: req.met ? '#48bb78' : '#cbd5e0' }} />
+                                                    {req.label}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
                             </div>
 
                             <div style={styles.inputGroup}>

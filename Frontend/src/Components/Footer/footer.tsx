@@ -1,7 +1,7 @@
 import { AiOutlineCopyright } from "react-icons/ai";
-
+import goggle from "../../assets/media/apple store.svg";
+import play from "../../assets/media/playstore.svg";
 import logo from "../../assets/media/New_Brand_logo_-_16060-removebg.png";
-
 
 const Footer = () => {
   return (
@@ -20,7 +20,6 @@ const Footer = () => {
                 alt="facebook"
                 className="h-7 w-7 object-contain"
               />
-
             </a>
             <a href="https://www.instagram.com/jobiffi?igsh=dnMwNWozYnBuODc2">
               <img
@@ -36,7 +35,6 @@ const Footer = () => {
                 alt="linkedin"
                 className="h-7 w-7 object-contain"
               />
-
             </a>
             <a href="">
               <img
@@ -51,10 +49,7 @@ const Footer = () => {
         {/* Column 2 */}
         <div>
           <ul className="mt-3 space-y-2 text-gray-600">
-            <a
-              href="/"
-              className="hover:text-blue-900 cursor-pointer block"
-            >
+            <a href="/" className="hover:text-blue-900 cursor-pointer block">
               Home
             </a>
             <a
@@ -90,10 +85,7 @@ const Footer = () => {
         {/* Column 4 */}
         <div>
           <ul className="mt-3 space-y-2 text-gray-600">
-
-            <li className="hover:text-blue-900 cursor-pointer">
-              Help Center
-            </li>
+            <li className="hover:text-blue-900 cursor-pointer">Help Center</li>
 
             <a
               href="/privacy-policy"
@@ -113,17 +105,13 @@ const Footer = () => {
               Terms & conditions
             </a>
 
-            <li className="hover:text-blue-900 cursor-pointer">
-              Fraud alert
-            </li>
+            <li className="hover:text-blue-900 cursor-pointer">Fraud alert</li>
 
             <li className="hover:text-blue-900 cursor-pointer">
               Trust & Safety
             </li>
-
           </ul>
         </div>
-
 
         {/* Column 5 */}
         <div>
@@ -132,7 +120,9 @@ const Footer = () => {
             Trusted by 5,000 + Job seekers
           </p>
           <div className="flex gap-3 mt-4">
-            <img
+            <img src={goggle} alt="android" className="h-10" />
+            <img src={play} alt="playstore" className="h-10" />
+            {/* <img
               src="https://static.naukimg.com/s/0/0/i/new-homepage/android-app_v1.png"
               alt="android"
               className="h-10"
@@ -141,13 +131,17 @@ const Footer = () => {
               src="https://static.naukimg.com/s/0/0/i/new-homepage/ios-app_v1.png"
               alt="ios"
               className="h-10"
-            />
+            /> */}
           </div>
         </div>
       </div>
       <div className="border border-r border-gray-200"></div>
       <div className="text-center mt-4 mb-4 text-gray-700">
-        <h6 className="flex justify-center gap-2">All right reserved <AiOutlineCopyright className="text-center  mt-1" /> 2026 Jobiffi (P) Ltd.</h6>
+        <h6 className="flex justify-center gap-2">
+          All right reserved{" "}
+          <AiOutlineCopyright className="text-center  mt-1" /> 2026 Jobiffi (P)
+          Ltd.
+        </h6>
       </div>
     </footer>
   );

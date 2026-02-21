@@ -41,7 +41,7 @@ export const otpTemplate = (otp, name) => {
           
           <!-- HEADER SECTION -->
           <tr>
-            <td align="center" style="background-color: #0033cc; padding: 30px 20px; border-radius: 8px 8px 0 0;">
+            <td align="center" style="background-color: #0025cc; padding: 30px 20px; border-radius: 8px 8px 0 0;">
               <a href="https://jobiffi.com" style="text-decoration: none;">
                 <img src="${logoUrl}" alt="Jobiffi" width="60" style="height: 60px; width: 60px; display: block; margin: 0 auto 10px auto; border: 0;" />
                 <div style="font-size: 24px; font-weight: bold; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center;">Jobiffi</div>
@@ -67,8 +67,8 @@ export const otpTemplate = (otp, name) => {
                   <td align="center" style="padding: 20px 0 30px 0;">
                     <table border="0" cellpadding="0" cellspacing="0">
                       <tr>
-                        <td align="center" style="background-color: #e6f0ff; border: 1px dashed #0033cc; border-radius: 8px; padding: 15px 30px;">
-                          <span style="font-family: Arial, Helvetica, sans-serif; font-size: 32px; font-weight: bold; color: #0033cc; letter-spacing: 5px;">
+                        <td align="center" style="background-color: #e6f0ff; border: 1px dashed #0025cc; border-radius: 8px; padding: 15px 30px;">
+                          <span style="font-family: Arial, Helvetica, sans-serif; font-size: 32px; font-weight: bold; color: #0025cc; letter-spacing: 5px;">
                             ${otp}
                           </span>
                         </td>
@@ -138,8 +138,8 @@ export const otpTemplate = (otp, name) => {
             <td style="background-color: #f9f9f9; padding: 30px; border-top: 1px solid #eeeeee; border-radius: 0 0 8px 8px;" class="mobile-padding">
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tr>
-                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 20px; color: #0033cc; padding-bottom: 20px;">
-                    <a href="https://jobiffi.com/report" style="color: #0033cc; text-decoration: none; font-weight: bold;">Report a problem</a>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 20px; color: #0025cc; padding-bottom: 20px;">
+                    <a href="https://jobiffi.com/report" style="color: #0025cc; text-decoration: none; font-weight: bold;">Report a problem</a>
                   </td>
                 </tr>
                 <tr>
@@ -157,16 +157,16 @@ export const otpTemplate = (otp, name) => {
                 </tr>
                 <tr>
                   <td style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px; color: #666666; padding-bottom: 20px;">
-                    We recommend that you visit our <a href="https://jobiffi.com/terms" style="color: #0033cc; text-decoration: none;">Terms and Conditions</a> and <a href="https://jobiffi.com/security" style="color: #0033cc; text-decoration: none;">Security Advice</a> for more information.
+                    We recommend that you visit our <a href="https://jobiffi.com/terms" style="color: #0025cc; text-decoration: none;">Terms and Conditions</a> and <a href="https://jobiffi.com/security" style="color: #0025cc; text-decoration: none;">Security Advice</a> for more information.
                   </td>
                 </tr>
                 <tr>
                   <td style="border-top: 1px solid #e0e0e0; padding-top: 20px; text-align: center;">
                     <span style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #999999;">© 2026 Jobiffi. All rights reserved.</span><br/>
                     <div style="padding-top: 10px;">
-                      <a href="https://jobiffi.com/privacy" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #0033cc; text-decoration: none; margin: 0 5px;">Privacy Policy</a>
+                      <a href="https://jobiffi.com/privacy" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #0025cc; text-decoration: none; margin: 0 5px;">Privacy Policy</a>
                       <span style="color: #999999;">|</span>
-                      <a href="https://jobiffi.com/terms" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #0033cc; text-decoration: none; margin: 0 5px;">Terms of Service</a>
+                      <a href="https://jobiffi.com/terms" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #0025cc; text-decoration: none; margin: 0 5px;">Terms of Service</a>
                     </div>
                   </td>
                 </tr>
@@ -215,7 +215,7 @@ export const resetPasswordTemplate = (link, name) => {
           
           <!-- HEADER SECTION -->
           <tr>
-            <td align="center" style="background-color: #0033cc; padding: 30px 20px; border-radius: 8px 8px 0 0;">
+            <td align="center" style="background-color: #0025cc; padding: 30px 20px; border-radius: 8px 8px 0 0;">
               <a href="https://jobiffi.com" style="text-decoration: none;">
                 <img src="${logoUrl}" alt="Jobiffi" width="60" style="height: 60px; width: 60px; display: block; margin: 0 auto 10px auto; border: 0;" />
                 <div style="font-size: 24px; font-weight: bold; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center;">Jobiffi</div>
@@ -241,8 +241,8 @@ export const resetPasswordTemplate = (link, name) => {
                   <td align="center" style="padding: 20px 0 30px 0;">
                     <table border="0" cellpadding="0" cellspacing="0">
                       <tr>
-                        <td align="center" style="border-radius: 6px; background-color: #0033cc;">
-                          <a href="${link}" target="_blank" style="font-size: 16px; font-family: Arial, Helvetica, sans-serif; color: #ffffff; text-decoration: none; border-radius: 6px; padding: 14px 40px; border: 1px solid #0033cc; display: inline-block; font-weight: bold;">
+                        <td align="center" style="border-radius: 6px; background-color: #0025cc;">
+                          <a href="${link}" target="_blank" style="font-size: 16px; font-family: Arial, Helvetica, sans-serif; color: #ffffff; text-decoration: none; border-radius: 6px; padding: 14px 40px; border: 1px solid #0025cc; display: inline-block; font-weight: bold;">
                             Reset Password
                           </a>
                         </td>
@@ -312,8 +312,8 @@ export const resetPasswordTemplate = (link, name) => {
             <td style="background-color: #f9f9f9; padding: 30px; border-top: 1px solid #eeeeee; border-radius: 0 0 8px 8px;" class="mobile-padding">
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tr>
-                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 20px; color: #0033cc; padding-bottom: 20px;">
-                    <a href="https://jobiffi.com/report" style="color: #0033cc; text-decoration: none; font-weight: bold;">Report a problem</a>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 20px; color: #0025cc; padding-bottom: 20px;">
+                    <a href="https://jobiffi.com/report" style="color: #0025cc; text-decoration: none; font-weight: bold;">Report a problem</a>
                   </td>
                 </tr>
                 <tr>
@@ -331,16 +331,16 @@ export const resetPasswordTemplate = (link, name) => {
                 </tr>
                 <tr>
                   <td style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px; color: #666666; padding-bottom: 20px;">
-                    We recommend that you visit our <a href="https://jobiffi.com/terms" style="color: #0033cc; text-decoration: none;">Terms and Conditions</a> and <a href="https://jobiffi.com/security" style="color: #0033cc; text-decoration: none;">Security Advice</a> for more information.
+                    We recommend that you visit our <a href="https://jobiffi.com/terms" style="color: #0025cc; text-decoration: none;">Terms and Conditions</a> and <a href="https://jobiffi.com/security" style="color: #0025cc; text-decoration: none;">Security Advice</a> for more information.
                   </td>
                 </tr>
                 <tr>
                   <td style="border-top: 1px solid #e0e0e0; padding-top: 20px; text-align: center;">
                     <span style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #999999;">© 2026 Jobiffi. All rights reserved.</span><br/>
                     <div style="padding-top: 10px;">
-                      <a href="https://jobiffi.com/privacy" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #0033cc; text-decoration: none; margin: 0 5px;">Privacy Policy</a>
+                      <a href="https://jobiffi.com/privacy" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #0025cc; text-decoration: none; margin: 0 5px;">Privacy Policy</a>
                       <span style="color: #999999;">|</span>
-                      <a href="https://jobiffi.com/terms" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #0033cc; text-decoration: none; margin: 0 5px;">Terms of Service</a>
+                      <a href="https://jobiffi.com/terms" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #0025cc; text-decoration: none; margin: 0 5px;">Terms of Service</a>
                     </div>
                   </td>
                 </tr>
@@ -389,7 +389,7 @@ export const verificationTemplate = (link) => {
           
           <!-- HEADER SECTION -->
           <tr>
-            <td align="center" style="background-color: #0033cc; padding: 30px 20px; border-radius: 8px 8px 0 0;">
+            <td align="center" style="background-color: #0025cc; padding: 30px 20px; border-radius: 8px 8px 0 0;">
               <a href="https://jobiffi.com" style="text-decoration: none;">
                 <img src="${logoUrl}" alt="Jobiffi" width="60" style="height: 60px; width: 60px; display: block; margin: 0 auto 10px auto; border: 0;" />
                 <div style="font-size: 24px; font-weight: bold; color: #ffffff; font-family: Arial, Helvetica, sans-serif; text-align: center;">Jobiffi</div>
@@ -415,8 +415,8 @@ export const verificationTemplate = (link) => {
                   <td align="center" style="padding: 20px 0 30px 0;">
                     <table border="0" cellpadding="0" cellspacing="0">
                       <tr>
-                        <td align="center" style="border-radius: 6px; background-color: #0033cc;">
-                          <a href="${link}" target="_blank" style="font-size: 16px; font-family: Arial, Helvetica, sans-serif; color: #ffffff; text-decoration: none; border-radius: 6px; padding: 14px 40px; border: 1px solid #0033cc; display: inline-block; font-weight: bold;">
+                        <td align="center" style="border-radius: 6px; background-color: #0025cc;">
+                          <a href="${link}" target="_blank" style="font-size: 16px; font-family: Arial, Helvetica, sans-serif; color: #ffffff; text-decoration: none; border-radius: 6px; padding: 14px 40px; border: 1px solid #0025cc; display: inline-block; font-weight: bold;">
                             Verify My Account
                           </a>
                         </td>
@@ -481,8 +481,8 @@ export const verificationTemplate = (link) => {
             <td style="background-color: #f9f9f9; padding: 30px; border-top: 1px solid #eeeeee; border-radius: 0 0 8px 8px;" class="mobile-padding">
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tr>
-                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 20px; color: #0033cc; padding-bottom: 20px;">
-                    <a href="https://jobiffi.com/report" style="color: #0033cc; text-decoration: none; font-weight: bold;">Report a problem</a>
+                  <td style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 20px; color: #0025cc; padding-bottom: 20px;">
+                    <a href="https://jobiffi.com/report" style="color: #0025cc; text-decoration: none; font-weight: bold;">Report a problem</a>
                   </td>
                 </tr>
                 <tr>
@@ -500,16 +500,16 @@ export const verificationTemplate = (link) => {
                 </tr>
                 <tr>
                   <td style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px; color: #666666; padding-bottom: 20px;">
-                    We recommend that you visit our <a href="https://jobiffi.com/terms" style="color: #0033cc; text-decoration: none;">Terms and Conditions</a> and <a href="https://jobiffi.com/security" style="color: #0033cc; text-decoration: none;">Security Advice</a> for more information.
+                    We recommend that you visit our <a href="https://jobiffi.com/terms" style="color: #0025cc; text-decoration: none;">Terms and Conditions</a> and <a href="https://jobiffi.com/security" style="color: #0025cc; text-decoration: none;">Security Advice</a> for more information.
                   </td>
                 </tr>
                 <tr>
                   <td style="border-top: 1px solid #e0e0e0; padding-top: 20px; text-align: center;">
                     <span style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #999999;">© 2026 Jobiffi. All rights reserved.</span><br/>
                     <div style="padding-top: 10px;">
-                      <a href="https://jobiffi.com/privacy" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #0033cc; text-decoration: none; margin: 0 5px;">Privacy Policy</a>
+                      <a href="https://jobiffi.com/privacy" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #0025cc; text-decoration: none; margin: 0 5px;">Privacy Policy</a>
                       <span style="color: #999999;">|</span>
-                      <a href="https://jobiffi.com/terms" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #0033cc; text-decoration: none; margin: 0 5px;">Terms of Service</a>
+                      <a href="https://jobiffi.com/terms" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #0025cc; text-decoration: none; margin: 0 5px;">Terms of Service</a>
                     </div>
                   </td>
                 </tr>
@@ -534,7 +534,7 @@ export const verificationSuccessTemplate = (companyName) => {
       <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .header { background-color: #0033cc; padding: 20px; text-align: center; color: #ffffff; font-size: 28px; font-weight: bold; }
+        .header { background-color: #0025cc; padding: 20px; text-align: center; color: #ffffff; font-size: 28px; font-weight: bold; }
         .content { padding: 30px; color: #333333; line-height: 1.6; }
         .greeting { font-size: 18px; font-weight: bold; margin-bottom: 20px; }
       </style>

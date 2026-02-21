@@ -1,6 +1,3 @@
-// ⚠️ IMPORTANT: This must be the very first import
-// In ES modules, ALL imports are hoisted before any code runs
-// So we use a separate env loader file to ensure dotenv loads first
 import "./src/config/env.config.js";
 
 import express from "express";
