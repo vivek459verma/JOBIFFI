@@ -52,11 +52,14 @@ function Navbar() {
       setIsLoggedIn(true);
 
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/auth/me`, {
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-        });
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/auth/me`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
 
         const data = await res.json();
         if (data.success) {
@@ -121,17 +124,24 @@ function Navbar() {
   ];
 
   const userMenuItems = [
-    { key: "profile", label: "My Profile", onClick: () => setIsProfileModalOpen(true) },
-    { key: "logout", label: <span className="text-red-600 font-semibold">Logout</span>, onClick: handleLogout },
+    {
+      key: "profile",
+      label: "My Profile",
+      onClick: () => setIsProfileModalOpen(true),
+    },
+    {
+      key: "logout",
+      label: <span className="text-red-600 font-semibold">Logout</span>,
+      onClick: handleLogout,
+    },
   ];
 
   return (
     <>
       <nav className="w-full bg-white shadow-md px-4 sm:px-8 py-3 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between relative">
-
           {/* LEFT – Logo */}
-          <div className="flex ml-[50px] items-center translate-x-[30%]">
+          <div className="flex ml-12.5 items-center translate-x-[30%]">
             <a href="/">
               <img src={logo} alt="Logo" className="h-12 w-auto" />
             </a>
@@ -139,7 +149,6 @@ function Navbar() {
 
           {/* CENTER – Desktop Menu */}
           <div className="hidden sm:flex absolute left-1/2 -translate-x-[80%] items-center gap-10">
-
             {/* Jobs */}
             <div
               className="relative"
@@ -151,8 +160,7 @@ function Navbar() {
               </h1>
 
               {jobsOpen && (
-                <div className="absolute top-10 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-
+                <div className="absolute top-10 left-0 w-162.5 bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
                   <div className="border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
                       Job Categories
@@ -179,6 +187,7 @@ function Navbar() {
                       <li>Work from home Jobs</li>
                       <li>Walk-in Jobs</li>
                       <li>Part-time Jobs</li>
+                      <li>Freelancing Jobs</li>
                     </ul>
                   </div>
 
@@ -188,6 +197,7 @@ function Navbar() {
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600">
                       <li>Jobs in Delhi</li>
+                      <li>Jobs in Noida</li>
                       <li>Jobs in Bangalore</li>
                       <li>Jobs in Mumbai</li>
                       <li>Jobs in Hyderabad</li>
@@ -195,7 +205,6 @@ function Navbar() {
                       <li>Jobs in Pune</li>
                     </ul>
                   </div>
-
                 </div>
               )}
             </div>
@@ -211,8 +220,7 @@ function Navbar() {
               </h1>
 
               {jobCompany && (
-                <div className="absolute top-10 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-
+                <div className="absolute top-10 left-0 w-162.5 bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
                   <div className="border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
                       Explore Categories
@@ -231,26 +239,25 @@ function Navbar() {
                       Explore collections
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600">
-                      <li>Top companies</li>
-                      <li>IT companies</li>
-                      <li>Fintech companies</li>
-                      <li>Sponsored companies</li>
-                      <li>Featured companies</li>
+                      <li>Top Companies</li>
+                      <li>IT Companies</li>
+                      <li>Fintech Companies</li>
+                      <li>Sponsored Companies</li>
+                      <li>Featured Companies</li>
                     </ul>
                   </div>
 
                   <div>
                     <h2 className="font-semibold text-blue-900 mb-3">
-                      Research companies
+                      Workplace Insights
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600">
-                      <li>Interview question</li>
-                      <li>Company salaries</li>
-                      <li>Company reviews</li>
+                      <li>Interview Question</li>
+                      <li>Company Salaries</li>
+                      <li>Company Reviews</li>
                       <li>Salary Calculator</li>
                     </ul>
                   </div>
-
                 </div>
               )}
             </div>
@@ -266,8 +273,7 @@ function Navbar() {
               </h1>
 
               {jobServices && (
-                <div className="absolute top-10 left-0 w-[650px] bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
-
+                <div className="absolute top-10 left-0 w-162.5 bg-white shadow-xl rounded-xl p-6 grid grid-cols-3 gap-6 z-50">
                   <div className="flex flex-col border-r border-gray-200 pr-4">
                     <h2 className="font-semibold text-blue-900 mb-3">
                       Smart Resume Builder
@@ -322,7 +328,6 @@ function Navbar() {
                       <li>Cover Letter Samples</li>
                     </ul>
                   </div>
-
                 </div>
               )}
             </div>
@@ -338,7 +343,7 @@ function Navbar() {
               </h1>
 
               {jobResources && (
-                <div className="absolute top-10 left-0 w-[350px] bg-white shadow-xl rounded-xl p-6 grid gap-6 z-50">
+                <div className="absolute top-10 left-0 w-55 bg-white shadow-xl rounded-xl p-6 grid gap-6 z-50">
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li>Jobiffi Blogs</li>
                     <li>AI Interview Coach</li>
@@ -348,7 +353,6 @@ function Navbar() {
                 </div>
               )}
             </div>
-
           </div>
 
           {/* RIGHT – Buttons */}
@@ -364,52 +368,42 @@ function Navbar() {
 
                 <button
                   onClick={() => navigate("/register")}
-                  className="cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-gradient-to-r from-blue-800 via-blue-900 to-blue-900 text-white font-semibold"
+                  className="cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-linear-to-r from-blue-800 via-blue-900 to-blue-900 text-white font-semibold"
                 >
                   Register
                 </button>
+
+                <Dropdown menu={{ items: employerItems }} trigger={["hover"]}>
+                  <div className="hidden sm:flex items-center gap-1 cursor-pointer text-gray-700 hover:text-black">
+                    For Employers
+                    <ChevronDownIcon className="w-4 h-4 text-gray-400" />
+                  </div>
+                </Dropdown>
+
+                {/* Mobile Hamburger */}
+                <div className="sm:hidden">
+                  <button onClick={() => setMenuOpen(!menuOpen)}>
+                    {menuOpen ? (
+                      <XMarkIcon className="w-6 h-6" />
+                    ) : (
+                      <Bars3Icon className="w-6 h-6" />
+                    )}
+                  </button>
+                </div>
               </>
             ) : (
-              <Dropdown menu={{ items: userMenuItems }} trigger={["click"]}>
-                <div className="flex items-center gap-2 cursor-pointer bg-blue-50 px-3 py-1.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors">
-                  <div className="w-8 h-8 rounded-full bg-blue-900 flex items-center justify-center text-white font-bold text-xs overflow-hidden">
-                    {userData?.profilePicture ? (
-                      <img src={userData.profilePicture} alt="User" className="w-full h-full object-cover" />
-                    ) : (
-                      userData?.fullName?.[0]?.toUpperCase() || "U"
-                    )}
-                  </div>
-                  <span className="hidden sm:inline font-semibold text-blue-900 text-sm">
-                    {userData?.fullName?.split(" ")[0] || "User"}
-                  </span>
-                  <ChevronDownIcon className="w-4 h-4 text-blue-900" />
+              <Dropdown menu={{ items: userMenuItems }} trigger={["hover"]}>
+                <div className="hidden sm:flex items-center gap-1 cursor-pointer text-gray-700 hover:text-black">
+                  My Account
+                  <ChevronDownIcon className="w-4 h-4 text-gray-400" />
                 </div>
               </Dropdown>
             )}
-
-            <Dropdown menu={{ items: employerItems }} trigger={["hover"]}>
-              <div className="hidden sm:flex items-center gap-1 cursor-pointer text-gray-700 hover:text-black">
-                For Employers
-                <ChevronDownIcon className="w-4 h-4 text-gray-400" />
-              </div>
-            </Dropdown>
-
-            {/* Mobile Hamburger */}
-            <div className="sm:hidden">
-              <button onClick={() => setMenuOpen(!menuOpen)}>
-                {menuOpen ? (
-                  <XMarkIcon className="w-6 h-6" />
-                ) : (
-                  <Bars3Icon className="w-6 h-6" />
-                )}
-              </button>
-            </div>
           </div>
 
           {/* ✅ FULL MOBILE MENU RESTORED */}
           {menuOpen && (
             <div className="sm:hidden absolute top-full left-0 w-full bg-white shadow-md p-4 z-50">
-
               {/* Jobs */}
               <div className="mb-2">
                 <button
@@ -417,7 +411,9 @@ function Navbar() {
                   onClick={() => setJobsOpen(!jobsOpen)}
                 >
                   Jobs
-                  <ChevronDownIcon className={`w-4 h-4 ${jobsOpen ? "rotate-180" : ""}`} />
+                  <ChevronDownIcon
+                    className={`w-4 h-4 ${jobsOpen ? "rotate-180" : ""}`}
+                  />
                 </button>
 
                 {jobsOpen && (
@@ -437,7 +433,9 @@ function Navbar() {
                   onClick={() => setJobCompany(!jobCompany)}
                 >
                   Companies
-                  <ChevronDownIcon className={`w-4 h-4 ${jobCompany ? "rotate-180" : ""}`} />
+                  <ChevronDownIcon
+                    className={`w-4 h-4 ${jobCompany ? "rotate-180" : ""}`}
+                  />
                 </button>
 
                 {jobCompany && (
@@ -446,25 +444,6 @@ function Navbar() {
                     <li>Unicorns</li>
                     <li>Product Companies</li>
                     <li>Internet Companies</li>
-                  </ul>
-                )}
-              </div>
-
-              {/* Services */}
-              <div className="mb-2">
-                <button
-                  className="w-full text-left flex justify-between items-center py-2 px-2 font-medium"
-                  onClick={() => setJobServices(!jobServices)}
-                >
-                  Services
-                  <ChevronDownIcon className={`w-4 h-4 ${jobServices ? "rotate-180" : ""}`} />
-                </button>
-
-                {jobServices && (
-                  <ul className="pl-4 space-y-1">
-                    <li>Resume Builder</li>
-                    <li>Job Alerts</li>
-                    <li>Monthly Subscription</li>
                   </ul>
                 )}
               </div>

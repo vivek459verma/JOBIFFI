@@ -69,9 +69,6 @@ const Footer = () => {
         {/* Column 3 */}
         <div>
           <ul className="mt-3 space-y-2 text-gray-600">
-            <li className="hover:text-blue-900 cursor-pointer">
-              <a href="/">Explore Opportunities</a>
-            </li>
             <li className="hover:text-blue-900 cursor-pointer">Jobs</li>
             <li className="hover:text-blue-900 cursor-pointer">Compaines</li>
             <li className="hover:text-blue-900 cursor-pointer">Services</li>
