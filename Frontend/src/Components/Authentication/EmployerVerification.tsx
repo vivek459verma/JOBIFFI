@@ -17,11 +17,14 @@ const EmployerVerification = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/api/employer/verify-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, otp }),
-      });
+      const response = await fetch(
+        "http://localhost:3000/api/employer/verify-email",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, otp }),
+        },
+      );
 
       const data = await response.json();
 
@@ -33,7 +36,7 @@ const EmployerVerification = () => {
         setError(data.message || "Verification failed");
       }
     } catch (err) {
-      setError("Server error. Please try again later.");
+      setError(`Server error. Please try again later. ${err}`);
     } finally {
       setLoading(false);
     }
@@ -44,11 +47,14 @@ const EmployerVerification = () => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:3000/api/employer/resend-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
+      const response = await fetch(
+        "http://localhost:3000/api/employer/resend-otp",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        },
+      );
 
       const data = await response.json();
 
@@ -59,7 +65,7 @@ const EmployerVerification = () => {
         setError(data.message || "Failed to resend OTP");
       }
     } catch (err) {
-      setError("Server error. Please try again later.");
+      setError(`Server error. Please try again later. ${err}`);
     }
   };
 
@@ -68,13 +74,16 @@ const EmployerVerification = () => {
       <div className="flex-grow flex items-center justify-center px-4">
         <div className="max-w-2xl w-full text-center space-y-6">
           <div className="space-y-4">
-            <h1 className="text-3xl font-bold text-gray-900">Verify Your Email</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Verify Your Email
+            </h1>
             <p className="text-lg md:text-xl text-gray-800 leading-relaxed">
               A verification OTP has been sent to{" "}
               <span className="font-bold text-gray-900">{email}</span>.
             </p>
             <p className="text-lg md:text-xl text-gray-800 leading-relaxed">
-              Please enter the OTP below to verify your email and complete registration.
+              Please enter the OTP below to verify your email and complete
+              registration.
             </p>
           </div>
 
@@ -138,4 +147,3 @@ const EmployerVerification = () => {
 };
 
 export default EmployerVerification;
-

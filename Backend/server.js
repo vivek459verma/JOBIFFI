@@ -11,12 +11,7 @@ const app = express();
 const port = process.env.PORT || 8000;
 
 // CORS Configuration
-const allowedOrigins = [
-  process.env.FRONTEND_URL,
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "http://localhost:3000"
-];
+const allowedOrigins = [process.env.FRONTEND_URL];
 
 app.use(
   cors({
@@ -25,12 +20,12 @@ app.use(
       if (!origin) return callback(null, true);
       if (process.env.NODE_ENV !== "production") return callback(null, true);
       if (allowedOrigins.indexOf(origin) === -1) {
-        return callback(new Error('Not allowed by CORS'), false);
+        return callback(new Error("Not allowed by CORS"), false);
       }
       return callback(null, true);
     },
     credentials: true,
-  })
+  }),
 );
 
 // Body Parsers
