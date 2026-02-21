@@ -36,8 +36,8 @@ const userSchema = new mongoose.Schema(
       maxlength: 16, // E.164 allows up to 15 digits + '+' sign
       validate: {
         validator: function (v) {
-          // If not required (e.g. OAuth), allow empty if not set
-          if (!this.required && !v) return true;
+          // If OAuth, allow empty if not set (to be filled during onboarding)
+          if (this.authProvider !== "EMAIL" && !v) return true;
           return /^\+[1-9]\d{1,14}$/.test(v);
         },
         message: props => `${props.value} is not a valid international phone number!`
@@ -100,6 +100,11 @@ const userSchema = new mongoose.Schema(
     profileCompletion: {
       type: Number,
       default: 20
+    },
+
+    resume: {
+      type: String, // Cloudinary URL
+      default: null
     },
 
     isActive: {

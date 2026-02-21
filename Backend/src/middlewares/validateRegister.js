@@ -59,8 +59,11 @@
 //   next();
 // };
 
+import { isPasswordSecure } from "../utils/passwordValidator.js";
+
 export const validateRegister = (req, res, next) => {
-  const { fullName, email, password, mobile, workStatus, currentCity } = req.body;
+  const body = req.body || {};
+  const { fullName, email, password, mobile, workStatus, currentCity } = body;
 
   if (!fullName || !email || !password || !mobile || !workStatus || !currentCity) {
     return res.status(400).json({ success: false, message: "All required fields must be provided" });
@@ -70,8 +73,11 @@ export const validateRegister = (req, res, next) => {
     return res.status(400).json({ success: false, message: "Invalid email format" });
   }
 
-  if (password.length < 8) {
-    return res.status(400).json({ success: false, message: "Password must be at least 8 characters long" });
+  if (!isPasswordSecure(password)) {
+    return res.status(400).json({
+      success: false,
+      message: "Password must be at least 8 characters and include uppercase, lowercase, a number, and a special character."
+    });
   }
 
   // Updated to include STUDENT to match User Model

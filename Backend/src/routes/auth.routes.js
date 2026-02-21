@@ -18,6 +18,7 @@ import {
 import { validateRegister } from "../middlewares/validateRegister.js";
 import { registerLimiter } from "../middlewares/rateLimit.js";
 import { protect } from "../middlewares/authMiddleware.js";
+import { upload, memoryUpload } from "../config/cloudinary.config.js";
 
 const router = express.Router();
 
@@ -33,7 +34,7 @@ router.get('/test-email-assets', (req, res) => {
 });
 
 // Email Verification Routes (from feature branch)
-router.post("/register", registerLimiter, validateRegister, registerUser);
+router.post("/register", registerLimiter, memoryUpload.single("resume"), validateRegister, registerUser);
 router.get("/verify-email", verifyEmail);
 router.post("/resend-verification", registerLimiter, resendVerificationEmail);
 
