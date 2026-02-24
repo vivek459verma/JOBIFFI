@@ -6,6 +6,8 @@ import authRoutes from "./src/routes/auth.routes.js";
 import employerRoutes from "./src/routes/employer.routes.js";
 import resumeMakerRoutes from './src/routes/ResumeMaker.routes.js';
 import dotenv from "dotenv";
+import passport from "passport";
+import "./src/config/passport.js"; // Ensure Passport strategies are configured
 
 // 1. Load environment variables first!
 dotenv.config();
