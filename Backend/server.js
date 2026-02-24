@@ -1,11 +1,12 @@
 import "./src/config/env.config.js";
 import express from "express";
+import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./src/config/mongo.config.js";
 import authRoutes from "./src/routes/auth.routes.js";
 import employerRoutes from "./src/routes/employer.routes.js";
 import resumeMakerRoutes from './src/routes/ResumeMaker.routes.js';
-import dotenv from "dotenv";
+
 import passport from "passport";
 import "./src/config/passport.js"; // Ensure Passport strategies are configured
 
@@ -67,6 +68,19 @@ app.use((err, req, res, next) => {
 
 // 6. Start Server
 const startServer = async () => {
+  // 🔍 DEBUGGING: Let's see what your .env file actually contains!
+  const dbKeys = Object.keys(process.env).filter(key => 
+    key.includes('MONGO') || key.includes('DB')
+  );
+  console.log("🔍 Database keys found in your .env file:", dbKeys);
+
+  if (!process.env.MONGO_URI) {
+    console.error("❌ CRITICAL ERROR: 'MONGO_URI' is strictly missing.");
+    console.error("👉 Please open your backend/.env file.");
+    console.error("👉 Change the name of your database variable to exactly MONGO_URI");
+    process.exit(1); // Stop the server from crashing wildly
+  }
+
   await connectDB();
   app.listen(port, () => {
     console.log(`🚀 Server running on port ${port}`);

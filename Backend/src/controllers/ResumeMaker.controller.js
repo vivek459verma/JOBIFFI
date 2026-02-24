@@ -5,25 +5,14 @@ import ResumeMakerModel from '../models/ResumeMakerModel.js'; // Adjust path if 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // ----------------------------------------------------------------------
-// 1. AI DESCRIPTION GENERATOR (Enforces 120 Credit Limit)
+// 1. AI DESCRIPTION GENERATOR (TEMPORARY BYPASS FOR TESTING)
 // ----------------------------------------------------------------------
 export const generateDescription = async (req, res) => {
   try {
-    // Note: req.user.id assumes you have an authentication middleware running
-    // If you don't have auth middleware yet, you must pass the userId in the req.body from the frontend
-    const userId = req.user?.id || req.body.userId; 
-    
-    if (!userId) {
-      return res.status(401).json({ success: false, message: "Unauthorized. Please log in." });
-    }
-
-    // 1. Check User Credits in MongoDB
-    const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ success: false, message: "User not found." });
-    
-    if (user.aiCredits <= 0) {
-      return res.status(403).json({ success: false, message: "You have used all your AI credits. Please upgrade your plan." });
-    }
+    // ⚠️ TEMPORARY BYPASS: User ID and Credit checks are disabled!
+    // const userId = req.user?.id || req.body.userId; 
+    // if (!userId) return res.status(401).json({ success: false, message: "Unauthorized." });
+    // const user = await User.findById(userId); ...
 
     let { role, company, rawText } = req.body;
 
@@ -32,7 +21,7 @@ export const generateDescription = async (req, res) => {
     if (!rawText || typeof rawText !== 'string') return res.status(400).json({ success: false, message: "Notes are required." });
 
     const safeRawText = rawText.substring(0, 800).trim();
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const prompt = `
     You are an expert, strict ATS resume writer. Your ONLY purpose is to rewrite the provided rough notes into 3 to 4 professional, action-oriented resume bullet points.
@@ -55,14 +44,14 @@ export const generateDescription = async (req, res) => {
 
     if (responseText.length > 6000) responseText = responseText.substring(0, 6000) + "...";
 
-    // 2. Deduct Credit and Save User
-    user.aiCredits -= 1;
-    await user.save();
+    // ⚠️ TEMPORARY BYPASS: Credit deduction disabled
+    // user.aiCredits -= 1;
+    // await user.save();
 
     res.status(200).json({ 
       success: true, 
       description: responseText,
-      creditsLeft: user.aiCredits 
+      creditsLeft: "Unlimited (Testing Mode)" // Mocking this so the frontend doesn't break
     });
 
   } catch (error) {

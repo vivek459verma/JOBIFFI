@@ -21,7 +21,35 @@ const Register = () => {
     const [mobile, setMobile] = useState("");
     const [city, setCity] = useState("");
     const [loading, setLoading] = useState(false);
+    const [resumeFile, setResumeFile] = useState<File | null>(null);
+    const [resumeName, setResumeName] = useState<string | null>(null);
     const navigate = useNavigate();
+
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Validation: PDF, DOC, DOCX
+        const allowedTypes = [
+            "application/pdf",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ];
+        if (!allowedTypes.includes(file.type)) {
+            message.error("Invalid file type. Please upload PDF, DOC, or DOCX.");
+            return;
+        }
+
+        // Validation: Max 2MB
+        if (file.size > 2 * 1024 * 1024) {
+            message.error("File size exceeds 2MB limit.");
+            return;
+        }
+
+        setResumeName(file.name);
+        setResumeFile(file);
+        message.success("Resume selected!");
+    };
 
     return (
         <div className="min-h-screen bg-white flex flex-col items-center">
@@ -72,13 +100,21 @@ const Register = () => {
 
                         <form className="space-y-6" onSubmit={async (e) => {
                             e.preventDefault();
-                            if (!isChecked || !workStatus) {
-                                message.error("Please agree to terms and select work status");
+                            if (!workStatus) {
+                                message.error("Please select work status");
                                 return;
                             }
 
                             setLoading(true);
                             try {
+                                // Password Complexity Regex (Supports common special symbols)
+                                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+                                if (!passwordRegex.test(password)) {
+                                    message.error("Password must be at least 8 characters long and include an uppercase letter, a number, and a special character.");
+                                    setLoading(false);
+                                    return;
+                                }
+
                                 const payload = {
                                     fullName,
                                     email,
@@ -87,8 +123,18 @@ const Register = () => {
                                     workStatus: workStatus === "experienced" ? "EXPERIENCED" :
                                         workStatus === "student" ? "STUDENT" : "FRESHER",
                                     currentCity: city,
-                                    communicationConsent: isChecked
+                                    communicationConsent: JSON.stringify(isChecked),
+                                    resume: resumeFile
                                 };
+
+                                const formData = new FormData();
+                                Object.entries(payload).forEach(([key, value]) => {
+                                    if (key === 'studentDetails' && value) {
+                                        formData.append(key, JSON.stringify(value));
+                                    } else if (value !== null) {
+                                        formData.append(key, value as any);
+                                    }
+                                });
 
                                 // Basic validation for student details if needed (skipping for now based on UI)
                                 if (payload.workStatus === "STUDENT") {
@@ -116,14 +162,15 @@ const Register = () => {
                                     // The UI has "I'm a student" button.
 
                                     // Let's add dummy details to pass backend validation for now.
-                                    (payload as any).studentDetails = {
+                                    const studentDetails = {
                                         collegeName: "Not Provided",
                                         degree: "Not Provided",
                                         graduationYear: new Date().getFullYear().toString()
                                     };
+                                    formData.set('studentDetails', JSON.stringify(studentDetails));
                                 }
 
-                                const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/auth/register`, payload);
+                                const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/auth/register`, formData);
 
                                 if (response.status === 201) {
                                     message.success("Registration successful!");
@@ -192,8 +239,8 @@ const Register = () => {
                                         required
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        placeholder="(Minimum 6 characters)"
-                                        className={`block w-full rounded-lg border ${password.length > 0 && password.length < 6 ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'} px-4 py-2.5 pr-12 text-gray-900 sm:text-sm placeholder-gray-400`}
+                                        placeholder="Minimum 8 characters"
+                                        className={`block w-full rounded-lg border ${password && !(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/.test(password)) ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'} px-4 py-2.5 pr-12 text-gray-900 sm:text-sm placeholder-gray-400`}
                                     />
                                     <button
                                         type="button"
@@ -207,15 +254,27 @@ const Register = () => {
                                         )}
                                     </button>
                                 </div>
-                                {password.length > 0 && password.length < 6 ? (
-                                    <p className="mt-1 text-xs text-red-500 font-medium">Password must be at least 6 characters</p>
-                                ) : password.length >= 6 ? (
-                                    <p className="mt-1 text-xs text-green-600 flex items-center gap-1 font-medium">
-                                        This helps your account stay protected <CheckCircleIcon className="w-4 h-4" />
-                                    </p>
-                                ) : (
-                                    <p className="mt-1 text-xs text-gray-400">This helps keep your Jobiffi account safe.</p>
+
+                                {password.length > 0 && (
+                                    <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                                        <p className="text-xs font-bold text-gray-600 mb-2 uppercase tracking-wider">Password Requirements:</p>
+                                        <ul className="space-y-1.5">
+                                            {[
+                                                { label: "8+ Characters", met: password.length >= 8 },
+                                                { label: "One Uppercase (A-Z)", met: /[A-Z]/.test(password) },
+                                                { label: "One Number (0-9)", met: /\d/.test(password) },
+                                                { label: "One Special Case (@$!%*?&)", met: /[@$!%*?&]/.test(password) }
+                                            ].map((req, i) => (
+                                                <li key={i} className={`flex items-center gap-2 text-xs ${req.met ? 'text-green-600 font-medium' : 'text-gray-400'}`}>
+                                                    <CheckCircleIcon className={`h-4 w-4 ${req.met ? 'text-green-500' : 'text-gray-300'}`} />
+                                                    {req.label}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
                                 )}
+
+                                {!password && <p className="mt-1 text-xs text-gray-400">This helps keep your Jobiffi account safe.</p>}
                             </div>
 
                             <div>
@@ -329,19 +388,33 @@ const Register = () => {
 
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-700 mb-1">
-                                            Resume
+                                            Resume (Optional)
                                         </label>
-                                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 border border-dashed border-blue-200 rounded-xl p-4 bg-white hover:bg-blue-50 transition-colors group cursor-pointer">
+                                        <div
+                                            onClick={() => document.getElementById('resume-upload')?.click()}
+                                            className="flex flex-col sm:flex-row items-start sm:items-center gap-4 border border-dashed border-blue-200 rounded-xl p-4 bg-white hover:bg-blue-50 transition-colors group cursor-pointer relative"
+                                        >
+                                            <input
+                                                type="file"
+                                                id="resume-upload"
+                                                className="hidden"
+                                                accept=".pdf,.doc,.docx"
+                                                onChange={handleFileUpload}
+                                            />
                                             <button
                                                 type="button"
                                                 className="flex items-center gap-2 rounded-full bg-[#f05537] px-6 py-2.5 text-sm font-bold text-white hover:bg-orange-600 transition shadow-md hover:shadow-lg transform active:scale-95"
                                             >
                                                 <CloudArrowUpIcon className="h-5 w-5" />
-                                                Upload Resume
+                                                {resumeName ? "Change Resume" : "Upload Resume"}
                                             </button>
                                             <div className="flex flex-col">
-                                                <span className="text-sm font-medium text-gray-700 group-hover:text-blue-700 transition-colors">Supported formats: doc, docx, rtf, pdf</span>
-                                                <span className="text-xs text-gray-400">Max file size: 2MB</span>
+                                                <span className="text-sm font-medium text-gray-700 group-hover:text-blue-700 transition-colors">
+                                                    {resumeName || "Supported formats: doc, docx, rtf, pdf"}
+                                                </span>
+                                                <span className="text-xs text-gray-400">
+                                                    {resumeFile ? "✅ Ready to register" : "Max file size: 2MB"}
+                                                </span>
                                             </div>
                                         </div>
                                         <p className="mt-2 text-xs text-gray-400 flex items-center gap-1">
@@ -379,9 +452,9 @@ const Register = () => {
                             <div className="pt-2 flex justify-between">
                                 <button
                                     type="submit"
-                                    disabled={!isChecked || !workStatus || (!!workStatus && !city)}
+                                    disabled={!workStatus || (!!workStatus && !city)}
                                     className={`cursor-pointer flex w-fit justify-center rounded-3xl px-10 py-3 text-sm font-bold text-white shadow-sm transition
-                                         ${isChecked && workStatus && city ? 'bg-blue-600 hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600' : 'bg-gray-400 cursor-not-allowed opacity-70'}
+                                         ${workStatus && city ? 'bg-blue-600 hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600' : 'bg-gray-400 cursor-not-allowed opacity-70'}
                                      `}
                                 >
                                     {loading ? "Registering..." : "Register now"}

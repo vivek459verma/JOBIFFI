@@ -10,6 +10,8 @@ import { sendVerificationEmail } from "../utils/sendEmail.js";
 import sendEmail from "../utils/sendEmailLogin.js";
 import sendResetEmail from "../utils/SendResetEmail.js";
 import { resetPasswordTemplate } from "../utils/emailTemplate.js";
+import { isPasswordSecure } from "../utils/passwordValidator.js";
+import { cloudinary } from "../config/cloudinary.config.js";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -17,11 +19,8 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
  * ✅ REGISTER USER (UNCHANGED - Your existing logic)
  */
 export const registerUser = async (req, res) => {
-  const session = await mongoose.startSession();
-
   try {
-    session.startTransaction();
-
+    const body = req.body || {};
     const {
       fullName,
       email,
@@ -31,94 +30,138 @@ export const registerUser = async (req, res) => {
       currentCity,
       communicationConsent,
       studentDetails
-    } = req.body;
+    } = body;
+
+    // 1. Initial Parsing & Validation
+    let parsedConsent = false;
+    try {
+      parsedConsent = typeof communicationConsent === 'string' ? JSON.parse(communicationConsent) : !!communicationConsent;
+    } catch (e) {
+      parsedConsent = !!communicationConsent;
+    }
+
+    let parsedStudent = undefined;
+    if (workStatus === "STUDENT") {
+      try {
+        parsedStudent = typeof studentDetails === 'string' ? JSON.parse(studentDetails) : studentDetails;
+      } catch (e) {
+        console.error("Error parsing student details:", e);
+      }
+    }
 
     if (!fullName || !email || !password || !mobile || !workStatus || !currentCity) {
-      await session.abortTransaction();
-      session.endSession();
       return res.status(400).json({ message: "Missing required fields" });
     }
 
     const allowedWorkStatus = ["FRESHER", "EXPERIENCED", "STUDENT"];
     if (!allowedWorkStatus.includes(workStatus)) {
-      await session.abortTransaction();
-      session.endSession();
       return res.status(400).json({ message: "Invalid work status" });
     }
 
-    if (workStatus === "STUDENT") {
-      if (
-        !studentDetails ||
-        !studentDetails.collegeName ||
-        !studentDetails.degree ||
-        !studentDetails.graduationYear
-      ) {
-        await session.abortTransaction();
-        session.endSession();
-        return res.status(400).json({
-          message: "Student details are required for student registration"
-        });
-      }
+    if (workStatus === "STUDENT" && (!parsedStudent || !parsedStudent.collegeName || !parsedStudent.degree || !parsedStudent.graduationYear)) {
+      return res.status(400).json({ message: "Student details are required for student registration" });
     }
 
-    const existingUser = await User.findOne({ email }).session(session);
+    // 2. Heavy Operations (Outside Transaction) - Parallelized
+    const [existingUser, passwordHash] = await Promise.all([
+      User.findOne({ email }),
+      bcrypt.hash(password, 10)
+    ]);
+
     if (existingUser) {
-      await session.abortTransaction();
-      session.endSession();
       return res.status(409).json({ message: "User already exists" });
     }
 
-    const passwordHash = await bcrypt.hash(password, 10);
     const verificationToken = crypto.randomBytes(32).toString("hex");
 
-    const [user] = await User.create(
-      [{
-        fullName,
-        email,
-        passwordHash,
-        mobile,
-        workStatus,
-        currentCity,
-        communicationConsent,
-        studentDetails: workStatus === "STUDENT" ? studentDetails : undefined,
-        role: "JOB_SEEKER",
-        profileCompletion: workStatus === "STUDENT" ? 15 : 20,
-        isEmailVerified: false,
-        emailVerificationToken: verificationToken,
-        emailVerificationExpires: Date.now() + 48 * 60 * 60 * 1000
-      }],
-      { session }
-    );
+    // 3. Database Write (Minimize Transaction Time)
+    const session = await mongoose.startSession();
+    try {
+      session.startTransaction();
 
-    await Subscription.create(
-      [{
-        ownerId: user._id,
-        ownerType: "USER",
-        planName: "FREE",
-        isActive: true
-      }],
-      { session }
-    );
+      const consentObject = {
+        sms: parsedConsent,
+        email: parsedConsent,
+        whatsapp: parsedConsent
+      };
 
-    await session.commitTransaction();
-    session.endSession();
+      const [user] = await User.create(
+        [{
+          fullName,
+          email,
+          passwordHash,
+          mobile,
+          workStatus,
+          currentCity,
+          communicationConsent: consentObject,
+          studentDetails: workStatus === "STUDENT" ? parsedStudent : undefined,
+          resume: null, // Set to null initially for speed
+          role: "JOB_SEEKER",
+          profileCompletion: workStatus === "STUDENT" ? 15 : 20,
+          isEmailVerified: false,
+          emailVerificationToken: verificationToken,
+          emailVerificationExpires: Date.now() + 48 * 60 * 60 * 1000
+        }],
+        { session }
+      );
 
-    res.status(201).json({
-      userId: user._id,
-      message: "Registration successful. Please verify your email."
-    });
+      await Subscription.create(
+        [{
+          ownerId: user._id,
+          ownerType: "USER",
+          planName: "FREE",
+          isActive: true
+        }],
+        { session }
+      );
 
-    sendVerificationEmail(user.email, verificationToken)
-      .catch(err => console.error("Email send failed:", err));
+      await session.commitTransaction();
+
+      // ✅ SUCCESS RESPONSE SENT IMMEDIATELY
+      res.status(201).json({
+        userId: user._id,
+        message: "Registration successful. Please verify your email."
+      });
+
+      // 4. Background Tasks (Email & Resume Upload)
+      // A. Send Verification Email
+      sendVerificationEmail(user.email, verificationToken)
+        .catch(err => console.error("Background task: Email failed:", err));
+
+      // B. Background Resume Upload
+      if (req.file && req.file.buffer) {
+        (async () => {
+          try {
+            const b64 = req.file.buffer.toString("base64");
+            const dataURI = `data:${req.file.mimetype};base64,${b64}`;
+
+            const uploadRes = await cloudinary.uploader.upload(dataURI, {
+              folder: "resumes",
+              resource_type: "raw",
+              public_id: `${Date.now()}-${req.file.originalname.split(".")[0]}`
+            });
+
+            await User.findByIdAndUpdate(user._id, { resume: uploadRes.secure_url });
+          } catch (uploadErr) {
+            console.error("Background task: Resume upload failed:", uploadErr);
+          }
+        })();
+      }
+
+    } catch (innerError) {
+      if (session.inTransaction()) {
+        await session.abortTransaction();
+      }
+      throw innerError;
+    } finally {
+      session.endSession();
+    }
 
   } catch (error) {
-    if (session.inTransaction()) {
-      await session.abortTransaction();
-    }
-    session.endSession();
-
     console.error("Register error:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    if (!res.headersSent) {
+      return res.status(500).json({ message: error.message || "Internal server error" });
+    }
   }
 };
 
@@ -273,8 +316,8 @@ export const sendOtp = async (req, res) => {
     // Save OTP to DB
     await Otp.create({ email: normalizedEmail, otp: otpCode });
 
-    // Send Email (Pass user.name for greeting)
-    await sendEmail(normalizedEmail, otpCode, user.name);
+    // Send Email (Pass user.fullName for greeting)
+    await sendEmail(normalizedEmail, otpCode, user.fullName);
 
     res.status(200).json({ success: true, message: "OTP sent successfully" });
 
@@ -458,6 +501,13 @@ export const resetPasswordConfirm = async (req, res) => {
     const otpRecord = await Otp.findOne({ email: user.email, otp });
     if (!otpRecord) return res.status(400).json({ success: false, message: "Invalid OTP" });
 
+    if (!isPasswordSecure(newPassword)) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 8 characters and include uppercase, lowercase, a number, and a special character."
+      });
+    }
+
     // Hash New Password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
@@ -491,7 +541,8 @@ export const getProfile = async (req, res) => {
         workStatus: user.workStatus,
         mobile: user.mobile,
         currentCity: user.currentCity,
-        profilePicture: user.profilePicture
+        profilePicture: user.profilePicture,
+        resume: user.resume
       }
     });
   } catch (error) {
@@ -503,7 +554,7 @@ export const getProfile = async (req, res) => {
 // --- 10. UPDATE USER PROFILE (For OAuth Completion) ---
 export const updateProfile = async (req, res) => {
   try {
-    const { mobile, workStatus, currentCity, fullName } = req.body;
+    const { mobile, workStatus, currentCity, fullName, resume } = req.body;
 
     const user = await User.findById(req.user.userId);
     if (!user) {
@@ -515,6 +566,7 @@ export const updateProfile = async (req, res) => {
     if (workStatus) user.workStatus = workStatus;
     if (currentCity) user.currentCity = currentCity;
     if (fullName) user.fullName = fullName;
+    if (resume) user.resume = resume;
 
     // Update profile completion score if needed
     if (user.mobile && user.workStatus && user.currentCity && user.profileCompletion < 50) {
@@ -533,7 +585,8 @@ export const updateProfile = async (req, res) => {
         workStatus: user.workStatus,
         mobile: user.mobile,
         currentCity: user.currentCity,
-        profilePicture: user.profilePicture
+        profilePicture: user.profilePicture,
+        resume: user.resume
       }
     });
 
