@@ -304,7 +304,7 @@ function HomePage() {
       <Navbar />
 
       {/* HOME PAGE CONTENT */}
-      <div className="bg-blue-50 relative z-0">
+      <div className="bg-blue-50 relative z-0 w-full min-h-screen overflow-x-hidden">
         <MainHead />
         <CategoryCompany />
         <TopCompanies />
