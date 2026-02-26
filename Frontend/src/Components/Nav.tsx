@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Dropdown } from "antd";
 import {
@@ -26,6 +26,22 @@ function Navbar() {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const navRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        setJobsOpen(false);
+        setJobCompany(false);
+        setJobServices(false);
+        setJobResources(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  });
 
   // Handle path-based modal triggers
   useEffect(() => {
@@ -139,21 +155,26 @@ function Navbar() {
   return (
     <>
       <nav className="w-full bg-white shadow-md px-4 sm:px-8 py-3 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto flex items-center justify-between relative">
+        <div ref={navRef} className="max-w-7xl mx-auto flex  items-center justify-between relative">
           {/* LEFT – Logo */}
-          <div className="flex ml-12.5 items-center translate-x-[30%]">
+          <div className="flex  items-center">
             <a href="/">
-              <img src={logo} alt="Logo" className="h-12 w-auto" />
+              <img src={logo} alt="Logo" className="h-12 w-auto " />
             </a>
           </div>
 
           {/* CENTER – Desktop Menu */}
-          <div className="hidden sm:flex absolute left-1/2 -translate-x-[80%] items-center gap-10">
+          <div className="hidden sm:flex absolute left-1/2 -translate-x-[80%] items-center gap-10 lg:gap-10">
             {/* Jobs */}
             <div
               className="relative"
-              onMouseEnter={() => setJobsOpen(true)}
-              onMouseLeave={() => setJobsOpen(false)}
+              onMouseEnter={() => {
+                setJobsOpen(true);
+                setJobCompany(false);
+                setJobServices(false);
+                setJobResources(false);
+              }}
+              // onMouseLeave={() => setJobsOpen(false)}
             >
               <h1 className="cursor-pointer font-medium text-gray-700 hover:text-black border-b-2 border-transparent hover:border-blue-800 pb-1">
                 Jobs
@@ -212,8 +233,13 @@ function Navbar() {
             {/* Companies */}
             <div
               className="relative"
-              onMouseEnter={() => setJobCompany(true)}
-              onMouseLeave={() => setJobCompany(false)}
+              onMouseEnter={() => {
+                setJobsOpen(false);
+                setJobCompany(true);
+                setJobServices(false);
+                setJobResources(false);
+              }}
+              // onMouseLeave={() => setJobCompany(false)}
             >
               <h1 className="cursor-pointer text-gray-700 hover:text-black font-medium border-b-2 border-transparent hover:border-blue-800 pb-1">
                 Companies
@@ -265,8 +291,13 @@ function Navbar() {
             {/* Services */}
             <div
               className="relative"
-              onMouseEnter={() => setJobServices(true)}
-              onMouseLeave={() => setJobServices(false)}
+              onMouseEnter={() => {
+                setJobsOpen(false);
+                setJobCompany(false);
+                setJobServices(true);
+                setJobResources(false);
+              }}
+              // onMouseLeave={() => setJobServices(false)}
             >
               <h1 className="cursor-pointer text-gray-700 hover:text-black font-medium border-b-2 border-transparent hover:border-blue-800 pb-1">
                 Services
@@ -335,8 +366,13 @@ function Navbar() {
             {/* Resources */}
             <div
               className="relative"
-              onMouseEnter={() => setJobResources(true)}
-              onMouseLeave={() => setJobResources(false)}
+              onMouseEnter={() => {
+                setJobsOpen(false);
+                setJobCompany(false);
+                setJobServices(false);
+                setJobResources(true);
+              }}
+              // onMouseLeave={() => setJobResources(false)}
             >
               <h1 className="cursor-pointer text-gray-700 hover:text-black font-medium border-b-2 border-transparent hover:border-blue-800 pb-1">
                 Resources
@@ -356,7 +392,7 @@ function Navbar() {
           </div>
 
           {/* RIGHT – Buttons */}
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             {!isLoggedIn ? (
               <>
                 <button
