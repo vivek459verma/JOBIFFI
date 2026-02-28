@@ -7,7 +7,7 @@ export default function AsideFooter() {
       <div className=" mt-3  flex flex-col md:flex-row items-center justify-between px-8 text-center md:text-left bg-pink-50 rounded-2xl max-w-7xl mx-auto">
         <div className="flex flex-col text-center md:text-left md:w-1/2 gap-4 ml-[5%] mb-3">
           <h1 className="text-black font-bold text-2xl mt-3">
-            1M+ users on the <br />
+            100k+ users on the <br />
             Jobiffi app
           </h1>
           <span className="text-gray-600">
