@@ -36,7 +36,7 @@ const Footer = () => {
                 className="h-7 w-7 object-contain"
               />
             </a>
-            <a href="">
+            <a href="https://x.com/jobiffidotcom">
               <img
                 src="https://img.freepik.com/free-vector/new-2023-twitter-logo-x-icon-design_1017-45418.jpg?semt=ais_hybrid&w=740&q=80"
                 alt="twitter"
