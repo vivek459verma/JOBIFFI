@@ -18,6 +18,8 @@ import AboutUs from "./Components/pages/AboutUs";
 import TermsConditions from "./Components/pages/TermsConditions";
 import PrivacyPolicy from "./Components/pages/PrivacyPolicy";
 import FraudAlert from "./Components/pages/FraudAlert";
+import TrustSafety from "./Components/pages/TrustSafety";
+
 
 
 function App() {
@@ -105,6 +107,17 @@ function App() {
     </div>
   }
 />
+<Route
+  path="/trust-safety"
+  element={
+    <div className="bg-blue-50 min-h-screen">
+      <TrustSafety />
+    </div>
+  }
+/>
+
+
+
 
     </Routes>
   );

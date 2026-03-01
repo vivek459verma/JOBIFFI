@@ -121,9 +121,15 @@ const Footer = () => {
 </a>
 
 
-            <li className="hover:text-blue-900 cursor-pointer">
-              Trust & Safety
-            </li>
+           <a
+  href="/trust-safety"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="hover:text-blue-900 cursor-pointer block"
+>
+  Trust & Safety
+</a>
+
 
           </ul>
         </div>
