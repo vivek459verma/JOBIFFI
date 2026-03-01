@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 
 /* ===== IMAGE IMPORTS ===== */
@@ -30,14 +30,31 @@ interface EventCardProps extends EventItem {}
 const CARD_WIDTH = 320;
 const CARD_GAP = 20;
 const STEP = CARD_WIDTH + CARD_GAP;
-const CARDS_PER_VIEW = 3;
+// const CARDS_PER_VIEW = 3;
 const ANIMATION_DURATION = 500;
 
 /* ===== MAIN COMPONENT ===== */
 
 const UpcomingEvents = () => {
   const [page, setPage] = useState(0);
+  const [cardPreview, setCardPreview] = useState(3);
   const isAnimatingRef = useRef(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if(window.innerWidth < 768) {
+        setCardPreview(1);
+      } else if(window.innerWidth < 1024) {
+        setCardPreview(2);
+      } else {
+        setCardPreview(3);
+      }
+      
+    }
+    handleResize();
+    window.addEventListener("resize",handleResize);
+    return () => window.removeEventListener("resize",handleResize);
+  },[]);
 
   const events: EventItem[] = [
     {
@@ -102,7 +119,7 @@ const UpcomingEvents = () => {
     },
   ];
 
-  const maxPage = Math.max(0, events.length - CARDS_PER_VIEW);
+  const maxPage = Math.max(0, events.length - cardPreview);
 
   const goToPage = (nextPage: number) => {
     if (isAnimatingRef.current) return;
@@ -128,16 +145,16 @@ const UpcomingEvents = () => {
               <img
                 src={eventsSwipeImg}
                 alt="Upcoming events illustration"
-                className="w-44 opacity-90 hidden md:block"
+                className="w-44 opacity-90  md:block"
               />
             </div>
           </div>
 
           {/* RIGHT */}
-          <div className="relative w-[1020px] mt-8">
+          <div className="relative w-full md:w-[1020px] mt-8">
             <div className="overflow-hidden">
               <div
-                className="flex gap-5 pl-[68px] transition-transform duration-500 ease-in-out"
+                className="flex gap-4 pl-4 md:pl-[68px] transition-transform duration-500 ease-in-out"
                 style={{ transform: `translate3d(-${page * STEP}px,0,0)` }}
               >
                 {events.map((event, index) => (

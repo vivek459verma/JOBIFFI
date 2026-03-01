@@ -1,14 +1,16 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import juice from "juice";
 import { otpTemplate } from "./emailTemplate.js";
+
 dotenv.config();
 
 const sendEmail = async (email, otp, name) => {
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
-      port: process.env.EMAIL_PORT,
-      secure: true, 
+      port: Number(process.env.EMAIL_PORT),
+      secure: true,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -16,15 +18,20 @@ const sendEmail = async (email, otp, name) => {
       tls: { rejectUnauthorized: false }
     });
 
+    // 1️⃣ Raw HTML from template
+    const rawHtml = otpTemplate(otp, name);
+
+    // 2️⃣ Inline CSS using juice
+    const inlinedHtml = juice(rawHtml);
+
     await transporter.sendMail({
-      from: `"Jobiffi Support" <${process.env.EMAIL_USER}>`,
+      from: `"Jobiffi" <${process.env.EMAIL_USER}>`,
       to: email,
-      subject: "Your OTP for logging in Jobiffi account",
-      text: `Dear ${name || "Jobseeker"}, Your OTP is: ${otp}.`,
-      html: otpTemplate(otp, name),
+      subject: "Your OTP for Jobiffi account",
+      html: inlinedHtml,
     });
 
-    console.log(`✅ Email sent successfully to ${name} (${email})`);
+    console.log(`✅ Email sent successfully to ${name || email} (${email})`);
 
   } catch (error) {
     console.log("⚠️ EMAIL FAILED - USING DEV MODE ⚠️");

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
+import job from "../../assets/media/Events.svg"
 
 const JobCompanies = () => {
   const jobs = [
@@ -57,11 +58,12 @@ const JobCompanies = () => {
 
           {/* LEFT SIDE */}
           <div className="md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left gap-4">
-            <img
+            {/* <img
               src="https://static.naukimg.com/s/0/0/i/role-collection-ot.png"
               alt="Jobs Illustration"
               className="h-40 md:h-60 w-auto"
-            />
+            /> */}
+            <img src={job} alt="" className="h-30 md:h-50 w-auto"/>
 
             <h1 className="font-bold text-2xl md:text-3xl">
               Discover Jobs across <br /> Popular roles
