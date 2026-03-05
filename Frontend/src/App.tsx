@@ -22,6 +22,10 @@ import AboutUs from "./Components/pages/AboutUs";
 
 import TermsConditions from "./Components/pages/TermsConditions";
 import PrivacyPolicy from "./Components/pages/PrivacyPolicy";
+import FraudAlert from "./Components/pages/FraudAlert";
+import TrustSafety from "./Components/pages/TrustSafety";
+
+
 
 // ✅ SUCCESS MESSAGE COMPONENT
 function VerificationSuccessMessage({ onClose }: { onClose: () => void }) {
@@ -400,9 +404,36 @@ function App() {
             <PrivacyPolicy />
           </div>
         }
+        
       />
+
+      <Route
+  path="/fraud-alert"
+  element={
+    <div className="bg-blue-50 min-h-screen">
+      <FraudAlert />
+    </div>
+  }
+/>
+<Route
+  path="/trust-safety"
+  element={
+    <div className="bg-blue-50 min-h-screen">
+      <TrustSafety />
+    </div>
+  }
+/>
+
+
+
+
     </Routes>
   );
 }
 
+<<<<<<< HEAD
+
 export default App;
+=======
+export default App;
+>>>>>>> 718fc3229d5ecd92c8796784d3bd26ffc4466659

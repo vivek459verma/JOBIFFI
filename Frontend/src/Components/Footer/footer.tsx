@@ -69,6 +69,10 @@ const Footer = () => {
         {/* Column 3 */}
         <div>
           <ul className="mt-3 space-y-2 text-gray-600">
+<<<<<<< HEAD
+          
+=======
+>>>>>>> 718fc3229d5ecd92c8796784d3bd26ffc4466659
             <li className="hover:text-blue-900 cursor-pointer">Jobs</li>
             <li className="hover:text-blue-900 cursor-pointer">Compaines</li>
             <li className="hover:text-blue-900 cursor-pointer">Services</li>
@@ -102,11 +106,34 @@ const Footer = () => {
               Terms & conditions
             </a>
 
+<<<<<<< HEAD
+           <a
+  href="/fraud-alert"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="hover:text-blue-900 cursor-pointer block"
+>
+  Fraud Alert
+</a>
+
+
+           <a
+  href="/trust-safety"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="hover:text-blue-900 cursor-pointer block"
+>
+  Trust & Safety
+</a>
+
+
+=======
             <li className="hover:text-blue-900 cursor-pointer">Fraud alert</li>
 
             <li className="hover:text-blue-900 cursor-pointer">
               Trust & Safety
             </li>
+>>>>>>> 718fc3229d5ecd92c8796784d3bd26ffc4466659
           </ul>
         </div>
 
