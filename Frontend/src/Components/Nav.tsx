@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { Dropdown } from "antd";
 import {
   ChevronDownIcon,
@@ -27,6 +27,10 @@ function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const navRef = useRef<HTMLDivElement>(null);
+  const jobsTimeout = useRef<any>(null);
+  const companyTimeout = useRef<any>(null);
+  const servicesTimeout = useRef<any>(null);
+  const resourcesTimeout = useRef<any>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -169,10 +173,16 @@ function Navbar() {
             <div
               className="relative"
               onMouseEnter={() => {
+                clearTimeout(jobsTimeout.current);
                 setJobsOpen(true);
                 setJobCompany(false);
                 setJobServices(false);
                 setJobResources(false);
+              }}
+              onMouseLeave={() => {
+                jobsTimeout.current = setTimeout(() => {
+                  setJobsOpen(false);
+                }, 150);
               }}
               // onMouseLeave={() => setJobsOpen(false)}
             >
@@ -234,10 +244,16 @@ function Navbar() {
             <div
               className="relative"
               onMouseEnter={() => {
+                clearTimeout(jobsTimeout.current);
                 setJobsOpen(false);
                 setJobCompany(true);
                 setJobServices(false);
                 setJobResources(false);
+              }}
+              onMouseLeave={() => {
+                jobsTimeout.current = setTimeout(() => {
+                  setJobsOpen(false);
+                }, 150);
               }}
               // onMouseLeave={() => setJobCompany(false)}
             >
@@ -292,10 +308,16 @@ function Navbar() {
             <div
               className="relative"
               onMouseEnter={() => {
+                clearTimeout(jobsTimeout.current);
                 setJobsOpen(false);
                 setJobCompany(false);
                 setJobServices(true);
                 setJobResources(false);
+              }}
+              onMouseLeave={() => {
+                jobsTimeout.current = setTimeout(() => {
+                  setJobsOpen(false);
+                }, 150);
               }}
               // onMouseLeave={() => setJobServices(false)}
             >
@@ -353,7 +375,13 @@ function Navbar() {
                       Free Resume Toolkit
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600">
-                      <li>Resume Builder</li>
+                      <li>
+                        <Link
+                          to="/resume-builder"
+                            className="hover:text-blue-800 transition-colors cursor-pointer block"
+                        >
+                          Resume Builder
+                        </Link> </li>                     
                       <li>Smart Resume Score</li>
                       <li>Resume Samples</li>
                       <li>Cover Letter Samples</li>
@@ -367,10 +395,16 @@ function Navbar() {
             <div
               className="relative"
               onMouseEnter={() => {
+                clearTimeout(jobsTimeout.current);
                 setJobsOpen(false);
                 setJobCompany(false);
                 setJobServices(false);
                 setJobResources(true);
+              }}
+              onMouseLeave={() => {
+                jobsTimeout.current = setTimeout(() => {
+                  setJobsOpen(false);
+                }, 150);
               }}
               // onMouseLeave={() => setJobResources(false)}
             >
