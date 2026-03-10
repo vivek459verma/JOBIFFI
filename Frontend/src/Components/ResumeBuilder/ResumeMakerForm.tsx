@@ -45,8 +45,34 @@ const ResumeMakerForm: React.FC = () => {
   // ✅ NEW: View Management (Dashboard vs Editor)
   const [currentView, setCurrentView] = useState<'dashboard' | 'editor'>('dashboard');
   
-  // ✅ NEW: Mock Array of Saved Resumes (Simulating Database)
+
   const [savedResumes, setSavedResumes] = useState<ResumeData[]>([]);
+
+
+  useEffect(() => {
+    const fetchMyResumes = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return; // Stop if the user isn't logged in
+
+        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+        const response = await fetch(`${API_URL}/api/resumeMaker/my-resumes`, {
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+          setSavedResumes(data.resumes); // Populates the dashboard instantly!
+        }
+      } catch (error) {
+        console.error("Failed to load resumes:", error);
+      }
+    };
+
+    if (currentView === 'dashboard') {
+      fetchMyResumes();
+    }
+  }, [currentView]);
 
   // Editor States
   const [formData, setFormData] = useState<ResumeData>(INITIAL_RESUME_STATE);
@@ -80,8 +106,8 @@ const ResumeMakerForm: React.FC = () => {
         const skillLower = skill.toLowerCase();
         if (combinedText.includes(skillLower)) score += 150;
         Object.values(skillsData?.hard || {}).forEach(categorySkills => {
-           const categoryLower = categorySkills.map(c => c.toLowerCase());
-           if (categoryLower.includes(skillLower) && categoryLower.some(c => combinedText.includes(c))) score += 60; 
+          const categoryLower = categorySkills.map(c => c.toLowerCase());
+          if (categoryLower.includes(skillLower) && categoryLower.some(c => combinedText.includes(c))) score += 60; 
         });
         skillsArray.forEach(addedSkill => {
             const addedWords = addedSkill.toLowerCase().split(/[\s.\/]+/);

@@ -20,6 +20,9 @@ import PrivacyPolicy from "./Components/pages/PrivacyPolicy";
 import FraudAlert from "./Components/pages/FraudAlert";
 import TrustSafety from "./Components/pages/TrustSafety";
 
+
+import ResumeForm from "./Components/ResumeBuilder/ResumeMakerForm";
+
 function App() {
   return (
     <Routes>
@@ -74,6 +77,21 @@ function App() {
           </>
         }
       />
+      
+      {/* SERVICES — WITH NAVBAR */}
+      <Route
+        path="/resume-builder"
+        element={
+          <>
+            <Navbar />
+            {/* Added standard background to match your theme */}
+            <div className="bg-blue-50 min-h-screen py-10">
+              <ResumeForm />
+            </div>
+          </>
+        }
+      />
+
 
       {/* TERMS */}
       <Route
