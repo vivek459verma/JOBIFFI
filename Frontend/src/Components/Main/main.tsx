@@ -84,7 +84,9 @@ export default function MainHead() {
   }, []);
 
   return (
-    <div className="container mx-auto px-3 flex flex-col items-center">
+    // <div className="container mx-auto px-3 flex flex-col items-center">
+    <div className="w-full">
+      <div className="w-full px-3 md:px-6 lg:px-8 flex flex-col items-center">
       {/* Badge */}
       <h1 className="mt-14 rounded-2xl border-2 border-blue-700 bg-blue-100 text-blue-600 font-bold px-4">
         5,000+ jobs available
@@ -106,10 +108,10 @@ export default function MainHead() {
 
       {/* 🔍 Search Bar */}
       <div className="mt-6 w-full max-w-4xl rounded-2xl shadow-lg">
-        <div className="w-full bg-white rounded-2xl border border-gray-200 flex items-center">
+        <div className="w-full bg-white rounded-2xl border border-gray-200 flex flex-col md:flex-row md:items-center">
 
           {/* Skills */}
-          <div className="relative flex items-center min-w-[220px] flex-1">
+          <div className="relative flex items-center w-full  md:min-w-[220px] flex-1">
             <CiSearch className="absolute left-3 text-gray-400 text-lg" />
             <input
               type="text"
@@ -118,10 +120,10 @@ export default function MainHead() {
             />
           </div>
 
-          <div className="h-6 w-px bg-gray-200" />
+          <div className="hidden md:block h-6 w-px bg-gray-200" />
 
           {/* Experience */}
-          <div ref={experienceRef} className="relative min-w-[160px] flex-1">
+          <div ref={experienceRef} className="relative w-full  md:min-w-[220px] flex-1">
             <div
               onClick={() => setExperienceOpen((prev) => !prev)}
               className="h-10 sm:h-12 px-3 flex items-center cursor-pointer text-sm text-gray-500"
@@ -152,7 +154,7 @@ export default function MainHead() {
 
           {/* 📍 Location */}
           {/* Location */}
-          <div ref={locationRef} className="relative min-w-[180px] flex-1">
+          <div ref={locationRef} className="relative w-full  md:min-w-[220px] flex-1">
             <div className="flex items-center h-10 sm:h-12 pl-9 pr-3 relative">
 
               <CiLocationOn className="absolute left-3 text-gray-400 text-lg" />
@@ -192,13 +194,14 @@ export default function MainHead() {
               console.log("Experience:", selectedExperience);
               console.log("Location:", locationSearch);
             }}
-            className="min-w-[120px] h-10 sm:h-12 px-5 bg-gradient-to-r from-blue-900 to-blue-800 text-white font-semibold text-sm rounded-r-2xl hover:from-blue-800 hover:to-blue-700 transition"
+            className=" min-w-[120px] h-10 sm:h-12 px-5 bg-gradient-to-r from-blue-900 to-blue-800 text-white font-semibold text-sm rounded-r-2xl hover:from-blue-800 hover:to-blue-700 transition"
           >
             Search
           </button>
         </div>
       </div>
 
+    </div>
     </div>
   );
 }

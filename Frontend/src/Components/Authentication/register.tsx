@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { message } from "antd";
 import { FcGoogle } from "react-icons/fc";
 import { CheckCircleIcon, MapPinIcon, CloudArrowUpIcon, EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
@@ -10,6 +9,8 @@ import { MdSchool, MdWork } from "react-icons/md";
 import Footer from "../Footer/footer";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+// @ts-ignore
+import { handleGoogleLogin, handleLinkedInLogin, registerCandidate } from "../../api/serverApi";
 
 const Register = () => {
     const [isChecked, setIsChecked] = useState(false);
@@ -54,18 +55,19 @@ const Register = () => {
     return (
         <div className="min-h-screen bg-white flex flex-col items-center">
             <div className="flex-grow w-full flex justify-center py-10 px-4">
-                <div className="max-w-6xl w-full flex flex-col md:flex-row gap-0 md:gap-32">
+                <div className="max-w-6xl w-full flex flex-col lg:flex-row md:flex-row gap-8 lg:gap-16 xl:gap-24 md:gap-32">
 
                     {/* Left Side - Form */}
-                    <div className="flex-1 max-w-2xl border border-dashed border-gray-300 rounded-2xl p-6 ml-4 shadow-sm ">
+                    <div className="flex-1 w-full max-w-2xl border border-dashed border-gray-300 rounded-2xl p-6  shadow-sm ">
                         <h1 className="text-3xl font-bold text-gray-900 mb-1">Create your Jobiffi profile</h1>
                         <p className="text-gray-500 text-sm mb-6">Search & apply to jobs from India's No.1 Job Site</p>
 
-
                         <div className="w-full mb-6 flex flex-col items-center gap-4">
                             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full">
+
+                                {/* Login with Google */}
                                 <div
-                                    onClick={() => window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/auth/google/oauth`}
+                                    onClick={handleGoogleLogin}
                                     className="flex items-center gap-4 border border-gray-300 rounded-full p-1.5 pr-6 w-max hover:shadow-md transition-shadow cursor-pointer group bg-white"
                                 >
                                     <span className="text-sm font-medium text-gray-500 ml-3 group-hover:transition-colors">Continue with</span>
@@ -77,15 +79,15 @@ const Register = () => {
                                         <span className="font-bold text-gray-700">Google</span>
                                     </button>
                                 </div>
+
+                                {/* Login with Linkdin */}
                                 <div
-                                    onClick={() => window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/auth/linkedin`}
-                                    className="flex items-center gap-4 border border-gray-300 rounded-full p-1.5 pr-6 w-max hover:shadow-md transition-shadow cursor-pointer group bg-white"
-                                >
+                                    onClick={handleLinkedInLogin}
+                                    className="flex items-center gap-4 border border-gray-300 rounded-full p-1.5 pr-6 w-max hover:shadow-md transition-shadow cursor-pointer group bg-white">
                                     <span className="text-sm font-medium text-gray-500 ml-3 group-hover:transition-colors">Continue with</span>
                                     <button
                                         type="button"
-                                        className="flex items-center gap-2 border border-blue-100 rounded-full px-5 py-2 bg-white hover:bg-blue-50 transition-colors"
-                                    >
+                                        className="flex items-center gap-2 border border-blue-100 rounded-full px-5 py-2 bg-white hover:bg-blue-50 transition-colors">
                                         <FaLinkedinIn className="text-blue-500 text-xl" />
                                         <span className="font-bold text-gray-700">LinkedIn</span>
                                     </button>
@@ -98,6 +100,7 @@ const Register = () => {
                             </div>
                         </div>
 
+                        {/* Form */}
                         <form className="space-y-6" onSubmit={async (e) => {
                             e.preventDefault();
                             if (!workStatus) {
@@ -107,7 +110,6 @@ const Register = () => {
 
                             setLoading(true);
                             try {
-                                // Password Complexity Regex (Supports common special symbols)
                                 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
                                 if (!passwordRegex.test(password)) {
                                     message.error("Password must be at least 8 characters long and include an uppercase letter, a number, and a special character.");
@@ -136,32 +138,7 @@ const Register = () => {
                                     }
                                 });
 
-                                // Basic validation for student details if needed (skipping for now based on UI)
                                 if (payload.workStatus === "STUDENT") {
-                                    // If student requires extra details, we might need a modal or extra fields.
-                                    // But based on current UI, we only have basic fields.
-                                    // The backend requires studentDetails for STUDENT workStatus.
-                                    // If the backend enforces it, we need to provide it or change workStatus logic.
-
-                                    // HACK: for now, if student, provide dummy or ask strictly.
-                                    // Actually, looking at backend: if workStatus === "STUDENT", checks for studentDetails.
-                                    // The UI DOES NOT have student details fields.
-                                    // To support student registration, we must either add fields or default to FRESHER for now if passing STUDENT fails.
-                                    // Or sending dummy data.
-
-                                    // Let's check backend constraint: collegeName, degree, graduationYear required.
-                                    // I'll send dummy empty object if not present? No, it validates.
-                                    // For now, I will map "student" to "FRESHER" or keep it as STUDENT and add dummy details if user selects student?
-                                    // The user didn't ask to add student fields.
-                                    // Safest: Warn user or handle it.
-                                    // Let's assume for this fix, we map "student" to "FRESHER" or "STUDENT" but providing dummy details
-                                    // to pass validation if they select Student.
-                                    // OR, better, let's just send the data and if it fails, show error.
-                                    // BUT, the backend WILL fail for STUDENT without details.
-                                    // I'll add dummy details for STUDENT to unblock or map to FRESHER?
-                                    // The UI has "I'm a student" button.
-
-                                    // Let's add dummy details to pass backend validation for now.
                                     const studentDetails = {
                                         collegeName: "Not Provided",
                                         degree: "Not Provided",
@@ -170,7 +147,7 @@ const Register = () => {
                                     formData.set('studentDetails', JSON.stringify(studentDetails));
                                 }
 
-                                const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/auth/register`, formData);
+                                const response = await registerCandidate(formData);
 
                                 if (response.status === 201) {
                                     message.success("Registration successful!");
@@ -179,18 +156,14 @@ const Register = () => {
                             } catch (error: any) {
                                 console.error("Registration Error:", error);
                                 if (error.response) {
-                                    // The request was made and the server responded with a status code
-                                    // that falls out of the range of 2xx
                                     if (error.response.status === 409) {
                                         message.error("User with this email already exists.");
                                     } else {
                                         message.error(error.response.data?.message || `Registration failed: ${error.response.statusText}`);
                                     }
                                 } else if (error.request) {
-                                    // The request was made but no response was received
                                     message.error("No response from server. Please check your internet connection or if the server is running.");
                                 } else {
-                                    // Something happened in setting up the request that triggered an Error
                                     message.error(`Error: ${error.message}`);
                                 }
                             } finally {
@@ -291,7 +264,7 @@ const Register = () => {
                                     disableSearchIcon={true}
                                     inputStyle={{
                                         width: '100%',
-                                        height: '45px',
+                                        height: '44px',
                                         borderRadius: '8px',
                                         border: '1px solid #ddd',
                                         fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
@@ -306,7 +279,6 @@ const Register = () => {
                                     }}
                                     dropdownStyle={{
                                         width: '300px',
-                                        // fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
                                         zIndex: 1000
                                     }}
                                     placeholder="Enter your mobile number"
@@ -446,10 +418,10 @@ const Register = () => {
 
                             {/* Terms Disclaimer */}
                             <p className="text-xs text-gray-500">
-                                By clicking Register, you agree to the <a href="#" className="text-blue-600 hover:text-blue-500">Terms and Conditions</a> & <a href="#" className="text-blue-600 hover:text-blue-500">Privacy Policy</a> of Jobiffi.com
+                                By clicking Register, you agree to the <a href="/terms-conditions" className="text-blue-600 hover:text-blue-500">Terms and Conditions</a> & <a href="/privacy-policy" className="text-blue-600 hover:text-blue-500">Privacy Policy</a> of Jobiffi.com
                             </p>
 
-                            <div className="pt-2 flex justify-between">
+                            <div className="pt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                                 <button
                                     type="submit"
                                     disabled={!workStatus || (!!workStatus && !city)}
@@ -471,7 +443,7 @@ const Register = () => {
                     </div>
 
                     {/* Right Side - Info Card */}
-                    <div className="hidden md:flex flex-col w-[320px] shrink-0">
+                    <div className="hidden md:flex flex-col w-[320px]  shrink-0">
                         <div className="sticky top-28 p-6 bg-gradient-to-br from-blue-50 to-white rounded-3xl border border-blue-100 shadow-sm">
                             <div className="h-40 w-40 mx-auto -mt-12 mb-4 bg-white rounded-full p-4 shadow-md border border-gray-100 flex items-center justify-center relative z-10">
                                 <img src={registerImg} alt="Illustration" className="w-full h-full mt-2 object-contain " />

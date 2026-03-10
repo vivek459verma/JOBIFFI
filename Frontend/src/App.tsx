@@ -4,8 +4,6 @@ import Navbar from "./Components/Nav";
 import Footer from "./Components/Footer/footer";
 import AsideFooter from "./Components/Footer/AsideFooter";
 
-
-import AboutUs from "./Components/Pages/AboutUs";
 import MainHead from "./Components/Main/main";
 import CategoryCompany from "./Components/Main/Category";
 import TopCompanies from "./Components/Top/TopCompanies";
@@ -15,12 +13,12 @@ import UpcomingEvents from "./Components/Events/UpcomingEvents";
 
 import Register from "./Components/Authentication/register";
 import Verification from "./Components/Authentication/verification";
+import AboutUs from "./Components/pages/AboutUs";
 
 import TermsConditions from "./Components/pages/TermsConditions";
 import PrivacyPolicy from "./Components/pages/PrivacyPolicy";
-
-// Import the new Resume Builder component
-import ResumeForm from "./Components/ResumeBuilder/ResumeMakerForm";
+import FraudAlert from "./Components/pages/FraudAlert";
+import TrustSafety from "./Components/pages/TrustSafety";
 
 function App() {
   return (
@@ -31,7 +29,6 @@ function App() {
         element={
           <>
             <Navbar />
-
             <div className="bg-blue-50 relative z-0">
               <MainHead />
               <CategoryCompany />
@@ -46,7 +43,7 @@ function App() {
         }
       />
 
-      {/* AUTH — WITH NAVBAR (optional) */}
+      {/* AUTH — WITH NAVBAR */}
       <Route
         path="/register"
         element={
@@ -67,8 +64,7 @@ function App() {
         }
       />
 
-
-      {/* ABOUT US — WITH NAVBAR */}
+      {/* ABOUT US */}
       <Route
         path="/about-us"
         element={
@@ -79,22 +75,7 @@ function App() {
         }
       />
 
-      {/* SERVICES — WITH NAVBAR */}
-      <Route
-        path="/resume-builder"
-        element={
-          <>
-            <Navbar />
-            {/* Added standard background to match your theme */}
-            <div className="bg-blue-50 min-h-screen py-10">
-              <ResumeForm />
-            </div>
-          </>
-        }
-      />
-
-
-      {/* TERMS — NO NAVBAR */}
+      {/* TERMS */}
       <Route
         path="/terms-conditions"
         element={
@@ -104,12 +85,32 @@ function App() {
         }
       />
 
-      {/* PRIVACY — NO NAVBAR */}
+      {/* PRIVACY */}
       <Route
         path="/privacy-policy"
         element={
           <div className="bg-blue-50 min-h-screen">
             <PrivacyPolicy />
+          </div>
+        }
+      />
+
+      {/* FRAUD ALERT */}
+      <Route
+        path="/fraud-alert"
+        element={
+          <div className="bg-blue-50 min-h-screen">
+            <FraudAlert />
+          </div>
+        }
+      />
+
+      {/* TRUST & SAFETY */}
+      <Route
+        path="/trust-safety"
+        element={
+          <div className="bg-blue-50 min-h-screen">
+            <TrustSafety />
           </div>
         }
       />

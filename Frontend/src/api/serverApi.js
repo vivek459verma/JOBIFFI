@@ -28,3 +28,15 @@ export const employerRegister = async (formData) => {
     return null;
   }
 };
+
+export const handleGoogleLogin = () => {
+  window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/auth/google/oauth`;
+};
+
+export const handleLinkedInLogin = () => {
+  window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/auth/linkedin`;
+};
+
+export const registerCandidate = async (formData) => {
+  return await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/auth/register`, formData);
+};
