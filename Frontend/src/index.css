@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+body {
+  font-family: 'Inter', sans-serif;
+}
 /* Hide scrollbar but allow scrolling */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;

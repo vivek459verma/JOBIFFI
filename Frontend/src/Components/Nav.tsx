@@ -353,7 +353,16 @@ function Navbar() {
                       Free Resume Toolkit
                     </h2>
                     <ul className="space-y-2 text-sm text-gray-600">
-                      <li>Resume Builder</li>
+                      <li
+  onClick={() => {
+    navigate("/resume-builder");
+    setJobServices(false); // closes dropdown
+  }}
+  className="cursor-pointer hover:text-blue-600"
+>
+  Resume Builder
+</li>
+
                       <li>Smart Resume Score</li>
                       <li>Resume Samples</li>
                       <li>Cover Letter Samples</li>
