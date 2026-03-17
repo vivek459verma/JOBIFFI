@@ -20,6 +20,8 @@ import PrivacyPolicy from "./Components/pages/PrivacyPolicy";
 import FraudAlert from "./Components/pages/FraudAlert";
 import TrustSafety from "./Components/pages/TrustSafety";
 
+import EmployerRegister from "./Components/Authentication/EmployerRegister";
+import EmployerVerification from "./Components/Authentication/EmployerVerification";
 
 import ResumeForm from "./Components/ResumeBuilder/ResumeMakerForm";
 
@@ -67,6 +69,27 @@ function App() {
         }
       />
 
+      {/* EMPLOYER AUTH — WITH NAVBAR */}
+      <Route
+        path="/employer-register"
+        element={
+          <>
+            <Navbar />
+            <EmployerRegister />
+          </>
+        }
+      />
+
+      <Route
+        path="/employer-verification"
+        element={
+          <>
+            <Navbar />
+            <EmployerVerification />
+          </>
+        }
+      />
+
       {/* ABOUT US */}
       <Route
         path="/about-us"
@@ -77,7 +100,7 @@ function App() {
           </>
         }
       />
-      
+
       {/* SERVICES — WITH NAVBAR */}
       <Route
         path="/resume-builder"
@@ -91,7 +114,6 @@ function App() {
           </>
         }
       />
-
 
       {/* TERMS */}
       <Route
