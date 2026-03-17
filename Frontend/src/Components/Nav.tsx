@@ -23,6 +23,8 @@ function Navbar() {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [userData, setUserData] = useState<any>(null); // To store user details for modal
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // new add
+  const [isRegisterModelOpen, setIsRegisterModelOpen] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -437,7 +439,7 @@ function Navbar() {
                 </button>
 
                 <button
-                  onClick={() => navigate("/register")}
+                  onClick={() => setIsRegisterModelOpen(true)}
                   className="cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-linear-to-r from-blue-800 via-blue-900 to-blue-900 text-white font-semibold"
                 >
                   Register
@@ -551,6 +553,30 @@ function Navbar() {
           localStorage.setItem("user", JSON.stringify(user)); // Sync with localStorage
         }}
       />
+      {isRegisterModelOpen && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-xl p-6 w-[50%] text-center">
+            <h2 className="mb-5 font-bold text-blue-600 text-2xl">Register</h2>
+            <div className="flex flex-col-gap-3 gap-4">
+              <button onClick={() =>{
+                setIsRegisterModelOpen(false);
+                navigate("/register")
+              }} className="w-full py-2 rounded-lg bg-blue-900 text-white font-semibold hover:bg-blue-800">
+                User Register
+              </button>
+              <button onClick={() => {
+                setIsRegisterModelOpen(false);
+                navigate("/employer-register")
+              }} className="w-full py-2 rounded-lg bg-blue-900 text-white font-semibold hover:bg-blue-800">
+                Employer Register
+              </button>
+            </div>
+            <button onClick={() => {setIsRegisterModelOpen(false)}} className="mt-4 text-gray-500 text-sm">
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

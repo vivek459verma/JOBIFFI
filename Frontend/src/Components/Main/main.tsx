@@ -3,35 +3,35 @@ import { CiLocationOn, CiSearch } from "react-icons/ci";
 
 
 // 📍 Real Job Hubs (India)
-const locations = [
-  "Remote",
-  "Hybrid",
-  "New Delhi",
-  "Bangalore",
-  "Delhi NCR",
-  "Mumbai",
-  "Hyderabad",
-  "Chennai",
-  "Pune",
-  "Gurgaon",
-  "Noida",
-  "Faridabad",
-  "Ghaziabad",
-  "Chandigarh",
-  "Ahmedabad",
-  "Vadodara",
-  "Surat",
-  "Coimbatore",
-  "Kochi",
-  "Trivandrum",
-  "Vizag",
-  "Vijayawada",
-  "Kolkata",
-  "Bhubaneswar",
-  "Indore",
-  "Jaipur",
-  "Mohali",
-];
+// const locations = [
+//   "Remote",
+//   "Hybrid",
+//   "New Delhi",
+//   "Bangalore",
+//   "Delhi NCR",
+//   "Mumbai",
+//   "Hyderabad",
+//   "Chennai",
+//   "Pune",
+//   "Gurgaon",
+//   "Noida",
+//   "Faridabad",
+//   "Ghaziabad",
+//   "Chandigarh",
+//   "Ahmedabad",
+//   "Vadodara",
+//   "Surat",
+//   "Coimbatore",
+//   "Kochi",
+//   "Trivandrum",
+//   "Vizag",
+//   "Vijayawada",
+//   "Kolkata",
+//   "Bhubaneswar",
+//   "Indore",
+//   "Jaipur",
+//   "Mohali",
+// ];
 
 // 🎓 Experience options
 const experienceOptions = [
@@ -48,6 +48,7 @@ const experienceOptions = [
 export default function MainHead() {
   const [locationOpen, setLocationOpen] = useState(false);
   const [locationSearch, setLocationSearch] = useState("");
+  const [apiLocations, setApiLocations] = useState<any[]>([]);
   const locationRef = useRef<HTMLDivElement | null>(null);
 
   const [experienceOpen, setExperienceOpen] = useState(false);
@@ -56,32 +57,45 @@ export default function MainHead() {
   // ✅ Selected experience state
   const [selectedExperience, setSelectedExperience] = useState("");
 
-
-  const filteredLocations =
-    locationSearch.trim().length > 0
-      ? locations.filter((loc) =>
-        loc.toLowerCase().includes(locationSearch.toLowerCase())
-      )
-      : [];
-
-  // ✅ Outside click handling
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node;
-
-      if (locationRef.current && !locationRef.current.contains(target)) {
-        setLocationOpen(false);
-      }
-
-      if (experienceRef.current && !experienceRef.current.contains(target)) {
-        setExperienceOpen(false);
+    const fetchLocations = async () => {
+      if(locationSearch.trim().length > 0){
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${locationSearch}&limit=5&addressdetails=1`);
+        const data  = await res.json();
+        setApiLocations(data);
+        setLocationOpen(true);
+      }else{
+        setApiLocations([]);
       }
     };
+    const delayDebounce = setTimeout(fetchLocations, 500); // debounce
+    return () => clearTimeout(delayDebounce);
+  }, [locationSearch]);
+  // const filteredLocations =
+  //   locationSearch.trim().length > 0
+  //     ? locations.filter((loc) =>
+  //       loc.toLowerCase().includes(locationSearch.toLowerCase())
+  //     )
+  //     : [];
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  // // ✅ Outside click handling
+  // useEffect(() => {
+  //   const handleClickOutside = (event: MouseEvent) => {
+  //     const target = event.target as Node;
+
+  //     if (locationRef.current && !locationRef.current.contains(target)) {
+  //       setLocationOpen(false);
+  //     }
+
+  //     if (experienceRef.current && !experienceRef.current.contains(target)) {
+  //       setExperienceOpen(false);
+  //     }
+  //   };
+
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () =>
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  // }, []);
 
   return (
     // <div className="container mx-auto px-3 flex flex-col items-center">
@@ -151,8 +165,6 @@ export default function MainHead() {
 
           <div className="h-6 w-px bg-gray-200" />
 
-
-          {/* 📍 Location */}
           {/* Location */}
           <div ref={locationRef} className="relative w-full  md:min-w-[220px] flex-1">
             <div className="flex items-center h-10 sm:h-12 pl-9 pr-3 relative">
@@ -170,18 +182,18 @@ export default function MainHead() {
               />
             </div>
 
-            {locationOpen && filteredLocations.length > 0 && (
+            {locationOpen && apiLocations.length > 0 && (
               <div className="absolute z-30 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
-                {filteredLocations.map((loc) => (
+                {apiLocations.map((loc) => (
                   <div
-                    key={loc}
+                    key={loc.place_id}
                     onClick={() => {
-                      setLocationSearch(loc);
+                      setLocationSearch(loc.display_name);
                       setLocationOpen(false);
                     }}
                     className="px-4 py-2 text-sm cursor-pointer hover:bg-blue-50"
                   >
-                    {loc}
+                    {loc.display_name}
                   </div>
                 ))}
               </div>
