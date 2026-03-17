@@ -67,7 +67,7 @@ const EmployerRegister = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/api/employer/register",
+        `${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/employer/register`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

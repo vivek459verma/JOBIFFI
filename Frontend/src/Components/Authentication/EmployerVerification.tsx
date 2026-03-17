@@ -18,14 +18,13 @@ const EmployerVerification = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/api/employer/verify-email",
+        `${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/employer/verify-email`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, otp }),
         },
       );
-
       const data = await response.json();
 
       if (data.success) {
@@ -48,7 +47,7 @@ const EmployerVerification = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/api/employer/resend-otp",
+        `${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/employer/resend-otp`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -115,10 +114,11 @@ const EmployerVerification = () => {
             <button
               type="submit"
               disabled={loading || otp.length !== 6}
-              className={`w-full max-w-md mx-auto justify-center rounded-3xl px-10 py-3 text-sm font-bold text-white shadow-sm transition ${!loading && otp.length === 6
+              className={`w-full max-w-md mx-auto justify-center rounded-3xl px-10 py-3 text-sm font-bold text-white shadow-sm transition ${
+                !loading && otp.length === 6
                   ? "bg-blue-600 hover:bg-blue-700 cursor-pointer"
                   : "bg-gray-400 cursor-not-allowed opacity-70"
-                }`}
+              }`}
             >
               {loading ? "Verifying..." : "Verify Email"}
             </button>
