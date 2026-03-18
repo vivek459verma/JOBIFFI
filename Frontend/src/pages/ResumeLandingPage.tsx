@@ -117,7 +117,7 @@ const ResumeLandingPage = () => {
             <div
               key={template.id}
               onClick={() =>
-                navigate(`/resume-editor?template=${template.id}`)
+                navigate(`/resume-builder?template=${template.id}`)
               }
               className="bg-white rounded-[16px] border border-[#e6e6e6] shadow-sm cursor-pointer overflow-hidden hover:shadow-md transition-all duration-300"
             >

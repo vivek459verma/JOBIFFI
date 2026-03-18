@@ -379,7 +379,7 @@ function Navbar() {
                     <ul className="space-y-2 text-sm text-gray-600">
                       <li
   onClick={() => {
-    navigate("/resume-builder");
+    navigate("/resume");
     setJobServices(false); // closes dropdown
   }}
   className="cursor-pointer hover:text-blue-600"

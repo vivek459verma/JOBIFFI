@@ -7,10 +7,10 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./Components/Nav";
 import Footer from "./Components/Footer/footer";
 import AsideFooter from "./Components/Footer/AsideFooter";
-import ResumeBuilderPage from "./pages/ResumeBuilderPage";
 import ResumeLandingPage from "./pages/ResumeLandingPage";
-import ResumePreviewPage from "./pages/ResumePreviewPage";
 import ResumeTemplatesPage from "./pages/ResumeTemplatesPage";
+import ResumeBuilderPage from "./pages/ResumeBuilderPage";
+import ResumePreviewPage from "./pages/ResumePreviewPage";
 
 import MainHead from "./Components/Main/main";
 import CategoryCompany from "./Components/Main/Category";
@@ -339,18 +339,13 @@ function App() {
       {/* FALLBACK FOR OLD LINKS — ALSO RENDERS HOMEPAGE */}
       <Route path="/login" element={<HomePage />} />
 
-{/* RESUME BUILDER */}
-      <Route
-        path="resume-builder"
-        element={
-          <MainLayout>
-            <ResumeBuilderPage />
-          </MainLayout>
-        }
-      />
-{/* RESUME LANDING */}
+{/* ===================== */}
+{/* 🏠 RESUME MODULE ROUTES */}
+{/* ===================== */}
+
+{/* 📌 Resume Landing Page */}
 <Route
-  path="resume"
+  path="/resume"
   element={
     <MainLayout>
       <ResumeLandingPage />
@@ -358,9 +353,9 @@ function App() {
   }
 />
 
-{/* RESUME TEMPLATES */}
+{/* 🎨 Resume Templates Selection */}
 <Route
-  path="resume-templates"
+  path="/resume-templates"
   element={
     <MainLayout>
       <ResumeTemplatesPage />
@@ -368,9 +363,19 @@ function App() {
   }
 />
 
-{/* RESUME PREVIEW */}
+{/* 🛠️ Resume Builder */}
 <Route
-  path="resume-preview"
+  path="/resume-builder"
+  element={
+    <MainLayout>
+      <ResumeBuilderPage />
+    </MainLayout>
+  }
+/>
+
+{/* 👁️ Resume Preview */}
+<Route
+  path="/resume-preview"
   element={
     <MainLayout>
       <ResumePreviewPage />
