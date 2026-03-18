@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { Dropdown } from "antd";
+
 import {
   ChevronDownIcon,
   Bars3Icon,
@@ -28,9 +29,6 @@ function Navbar() {
   const location = useLocation();
   const navRef = useRef<HTMLDivElement>(null);
   const jobsTimeout = useRef<any>(null);
-  const companyTimeout = useRef<any>(null);
-  const servicesTimeout = useRef<any>(null);
-  const resourcesTimeout = useRef<any>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -382,7 +380,18 @@ function Navbar() {
                         >
                           Resume Builder
                         </Link> </li>                     
-                      <li>Smart Resume Score</li>
+                      <ul className="dropdown-menu">
+                        {/* ... other links ... */}
+                        <li>
+                          <Link
+                            to="/smart-score"
+                            className="hover:text-blue-800 transition-colors cursor-pointer block"
+                          >
+                            Smart Resume Score
+                          </Link>
+                        </li>
+                        {/* ... other links ... */}
+                      </ul>
                       <li>Resume Samples</li>
                       <li>Cover Letter Samples</li>
                     </ul>

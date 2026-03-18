@@ -6,6 +6,7 @@ import connectDB from "./src/config/mongo.config.js";
 import authRoutes from "./src/routes/auth.routes.js";
 import passport from "./src/config/passport.js";
 import employerRoutes from "./src/routes/employer.routes.js";
+import atsRoutes from './src/routes/ATS.routes.js';
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -53,6 +54,8 @@ app.use((err, req, res, next) => {
     message: err.message || "Internal Server Error",
   });
 });
+
+app.use('/api/ats', atsRoutes);
 
 // Start Server
 const startServer = async () => {

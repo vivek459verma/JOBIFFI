@@ -21,7 +21,8 @@ import FraudAlert from "./Components/pages/FraudAlert";
 import TrustSafety from "./Components/pages/TrustSafety";
 
 
-import ResumeForm from "./Components/ResumeBuilder/ResumeMakerForm";
+import ResumeForm from "./Components/ResumeServices/ResumeMakerForm";
+import SmartResumeScore from './Components/ResumeServices/SmartResumeScore'; // adjust path to match your structure
 
 function App() {
   return (
@@ -122,6 +123,8 @@ function App() {
           </div>
         }
       />
+
+      <Route path="/smart-score" element={<SmartResumeScore />} />
 
       {/* TRUST & SAFETY */}
       <Route
