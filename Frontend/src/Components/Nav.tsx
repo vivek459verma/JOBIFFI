@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { Dropdown } from "antd";
 import {
   ChevronDownIcon,
@@ -23,10 +23,16 @@ function Navbar() {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [userData, setUserData] = useState<any>(null); // To store user details for modal
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // new add
+  const [isRegisterModelOpen, setIsRegisterModelOpen] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
   const navRef = useRef<HTMLDivElement>(null);
+  const jobsTimeout = useRef<any>(null);
+  const companyTimeout = useRef<any>(null);
+  const servicesTimeout = useRef<any>(null);
+  const resourcesTimeout = useRef<any>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -169,10 +175,16 @@ function Navbar() {
             <div
               className="relative"
               onMouseEnter={() => {
+                clearTimeout(jobsTimeout.current);
                 setJobsOpen(true);
                 setJobCompany(false);
                 setJobServices(false);
                 setJobResources(false);
+              }}
+              onMouseLeave={() => {
+                jobsTimeout.current = setTimeout(() => {
+                  setJobsOpen(false);
+                }, 150);
               }}
               // onMouseLeave={() => setJobsOpen(false)}
             >
@@ -234,10 +246,16 @@ function Navbar() {
             <div
               className="relative"
               onMouseEnter={() => {
+                clearTimeout(jobsTimeout.current);
                 setJobsOpen(false);
                 setJobCompany(true);
                 setJobServices(false);
                 setJobResources(false);
+              }}
+              onMouseLeave={() => {
+                jobsTimeout.current = setTimeout(() => {
+                  setJobsOpen(false);
+                }, 150);
               }}
               // onMouseLeave={() => setJobCompany(false)}
             >
@@ -292,10 +310,16 @@ function Navbar() {
             <div
               className="relative"
               onMouseEnter={() => {
+                clearTimeout(jobsTimeout.current);
                 setJobsOpen(false);
                 setJobCompany(false);
                 setJobServices(true);
                 setJobResources(false);
+              }}
+              onMouseLeave={() => {
+                jobsTimeout.current = setTimeout(() => {
+                  setJobsOpen(false);
+                }, 150);
               }}
               // onMouseLeave={() => setJobServices(false)}
             >
@@ -376,10 +400,16 @@ function Navbar() {
             <div
               className="relative"
               onMouseEnter={() => {
+                clearTimeout(jobsTimeout.current);
                 setJobsOpen(false);
                 setJobCompany(false);
                 setJobServices(false);
                 setJobResources(true);
+              }}
+              onMouseLeave={() => {
+                jobsTimeout.current = setTimeout(() => {
+                  setJobsOpen(false);
+                }, 150);
               }}
               // onMouseLeave={() => setJobResources(false)}
             >
@@ -412,7 +442,7 @@ function Navbar() {
                 </button>
 
                 <button
-                  onClick={() => navigate("/register")}
+                  onClick={() => setIsRegisterModelOpen(true)}
                   className="cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-linear-to-r from-blue-800 via-blue-900 to-blue-900 text-white font-semibold"
                 >
                   Register
@@ -526,6 +556,30 @@ function Navbar() {
           localStorage.setItem("user", JSON.stringify(user)); // Sync with localStorage
         }}
       />
+      {isRegisterModelOpen && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-xl p-6 w-[50%] text-center">
+            <h2 className="mb-5 font-bold text-blue-600 text-2xl">Register</h2>
+            <div className="flex flex-col-gap-3 gap-4">
+              <button onClick={() =>{
+                setIsRegisterModelOpen(false);
+                navigate("/register")
+              }} className="w-full py-2 rounded-lg bg-blue-900 text-white font-semibold hover:bg-blue-800">
+                User Register
+              </button>
+              <button onClick={() => {
+                setIsRegisterModelOpen(false);
+                navigate("/employer-register")
+              }} className="w-full py-2 rounded-lg bg-blue-900 text-white font-semibold hover:bg-blue-800">
+                Employer Register
+              </button>
+            </div>
+            <button onClick={() => {setIsRegisterModelOpen(false)}} className="mt-4 text-gray-500 text-sm">
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

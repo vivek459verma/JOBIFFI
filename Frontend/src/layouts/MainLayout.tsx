@@ -1,9 +1,10 @@
+import { ReactNode } from "react";
 import Navbar from "../Components/Nav";
 import Footer from "../Components/Footer/footer";
 import AsideFooter from "../Components/Footer/AsideFooter";
 
 interface Props {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const MainLayout = ({ children }: Props) => {
