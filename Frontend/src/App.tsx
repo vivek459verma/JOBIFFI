@@ -21,6 +21,8 @@ import FraudAlert from "./Components/pages/FraudAlert";
 import TrustSafety from "./Components/pages/TrustSafety";
 
 import ResumeLandingPage from "./Components/ResumeServices/ResumeLandingPage";
+import EmployerRegister from "./Components/Authentication/EmployerRegister";
+import EmployerVerification from "./Components/Authentication/EmployerVerification";
 
 
 import ResumeForm from "./Components/ResumeServices/ResumeMakerForm";
@@ -66,6 +68,27 @@ function App() {
           <>
             <Navbar />
             <Verification />
+          </>
+        }
+      />
+
+      {/* EMPLOYER AUTH — WITH NAVBAR */}
+      <Route
+        path="/employer-register"
+        element={
+          <>
+            <Navbar />
+            <EmployerRegister />
+          </>
+        }
+      />
+
+      <Route
+        path="/employer-verification"
+        element={
+          <>
+            <Navbar />
+            <EmployerVerification />
           </>
         }
       />
