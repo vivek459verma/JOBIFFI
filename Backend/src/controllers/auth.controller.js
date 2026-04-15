@@ -16,7 +16,7 @@ import { cloudinary } from "../config/cloudinary.config.js";
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 /**
- * ✅ REGISTER USER (UNCHANGED - Your existing logic)
+ * ✅ REGISTER USER 
  */
 export const registerUser = async (req, res) => {
   try {
@@ -166,7 +166,7 @@ export const registerUser = async (req, res) => {
 };
 
 /**
- * ✅ VERIFY EMAIL - FIXED TO REDIRECT TO LANDING PAGE
+ * ✅ VERIFY EMAIL 
  */
 export const verifyEmail = async (req, res) => {
   try {
@@ -209,7 +209,7 @@ export const verifyEmail = async (req, res) => {
 };
 
 /**
- * ✅ RESEND VERIFICATION EMAIL (UNCHANGED)
+ * ✅ RESEND VERIFICATION EMAIL 
  */
 export const resendVerificationEmail = async (req, res) => {
   try {
@@ -269,7 +269,7 @@ export const loginUser = async (req, res) => {
     // Generate Token
     const token = jwt.sign(
       { userId: user._id, email: user.email },
-      process.env.JWT_SECRET || "default_secret_key",
+      process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 
@@ -345,7 +345,7 @@ export const loginWithOtp = async (req, res) => {
     // Generate Token
     const token = jwt.sign(
       { userId: user._id, email: user.email },
-      process.env.JWT_SECRET || "default_secret_key",
+      process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 
@@ -373,7 +373,7 @@ export const loginWithOtp = async (req, res) => {
   }
 };
 
-// --- 5. GOOGLE LOGIN (NEW) ---
+// --- 5. GOOGLE LOGIN ---
 export const googleLogin = async (req, res) => {
   try {
     const { token } = req.body;
@@ -401,8 +401,6 @@ export const googleLogin = async (req, res) => {
         passwordHash: hashedPassword,
         authProvider: "GOOGLE",
         isEmailVerified: true,
-        // mobile: "", // Leave out to trigger onboarding
-        // workStatus: "FRESHER", // Leave out to trigger onboarding
         profilePicture: picture
       });
     }
@@ -410,7 +408,7 @@ export const googleLogin = async (req, res) => {
     // Generate JWT
     const jwtToken = jwt.sign(
       { userId: user._id, email: user.email },
-      process.env.JWT_SECRET || "default_secret_key",
+      process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 
@@ -551,42 +549,54 @@ export const getProfile = async (req, res) => {
   }
 };
 
-// --- 10. UPDATE USER PROFILE (For OAuth Completion) ---
+// --- 10. UPDATE USER PROFILE (CRASH FIX IMPLEMENTED HERE) ---
 export const updateProfile = async (req, res) => {
   try {
     const { mobile, workStatus, currentCity, fullName, resume } = req.body;
 
-    const user = await User.findById(req.user.userId);
-    if (!user) {
+    // 1. Fetch current user data safely to calculate profile completion
+    const existingUser = await User.findById(req.user.userId);
+    if (!existingUser) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    // Update fields
-    if (mobile) user.mobile = mobile;
-    if (workStatus) user.workStatus = workStatus;
-    if (currentCity) user.currentCity = currentCity;
-    if (fullName) user.fullName = fullName;
-    if (resume) user.resume = resume;
+    // 2. Prepare dynamic update fields
+    const updateFields = {};
+    if (mobile) updateFields.mobile = mobile;
+    if (workStatus) updateFields.workStatus = workStatus;
+    if (currentCity) updateFields.currentCity = currentCity;
+    if (fullName) updateFields.fullName = fullName;
+    if (resume) updateFields.resume = resume;
 
-    // Update profile completion score if needed
-    if (user.mobile && user.workStatus && user.currentCity && user.profileCompletion < 50) {
-      user.profileCompletion = 50;
+    // 3. Logic: Update profile completion score if requirements are met
+    const hasMobile = updateFields.mobile || existingUser.mobile;
+    const hasWorkStatus = updateFields.workStatus || existingUser.workStatus;
+    const hasCity = updateFields.currentCity || existingUser.currentCity;
+
+    if (hasMobile && hasWorkStatus && hasCity && existingUser.profileCompletion < 50) {
+      updateFields.profileCompletion = 50;
     }
 
-    await user.save();
+    // 4. THE FIX: Bypass full document validation via findByIdAndUpdate
+    // runValidators: false tells Mongoose to ignore the missing passwordHash rule!
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.userId,
+      { $set: updateFields },
+      { new: true, runValidators: false } 
+    );
 
     res.status(200).json({
       success: true,
       message: "Profile updated successfully",
       user: {
-        id: user._id,
-        fullName: user.fullName || user.name,
-        email: user.email,
-        workStatus: user.workStatus,
-        mobile: user.mobile,
-        currentCity: user.currentCity,
-        profilePicture: user.profilePicture,
-        resume: user.resume
+        id: updatedUser._id,
+        fullName: updatedUser.fullName || updatedUser.name,
+        email: updatedUser.email,
+        workStatus: updatedUser.workStatus,
+        mobile: updatedUser.mobile,
+        currentCity: updatedUser.currentCity,
+        profilePicture: updatedUser.profilePicture,
+        resume: updatedUser.resume
       }
     });
 
