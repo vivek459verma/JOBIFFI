@@ -269,7 +269,7 @@ export const loginUser = async (req, res) => {
     // Generate Token
     const token = jwt.sign(
       { userId: user._id, email: user.email },
-      process.env.JWT_SECRET || "default_secret_key",
+      process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 
@@ -345,7 +345,7 @@ export const loginWithOtp = async (req, res) => {
     // Generate Token
     const token = jwt.sign(
       { userId: user._id, email: user.email },
-      process.env.JWT_SECRET || "default_secret_key",
+      process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 
@@ -408,7 +408,7 @@ export const googleLogin = async (req, res) => {
     // Generate JWT
     const jwtToken = jwt.sign(
       { userId: user._id, email: user.email },
-      process.env.JWT_SECRET || "default_secret_key",
+      process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 

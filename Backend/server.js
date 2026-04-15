@@ -3,16 +3,19 @@ import "./src/config/env.config.js";
 import express from "express";
 import cors from "cors";
 import connectDB from "./src/config/mongo.config.js";
-import authRoutes from "./src/routes/auth.routes.js";
 import passport from "./src/config/passport.js";
+
+// --- ROUTES ---
+import authRoutes from "./src/routes/auth.routes.js";
 import employerRoutes from "./src/routes/employer.routes.js";
 import atsRoutes from './src/routes/ATS.routes.js';
+import resumeMakerRoutes from './src/routes/resumeMaker.routes.js'; 
 
 const app = express();
 const port = process.env.PORT || 8000;
 
 // CORS Configuration
-const allowedOrigins = process.env.FRONTEND_URL.split(',');
+const allowedOrigins = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',') : [];
 
 app.use(
   cors({
@@ -41,11 +44,19 @@ app.get("/", (req, res) => {
   res.send("jobiffi backend is running!");
 });
 
-// API Routes
+// ==========================================
+// ✅ API ROUTES (Must go BEFORE Error Handler)
+// ==========================================
 app.use("/api/auth", authRoutes);
 app.use("/api/employer", employerRoutes);
+app.use('/api/ats', atsRoutes); // Moved this up where it belongs!
 
-// Error Handler
+
+app.use('/api/resumeMaker', resumeMakerRoutes);
+// ==========================================
+
+
+// Error Handler (Must be the LAST app.use)
 app.use((err, req, res, next) => {
   console.error(err.stack);
   const statusCode = err.statusCode || 500;
@@ -54,8 +65,6 @@ app.use((err, req, res, next) => {
     message: err.message || "Internal Server Error",
   });
 });
-
-app.use('/api/ats', atsRoutes);
 
 // Start Server
 const startServer = async () => {

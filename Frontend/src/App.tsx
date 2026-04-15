@@ -20,6 +20,8 @@ import PrivacyPolicy from "./Components/pages/PrivacyPolicy";
 import FraudAlert from "./Components/pages/FraudAlert";
 import TrustSafety from "./Components/pages/TrustSafety";
 
+import ResumeLandingPage from "./Components/ResumeServices/ResumeLandingPage";
+
 
 import ResumeForm from "./Components/ResumeServices/ResumeMakerForm";
 import SmartResumeScore from './Components/ResumeServices/SmartResumeScore'; // adjust path to match your structure
@@ -79,9 +81,20 @@ function App() {
         }
       />
       
-      {/* SERVICES — WITH NAVBAR */}
+      {/* SERVICES — RESUME LANDING PAGE */}
       <Route
         path="/resume-builder"
+        element={
+          <>
+            <Navbar />
+            <ResumeLandingPage />
+          </>
+        }
+      />
+
+      {/* SERVICES — ACTUAL RESUME EDITOR */}
+      <Route
+        path="/resume-editor"
         element={
           <>
             <Navbar />
@@ -92,7 +105,6 @@ function App() {
           </>
         }
       />
-
 
       {/* TERMS */}
       <Route
