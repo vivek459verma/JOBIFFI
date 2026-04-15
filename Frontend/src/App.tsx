@@ -22,6 +22,8 @@ import TrustSafety from "./Components/pages/TrustSafety";
 
 import ResumeLandingPage from "./Components/ResumeServices/ResumeLandingPage";
 
+import EmployerRegister from "./Components/Authentication/EmployerRegister";
+import EmployerVerification from "./Components/Authentication/EmployerVerification";
 
 import ResumeForm from "./Components/ResumeServices/ResumeMakerForm";
 import SmartResumeScore from './Components/ResumeServices/SmartResumeScore'; // adjust path to match your structure
@@ -70,6 +72,27 @@ function App() {
         }
       />
 
+      {/* EMPLOYER AUTH — WITH NAVBAR */}
+      <Route
+        path="/employer-register"
+        element={
+          <>
+            <Navbar />
+            <EmployerRegister />
+          </>
+        }
+      />
+
+      <Route
+        path="/employer-verification"
+        element={
+          <>
+            <Navbar />
+            <EmployerVerification />
+          </>
+        }
+      />
+
       {/* ABOUT US */}
       <Route
         path="/about-us"
@@ -80,8 +103,8 @@ function App() {
           </>
         }
       />
-      
-      {/* SERVICES — RESUME LANDING PAGE */}
+
+      {/* SERVICES — WITH NAVBAR */}
       <Route
         path="/resume-builder"
         element={
